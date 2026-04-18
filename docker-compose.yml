@@ -1,0 +1,56 @@
+version: "3.8"
+services:
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - VITE_API_URL=http://localhost:5000
+      - VITE_WS_URL=http://localhost:5000
+    depends_on:
+      - backend-node
+
+  backend-node:
+    build: ./backend-node
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./backend-node:/app
+      - /app/node_modules
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/codebattle
+      - JWT_SECRET=${JWT_SECRET}
+      - FASTAPI_URL=http://backend-python:8000
+      - REDIS_URL=redis://redis:6379
+      - PORT=5000
+    depends_on:
+      - mongo
+      - redis
+
+  backend-python:
+    build: ./backend-python
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend-python:/app
+    environment:
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - SANDBOX_TIMEOUT=5
+
+  mongo:
+    image: mongo:7
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
+volumes:
+  mongo_data:
