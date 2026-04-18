@@ -2,7 +2,6 @@
 
 ## ⚙️ Frontend — React + TypeScript + Vite
 
-<<<<<<< HEAD
 
 ```bash
 cd frontend
@@ -71,11 +70,4 @@ Bibliothèque d’animations fluide pour React afin de créer des interfaces mod
 [https://judge0.com/](https://judge0.com/)
 API permettant l’exécution de code en plusieurs langages pour les challenges et battles.
 =======
-cd frontend </br>
-npm create vite@latest . -- --template react-ts</br>
-npm install</br>
-npm install tailwindcss @tailwindcss/vite socket.io-client @monaco-editor/react</br>
-npx tailwindcss init -p</br>
-cd ..</br>
 
-> > > > > > > 31359d1ba297798b5e527a2a015e3a9369fb581e
