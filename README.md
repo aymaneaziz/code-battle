@@ -2,7 +2,7 @@
 
 # Frontend — React + TypeScript + Vite
 
-cd frontend
+cd frontend </br>
 npm create vite@latest . -- --template react-ts
 npm install
 npm install tailwindcss @tailwindcss/vite socket.io-client @monaco-editor/react
