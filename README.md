@@ -2,7 +2,6 @@
 
 ## ⚙️ Frontend — React + TypeScript + Vite
 
-
 ```bash
 cd frontend
 npm create vite@latest . -- --template react-ts
@@ -72,3 +71,9 @@ API permettant l’exécution de code en plusieurs langages pour les challenges 
 
 ---
 
+### 🎯 Lucide Icons
+
+[https://lucide.dev/](https://lucide.dev/)
+Modern open-source icon library with customizable colors, perfect for clean and consistent UI design.
+
+---
