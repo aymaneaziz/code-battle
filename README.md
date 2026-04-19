@@ -70,5 +70,5 @@ Bibliothèque d’animations fluide pour React afin de créer des interfaces mod
 [https://judge0.com/](https://judge0.com/)
 API permettant l’exécution de code en plusieurs langages pour les challenges et battles.
 
-=======
+---
 
