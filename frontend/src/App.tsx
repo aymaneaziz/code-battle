@@ -17,7 +17,7 @@ function App() {
         </div>
         <div className="text-center">
           <h1 className="text-4xl md:text-6xl font-bold text-gray-800 mb-4">
-            Get started to
+            Aymane Negga
           </h1>
           <p className="text-lg md:text-xl text-gray-600">
             <code className="bg-gray-200 px-2 py-1 rounded">src/App.tsx</code>{" "}
