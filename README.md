@@ -13,6 +13,14 @@ cd ..
 
 ---
 
+#### Backend-node cmd
+
+```bash
+npm init -y
+npm install express
+
+```
+
 ## 🧰 Stack & Outils (en cours)
 
 ### ⚛️ React Router
@@ -64,16 +72,24 @@ Bibliothèque d’animations fluide pour React afin de créer des interfaces mod
 
 ---
 
+### 🎯 Lucide Icons
+
+[https://lucide.dev/](https://lucide.dev/)
+Modern open-source icon library with customizable colors, perfect for clean and consistent UI design.
+
+---
+
 ### ⚖️ Judge0 API
 
 [https://judge0.com/](https://judge0.com/)
 API permettant l’exécution de code en plusieurs langages pour les challenges et battles.
 
----
+Building a Code Editor with Monaco Editor and Judge 0 API
+https://medium.com/@adwait.purao/building-a-code-editor-with-monaco-editor-and-judge-0-api-b8288c0d13ae
 
-### 🎯 Lucide Icons
+How to self-host Judge0 API on your PC locally | All you need to know
+https://denishoti.medium.com/how-to-self-host-judge0-api-on-your-pc-locally-all-you-need-to-know-ad8a2b64fd1
 
-[https://lucide.dev/](https://lucide.dev/)
-Modern open-source icon library with customizable colors, perfect for clean and consistent UI design.
+https://www.youtube.com/watch?v=QOmc3u1Aev8&list=WL
 
 ---
