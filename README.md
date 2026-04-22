@@ -18,6 +18,10 @@ cd ..
 ```bash
 npm init -y
 npm install express
+npm install --save-dev nodemon  //always restart server whenever make any changes
+
+npm run dev //to start backend
+npx eslint --init //quality of code
 
 ```
 
