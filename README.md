@@ -13,7 +13,7 @@ cd ..
 
 ---
 
-#### Backend-node cmd
+#### Backend-node note (cmd)
 
 ```bash
 npm init -y
