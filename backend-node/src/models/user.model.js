@@ -35,6 +35,19 @@ const userSchema = new mongoose.Schema(
   },
 );
 
+userSchema.pre("save", function (next) {
+  if (this.isModified("password")) {
+    // Hash the password before saving (you can use bcrypt or any hashing library)
+    this.password = hashPassword(this.password);
+  }
+  next();
+});
+
+function hashPassword(password) {
+  // Implement your password hashing logic here (e.g., using bcrypt)
+  return password; // Placeholder, replace with actual hashed password
+}
+
 const User = mongoose.model("User", userSchema);
 
 export default User;
