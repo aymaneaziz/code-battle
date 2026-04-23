@@ -1,32 +1,43 @@
-import codeArenaLOGO from "./assets/Code_Arena.png";
+import { Route, Routes } from "react-router-dom";
 import "./App.css";
+
+import { MainLayout } from "./layouts/MainLayout";
+import { AuthLayout } from "./layouts/AuthLayout";
+
+import { Home } from "./pages/Home";
+import { Challenges } from "./pages/Challenges";
+import { Missions } from "./pages/Missions";
+import { Guild } from "./pages/Guild";
+import { Shop } from "./pages/Shop";
+import { Leaderboard } from "./pages/Leaderboard";
+
+import { SignIn, SignUp } from "@clerk/clerk-react";
 
 function App() {
   return (
-    <>
-      <section
-        id="center"
-        className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-8"
-      >
-        <div className="mb-8">
-          <img
-            src={codeArenaLOGO}
-            className="w-162 h-162 object-contain"
-            alt="Code Arena Logo"
-          />
-        </div>
-        <div className="text-center">
-          <h1 className="text-4xl md:text-6xl font-bold text-gray-800 mb-4">
-            sidi yahya on top negga
-          </h1>
-          <p className="text-lg md:text-xl text-gray-600">
-            <code className="bg-gray-200 px-2 py-1 rounded">src/App.tsx</code>{" "}
-            and save to test{" "}
-            <code className="bg-gray-200 px-2 py-1 rounded">HMR</code>
-          </p>
-        </div>
-      </section>
-    </>
+    <Routes>
+      {/* MAIN APP (WITH NAVBAR) */}
+      <Route element={<MainLayout />}>
+        <Route path="/" element={<Home />} />
+        <Route path="/challenges" element={<Challenges />} />
+        <Route path="/missions" element={<Missions />} />
+        <Route path="/guild" element={<Guild />} />
+        <Route path="/shop" element={<Shop />} />
+        <Route path="/leaderboard" element={<Leaderboard />} />
+      </Route>
+
+      {/* AUTH PAGES (NO NAVBAR) */}
+      <Route element={<AuthLayout />}>
+        <Route
+          path="/signin"
+          element={<SignIn routing="path" path="/signin" />}
+        />
+        <Route
+          path="/signup"
+          element={<SignUp routing="path" path="/signup" />}
+        />
+      </Route>
+    </Routes>
   );
 }
 
