@@ -1,7 +1,6 @@
 import User from "../models/user.model.js";
 
 const syncUser = async (req, res) => {
-  console.log("Tentative de sync pour :", req.auth.userId);
   try {
     // Récupérer le userId ET les sessionClaims
     const { userId, sessionClaims } = req.auth;
