@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useUser, SignedIn, SignedOut } from "@clerk/clerk-react";
-import logo from "../../assets/Code-Arena.png";
+import logo from "../../assets/Code-Arena.svg";
 import { NavLinks } from "./NavLinks";
 import { NavAuthButtons } from "./NavAuthButtons";
 
