@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useUser, SignedIn, SignedOut } from "@clerk/clerk-react";
-import logo from "../../assets/logo.png";
+import logo from "../../assets/Code-Arena.png";
 import { NavLinks } from "./NavLinks";
 import { NavAuthButtons } from "./NavAuthButtons";
 
@@ -20,7 +20,7 @@ export function Navbar() {
             to="/"
             className="flex items-center gap-2 font-bold text-lg text-white"
           >
-            <img src={logo} alt="Code Arena" className="h-8 w-auto" />
+            <img src={logo} alt="Code Arena" className="h-13 w-auto" />
             <span className="hidden sm:block">Code Arena</span>
           </Link>
 
