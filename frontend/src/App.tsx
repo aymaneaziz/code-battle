@@ -4,12 +4,12 @@ import "./App.css";
 import { MainLayout } from "./layouts/MainLayout";
 import { AuthLayout } from "./layouts/AuthLayout";
 
-import { Home } from "./pages/Home";
-import { Challenges } from "./pages/Challenges";
-import { Missions } from "./pages/Missions";
-import { Guild } from "./pages/Guild";
-import { Shop } from "./pages/Shop";
-import { Leaderboard } from "./pages/Leaderboard";
+import { Home } from "./features/home/Home.tsx";
+import { Challenges } from "./features/challenges/Challenges.tsx";
+import { Missions } from "./features/missions/Missions.tsx";
+import { Guild } from "./features/guild/Guild.tsx";
+import { Shop } from "./features/shop/Shop.tsx";
+import { Leaderboard } from "./features/leaderboard/Leaderboard.tsx";
 
 import { SignIn, SignUp } from "@clerk/clerk-react";
 
