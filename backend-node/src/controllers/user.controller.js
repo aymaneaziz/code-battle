@@ -1,13 +1,12 @@
 import User from "../models/user.model.js";
 
 const syncUser = async (req, res) => {
-  console.log("Tentative de sync pour :", req.auth.userId);
   try {
     // Récupérer le userId ET les sessionClaims
     const { userId, sessionClaims } = req.auth;
     const { email, username } = req.body;
 
-    // 2. Extraire le rôle depuis les claims de session Clerk
+    // Extraire le rôle depuis les claims de session Clerk
     const roleFromClerk = sessionClaims?.role || "player";
 
     const user = await User.findOneAndUpdate(
@@ -20,7 +19,7 @@ const syncUser = async (req, res) => {
         status: "online",
         lastActive: Date.now(),
       },
-      { upsert: true, returnDocument: "after" },
+      { upsert: true, returnDocument: "after" }, //It returns the updated document (after changes are applied)
     );
 
     res.status(200).json(user);
