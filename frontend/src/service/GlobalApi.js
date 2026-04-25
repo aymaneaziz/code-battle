@@ -1,61 +1,75 @@
-const backend = import.meta.env.VITE_BACKEND_URL
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 class GlobalApi {
-    //cree la class GlobalApi avec le lien du backenc
-    constructor(){
-        this.backend = backend + "/api";
+  //cree la class GlobalApi avec le lien du backenc
+  constructor() {
+    this.baseURL = `${BACKEND_URL}/api`;
+  }
+
+  //methode privée pour envoyer des api
+  async #request(method, endPoint, data = null, customOptions = {}) {
+    const url = `${this.baseURL}${endpoint}`;
+    try {
+      const options = {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+          ...customOptions.headers,
+        },
+      };
+
+      //ajouter le body seulment si necessaire
+      if (data && method !== "GET" && method !== "DELETE") {
+        options.body = JSON.stringify(data);
+      }
+
+      const response = await fetch(url, options);
+
+      if (response.status === 204) return true; //parfois delete ne renvoi aucun json
+
+      // essayer de parser JSON
+      let result;
+      try {
+        result = await response.json();
+      } catch {
+        result = null;
+      }
+
+      // gestion erreur backend propre
+      if (!response.ok) {
+        const message =
+          result?.message ||
+          `Erreur ${response.status} : ${response.statusText}`;
+        throw new Error(message);
+      }
+
+      return result;
+    } catch (erreur) {
+      console.error("API Error:", error.message);
+      throw erreur;
     }
+  }
 
-    //methode privée pour envoyer des api
-    async #request(method, endPoint, data = null){
-        try {
-            const options = {
-                method,
-                headers: {
-                   "Content-Type": "application/json"
-                }
-            };
-             
-            //ajouter le body seulment si necessaire
-            if(method !== "GET" && method !== "DELETE"){
-                options.body = JSON.stringify(data);
-            }
+  //GET
+  get(endpoint, options = {}) {
+    return this.#request("GET", endpoint, null, options);
+  }
 
-            const resp = await fetch(this.backend + endPoint, options);
-            
-            //en cas d'erruer (statue:500 etc)
-            if (!resp.ok) {
-                throw new Error("Erreur serveur : " + resp.status);
-            }
+  // POST
+  post(endpoint, data, options = {}) {
+    return this.#request("POST", endpoint, data, options);
+  }
 
-            if (resp.status === 204) return true;//parfois delete ne renvoi aucun json
+  // PUT
+  put(endpoint, data, options = {}) {
+    return this.#request("PUT", endpoint, data, options);
+  }
 
-            return await resp.json();
-        } catch (erreur) {
-            console.log(erreur);
-            throw erreur;
-        }
-    }
-
-    //methode get pour recuperer des donnees 
-    async get(endPoint){
-        return this.#request("GET", endPoint);
-    }
-
-    //methode post pour ajouter des donnees 
-    async post(endPoint, data){
-        return this.#request("POST", endPoint, data);
-    }
-
-    //methode put pour modfier des donnees 
-    async put(endPoint, data){
-        return this.#request("PUT", endPoint, data);
-    }
-
-    //methode remove pour supprimer des donnees 
-    async remove(endPoint){//delete est un mot reservé a js
-        return this.#request("DELETE", endPoint);
-    }
+  // DELETE
+  delete(endpoint, options = {}) {
+    return this.#request("DELETE", endpoint, null, options);
+  }
 }
 
-export default GlobalApi;
+const api = new GlobalApi();
+export default api;
