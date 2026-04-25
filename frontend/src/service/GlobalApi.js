@@ -1,70 +1,57 @@
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 class GlobalApi {
-  //cree la class GlobalApi avec le lien du backenc
   constructor() {
     this.baseURL = `${BACKEND_URL}/api`;
   }
 
-  //methode privée pour envoyer des api
-  async #request(method, endPoint, data = null, customOptions = {}) {
+  async #request(method, endpoint, data = null, customOptions = {}) {
     const url = `${this.baseURL}${endpoint}`;
+
     try {
       const options = {
         method,
         headers: {
           "Content-Type": "application/json",
-          ...customOptions.headers,
+          ...(customOptions.headers || {}),
         },
       };
 
-      //ajouter le body seulment si necessaire
       if (data && method !== "GET" && method !== "DELETE") {
         options.body = JSON.stringify(data);
       }
 
       const response = await fetch(url, options);
 
-      if (response.status === 204) return true; //parfois delete ne renvoi aucun json
+      if (response.status === 204) return true;
 
-      // essayer de parser JSON
-      let result;
-      try {
-        result = await response.json();
-      } catch {
-        result = null;
-      }
+      const text = await response.text();
+      const result = text ? JSON.parse(text) : null;
 
-      // gestion erreur backend propre
       if (!response.ok) {
-        const message =
-          result?.message ||
-          `Erreur ${response.status} : ${response.statusText}`;
-        throw new Error(message);
+        throw new Error(
+          result?.message || `HTTP ${response.status}: ${response.statusText}`,
+        );
       }
 
       return result;
-    } catch (erreur) {
+    } catch (error) {
       console.error("API Error:", error.message);
-      throw erreur;
+      throw error;
     }
   }
-
   //GET
   get(endpoint, options = {}) {
     return this.#request("GET", endpoint, null, options);
   }
-
-  // POST
+  //POST
   post(endpoint, data, options = {}) {
     return this.#request("POST", endpoint, data, options);
   }
-
-  // PUT
+  //UPDATE
   put(endpoint, data, options = {}) {
     return this.#request("PUT", endpoint, data, options);
   }
-
   // DELETE
   delete(endpoint, options = {}) {
     return this.#request("DELETE", endpoint, null, options);
