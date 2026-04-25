@@ -1,13 +1,13 @@
 import User from "../models/user.model.js";
 
 const syncUser = async (req, res) => {
+  console.log("Tentative de sync pour :", req.auth.userId);
   try {
-    // 1. Récupérer le userId ET les sessionClaims (qui contiennent le rôle)
+    // Récupérer le userId ET les sessionClaims
     const { userId, sessionClaims } = req.auth;
     const { email, username } = req.body;
 
     // 2. Extraire le rôle depuis les claims de session Clerk
-    // (On verra à l'étape suivante comment s'assurer que 'role' est bien là)
     const roleFromClerk = sessionClaims?.role || "player";
 
     const user = await User.findOneAndUpdate(
