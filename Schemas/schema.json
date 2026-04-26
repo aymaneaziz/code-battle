@@ -54,49 +54,6 @@
             }
         }
     ],
-    "badges": [
-        {
-            "id": "badge1",
-            "label": "Top Player",
-            "description": "Awarded for being a top player in the game",
-            "iconUrl": "🐄"
-        },
-        {
-            "id": "badge2",
-            "label": "Active Player",
-            "description": "Awarded for being an active player in the game",
-            "iconUrl": "🏃"
-        },
-        {
-            "id": "badge3",
-            "label": "Community Contributor",
-            "description": "Awarded for contributing to the game community",
-            "iconUrl": "👥"
-        }
-    ],
-    "rank": [
-        {
-            "id": "rank1",
-            "label": "Bronze",
-            "minElo": 0,
-            "maxElo": 999,
-            "icon": "🥉"
-        },
-        {
-            "id": "rank2",
-            "label": "Silver",
-            "minElo": 1000,
-            "maxElo": 1999,
-            "icon": "🥈"
-        },
-        {
-            "id": "rank3",
-            "label": "Gold",
-            "minElo": 2000,
-            "maxElo": 9999,
-            "icon": "🥇"
-        }
-    ],
     "problems": [
         {
             "id": "problem1",

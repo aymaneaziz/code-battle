@@ -3,6 +3,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import { PORT, VITE_FRONTEND_URL } from "./config/env.js";
 import userRouter from "./routes/user.routes.js";
+import dataRouter from "./routes/data.routes.js";
 
 import connectToDatabase from "./database/mongodb.js";
 import errorMiddleware from "./middlewares/error.middleware.js";
@@ -25,7 +26,9 @@ app.use(
 );
 //Synch and add new User------------------------------------------
 app.use("/api/user", userRouter);
+app.use("/api/data", dataRouter);
 
+//dima ftali had lmiddelware dyal clerk
 app.use(errorClerk);
 app.use(errorMiddleware); // Global error handling middleware
 

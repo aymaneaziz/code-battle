@@ -1,38 +1,100 @@
-import { useUser } from "@clerk/clerk-react";
+import { useUser, useAuth } from "@clerk/clerk-react";
+import { useEffect, useState } from "react";
+// @ts-expect-error - no type declarations for Avatar
+import Avatar from "./components/Avatar";
+
+// @ts-expect-error - no type declarations for Avatar
+import PlayerIdentity from "./components/PlayerIdentity";
+
+// @ts-expect-error - no type declarations for GlobalApi
+import api from "../../service/GlobalApi";
 
 export const PlayerSetup = () => {
-  const user = useUser();
-  console.log("PlayerSetup user:", user);
 
-  // rani rire kandfch hna hhh rah hta ndiro meet ou 3awd goli wacha 5aso y3mr
+  const { user } = useUser();
+  const { getToken } = useAuth();
+
+  const [formData, setFormData] = useState({ //hada fomulaire li ghadi nsiftoh l backend
+    avatarId: "",
+    username: "",
+    displayName: "",
+    address: "",
+    languageId: "",
+    preferenceId: "",
+    experienceId: "",
+    bio: "",
+    hasAggreedToTerms: false,
+  });
+
+  const handleChange = (e) => { // hadi func katbdle state nta3 formData kan3tiha les elements fils
+    console.log("Input changed:", e.target.name, e.target.value);
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(formData);
+  };
+
+  //hna nstoki dok les listes li jbthom mn lbackend
+  const [avatars, setAvatars] = useState([]);
+  const [battlePreferences, setBattlePreferences] = useState([]);
+  const [codingExperiences, setCodingExperiences] = useState([]);
+  const [languages, setLanguages] = useState([]);
+
+
+  useEffect(() => {
+    if (!user) return;
+
+    const fetchDefaultData = async () => {
+      const token = await getToken();
+
+      const resp = await api.get("/data/setup", 
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      console.log("Default data fetched:", resp);
+      setAvatars(resp.avatars);
+      setBattlePreferences(resp.battlePreferences);
+      setCodingExperiences(resp.codingExperiences);
+      setLanguages(resp.languages);
+      //ici kandir set l data bach formulaire y3mr b des valeurs par defaut
+      setFormData((prev) => ({
+        ...prev,
+        username: user?.username || user?.fullName || "",
+        displayName: user?.firstName || "",
+        address: "",
+        bio: "",
+        hasAggreedToTerms: false,
+        avatarId: resp.avatars[0]?.avatarId || "",
+        preferenceId: resp.battlePreferences[0]?.preferenceId || "",
+        experienceId: resp.codingExperiences[0]?.experienceId || "",
+        languageId: resp.languages[0]?.languageId || "",
+      }));
+    };
+    
+    console.log("User detected", user);
+    fetchDefaultData();
+  }, [user]);
+
   return (
-    <div className="">
-      <h1 className="text-3xl font-bold mb-4">Configuer votre profil</h1>
-      <p className="mb-4">Bienvenue, {user?.user?.firstName}! Veuillez compléter votre profil pour commencer à jouer.</p>
-      
-      {/* Formulaire de configuration du profil */}
-      <form className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium mb-1" htmlFor="username">Nom d'utilisateur</label>
-          <input 
-            type="text" 
-            id="username" 
-            name="username" 
-            className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-500" 
-            placeholder="Choisissez un nom d'utilisateur"
-          />
+    <form className="flex flex-row gap-4" onSubmit={handleSubmit}>
+      <div className="w-1/5 h h-full border-2 border-gray-300 rounded-lg p-4">
+        <Avatar avatars={avatars} handleChange={handleChange}/>
+      </div>
+      <div className="w-4/5 gap-4 flex flex-col">
+        <div className="border-2 border-gray-300 rounded-lg p-4">
+          <p>
+            Your email and password are secured by <b>Clerk</b>. This page collects your <b>game identity</b>
+          </p>
         </div>
-        <div>
-          <label className="block text-sm font-medium mb-1" htmlFor="avatar">Avatar</label>
-          <input 
-            type="file" 
-            id="avatar" 
-            name="avatar" 
-            className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-500"
-          />
+        <div className="border-2 border-gray-300 rounded-lg p-4">
+          <PlayerIdentity formData={formData} handleChange={handleChange}/>
         </div>
-        <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Enregistrer</button>
-      </form>
-    </div>
+        <button type="submit">Envoyer</button>
+      </div>
+    </form>
   )
 }
