@@ -1,5 +1,37 @@
 import mongoose from "mongoose";
+const badgeSchema = new mongoose.Schema(
+  {
+    badgeId: { type: String, required: true },
+    name: { type: String, required: true },
+    descrtiption: { type: String, required: true },
+    iconUrl: { type: String, requires: true },
+    earnedAt: { type: Date, default: Date.now },
+  },
+  { _id: false },
+);
 
+const statsSchema = new mongoose.Schema(
+  {
+    elo: { type: Number, default: 0 },
+    rank: { type: Number, default: 0 },
+    wins: { type: Number, default: 0 },
+    losses: { type: Number, default: 0 },
+    draws: { type: Number, default: 0 },
+    winRate: { type: Number, default: 0.0 },
+    totalMatches: { type: Number, default: 0 },
+    currentStreak: { type: Number, default: 0 },
+    bestStreak: { type: Number, default: 0 },
+    xp: { type: Number, default: 0 },
+    level: { type: Number, default: 1 },
+    averageSolveTime: { type: Number, default: 0 },
+    fastestSolveTime: { type: Number, default: 0 },
+    hardestWin: { type: String, default: "None" },
+    prefectRuns: { type: Number, default: 0 },
+    itemsUsed: { type: Number, default: 0 },
+    hintUsed: { type: Number, default: 0 },
+  },
+  { _id: false },
+);
 const userSchema = new mongoose.Schema(
   {
     clerkId: {
@@ -29,6 +61,17 @@ const userSchema = new mongoose.Schema(
       enum: ["online", "offline"],
       default: "offline",
     },
+    avatar: {
+      type: String,
+      default: "🤖",
+    },
+    unlockedAvatars: {
+      type: [String],
+      default: ["🤖", "💀", "🐶"],
+    },
+    coin: { type: Number, default: 0 },
+    stats: { type: statsSchema, default: () => ({}) },
+    badgesPlayer: [badgeSchema],
     lastActive: {
       type: Date,
       default: Date.now,
@@ -36,6 +79,7 @@ const userSchema = new mongoose.Schema(
   },
   { timestamps: true },
 );
+
 // Middleware to hash password before saving
 /*
 userSchema.pre("save", function (next) {

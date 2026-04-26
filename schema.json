@@ -4,18 +4,11 @@
             "id": "dfbhufbezih13333A",
             "username": "John Doe",
             "email": "john.doe@example.com",
-            "password": "hashed_password",
             "createdAt": "2024-01-01T12:00:00Z",
             "updatedAt": "2024-01-01T12:00:00Z",
             "lastSeen": "2024-06-01T12:00:00Z",
             "isOnline": true,
-            "role": "player"
-        }
-    ],
-    "player": [
-        {
-            "id": "player1",
-            "userId": "dfbhufbezih13333A",
+            "role": "player",
             "alias": "JohnD",
             "location": "New York, USA",
             "bio": "Gamer and streamer",
