@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 
 const Avatar = ({ avatars = [], handleChange }) => {
-  const [selectedAvatar, setSelectedAvatar] = useState();
+  const [selectedAvatar, setSelectedAvatar] = useState(null);
 
   useEffect(() => {
     // hna kanselectew dak lavatar lewel f la liste bach ykon par defaut

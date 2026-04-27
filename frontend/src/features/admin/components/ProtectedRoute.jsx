@@ -1,6 +1,6 @@
 import { useUser } from "@clerk/clerk-react";
-import { Navigate } from "react-router-dom";
 import { Loader2 } from "lucide-react";
+import { Navigate } from "react-router-dom";
 
 export function ProtectedRoute({ children, requiredRole, redirectTo = "/" }) {
   const { isLoaded, isSignedIn, user } = useUser();

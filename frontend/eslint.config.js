@@ -25,6 +25,8 @@ export default [
       "react-hooks": reactHooks,
       "react-refresh": reactRefresh,
     },
+
+    // Cette ligne empêche ESLint de souligner en rouge les imports utilisés dans le JSX
     rules: {
       ...js.configs.recommended.rules,
       ...reactHooks.configs.recommended.rules,
@@ -32,11 +34,10 @@ export default [
         "warn",
         { allowConstantExport: true },
       ],
-      // Cette ligne empêche ESLint de souligner en rouge les imports utilisés dans le JSX
-      "no-unused-vars": [
-        "warn",
-        { vars: "all", args: "after-used", ignoreRestSiblings: true },
-      ],
+
+      // Modifie cette ligne précisément :
+      "no-unused-vars": "off",
     },
   },
+  ,
 ];
