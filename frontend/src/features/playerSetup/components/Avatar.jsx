@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 
 const Avatar = ({ avatars = [], handleChange }) => {
-  const [selectedAvatar, setSelectedAvatar] = useState(null);
+  const [selectedAvatar, setSelectedAvatar] = useState();
 
-  useEffect(() => {// hna kanselectew dak lavatar lewel f la liste bach ykon par defaut
+  useEffect(() => {
+    // hna kanselectew dak lavatar lewel f la liste bach ykon par defaut
     if (!selectedAvatar && avatars.length > 0) {
       setSelectedAvatar(avatars[0]);
 
@@ -29,9 +30,7 @@ const Avatar = ({ avatars = [], handleChange }) => {
 
   return (
     <div className="flex flex-col gap-4 justify-center items-center w-full">
-      <h2 className="text-2xl font-bold text-center">
-        Choose Your Avatar
-      </h2>
+      <h2 className="text-2xl font-bold text-center">Choose Your Avatar</h2>
 
       <div className="w-5/6 aspect-square rounded-xl flex items-center justify-center font-semibold shadow-md border-2 border-black text-5xl bg-white">
         {selectedAvatar ? selectedAvatar.iconUrl : "?"}
@@ -56,9 +55,7 @@ const Avatar = ({ avatars = [], handleChange }) => {
           >
             <span className="text-xl">{avatar.iconUrl}</span>
 
-            <p className="text-xs font-medium text-gray-700">
-              {avatar.label}
-            </p>
+            <p className="text-xs font-medium text-gray-700">{avatar.label}</p>
           </button>
         ))}
       </div>

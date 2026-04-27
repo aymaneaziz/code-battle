@@ -16,7 +16,7 @@ const avatarSchema = new mongoose.Schema(
       required: true,
     },
   },
-  { timestamps: true,_id: false },
+  { timestamps: true, _id: false },
 );
 
 const Avatar = mongoose.model("Avatar", avatarSchema);

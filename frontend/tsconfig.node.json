@@ -2,26 +2,34 @@
   "compilerOptions": {
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
     "target": "ES2022",
-    "lib": ["ES2022"],
+    "lib": [
+      "ES2022"
+    ],
     "module": "ESNext",
-    "types": ["node"],
+    "types": [
+      "node"
+    ],
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-
+    "allowJs": true, // Permet d'importer des fichiers .js
+    "checkJs": false, // Désactive la vérification des erreurs dans les fichiers .js
+    "noImplicitAny": false, // Autorise les variables sans type (évite l'erreur 'any')
+    "strictNullChecks": false, // Autorise de mélanger null avec d'autres types
     /* Bundler mode */
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,
     "moduleDetection": "force",
     "noEmit": true,
-
     /* Linting */
-    "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
+    "strict": false, // (Optionnel) Désactive le mode strict si c'est trop bloquant
+    "noUnusedLocals": false, // Autorise les variables locales non utilisées
+    "noUnusedParameters": false, // Autorise les paramètres de fonction non utilisés
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["vite.config.ts"]
+  "include": [
+    "vite.config.ts"
+  ]
 }

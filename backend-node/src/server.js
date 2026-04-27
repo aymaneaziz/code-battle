@@ -26,6 +26,7 @@ app.use(
 );
 //Synch and add new User------------------------------------------
 app.use("/api/user", userRouter);
+// Setup player data------------------------------------------
 app.use("/api/data", dataRouter);
 
 //dima ftali had lmiddelware dyal clerk

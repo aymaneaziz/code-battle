@@ -1,20 +1,18 @@
 import { useUser, useAuth } from "@clerk/clerk-react";
 import { useEffect, useState } from "react";
-// @ts-expect-error - no type declarations for Avatar
+
 import Avatar from "./components/Avatar";
 
-// @ts-expect-error - no type declarations for Avatar
 import PlayerIdentity from "./components/PlayerIdentity";
 
-// @ts-expect-error - no type declarations for GlobalApi
 import api from "../../service/GlobalApi";
 
 export const PlayerSetup = () => {
-
   const { user } = useUser();
   const { getToken } = useAuth();
 
-  const [formData, setFormData] = useState({ //hada fomulaire li ghadi nsiftoh l backend
+  const [formData, setFormData] = useState({
+    //hada fomulaire li ghadi nsiftoh l backend
     avatarId: "",
     username: "",
     displayName: "",
@@ -26,7 +24,8 @@ export const PlayerSetup = () => {
     hasAggreedToTerms: false,
   });
 
-  const handleChange = (e) => { // hadi func katbdle state nta3 formData kan3tiha les elements fils
+  const handleChange = (e) => {
+    // hadi func katbdle state nta3 formData kan3tiha les elements fils
     console.log("Input changed:", e.target.name, e.target.value);
     setFormData({
       ...formData,
@@ -45,16 +44,15 @@ export const PlayerSetup = () => {
   const [codingExperiences, setCodingExperiences] = useState([]);
   const [languages, setLanguages] = useState([]);
 
-
   useEffect(() => {
     if (!user) return;
 
     const fetchDefaultData = async () => {
       const token = await getToken();
 
-      const resp = await api.get("/data/setup", 
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      const resp = await api.get("/data/setup", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       console.log("Default data fetched:", resp);
       setAvatars(resp.avatars);
       setBattlePreferences(resp.battlePreferences);
@@ -74,7 +72,7 @@ export const PlayerSetup = () => {
         languageId: resp.languages[0]?.languageId || "",
       }));
     };
-    
+
     console.log("User detected", user);
     fetchDefaultData();
   }, [user]);
@@ -82,19 +80,20 @@ export const PlayerSetup = () => {
   return (
     <form className="flex flex-row gap-4" onSubmit={handleSubmit}>
       <div className="w-1/5 h h-full border-2 border-gray-300 rounded-lg p-4">
-        <Avatar avatars={avatars} handleChange={handleChange}/>
+        <Avatar avatars={avatars} handleChange={handleChange} />
       </div>
       <div className="w-4/5 gap-4 flex flex-col">
         <div className="border-2 border-gray-300 rounded-lg p-4">
           <p>
-            Your email and password are secured by <b>Clerk</b>. This page collects your <b>game identity</b>
+            Your email and password are secured by <b>Clerk</b>. This page
+            collects your <b>game identity</b>
           </p>
         </div>
         <div className="border-2 border-gray-300 rounded-lg p-4">
-          <PlayerIdentity formData={formData} handleChange={handleChange}/>
+          <PlayerIdentity formData={formData} handleChange={handleChange} />
         </div>
         <button type="submit">Envoyer</button>
       </div>
     </form>
-  )
-}
+  );
+};
