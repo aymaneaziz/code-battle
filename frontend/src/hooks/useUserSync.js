@@ -1,7 +1,6 @@
 import { useEffect, useRef } from "react";
 import { useAuth, useUser } from "@clerk/clerk-react";
 
-// @ts-expect-error - no type declarations for GlobalApi
 import api from "../service/GlobalApi";
 
 export function useUserSync() {

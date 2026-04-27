@@ -8,13 +8,8 @@ const NAV_ITEMS = [
   { to: "/leaderboard", label: "Leaderboard" },
 ];
 
-interface NavLinksProps {
-  isAdmin?: boolean;
-  vertical?: boolean;
-  onNavigate?: () => void;
-}
-
-export function NavLinks({ isAdmin, vertical, onNavigate }: NavLinksProps) {
+// On retire l'interface NavLinksProps et l'annotation de type :NavLinksProps
+export function NavLinks({ isAdmin, vertical, onNavigate }) {
   const base = vertical
     ? "block px-3 py-2 rounded-md text-sm text-gray-300 hover:bg-gray-800 hover:text-white transition-colors"
     : "text-sm text-gray-300 hover:text-white transition-colors";

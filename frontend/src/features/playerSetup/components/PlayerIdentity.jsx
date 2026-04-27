@@ -1,5 +1,3 @@
-import React from "react";
-
 const PlayerIdentity = ({ formData, handleChange }) => {
   return (
     <div>

@@ -2,17 +2,7 @@ import { useUser } from "@clerk/clerk-react";
 import { Navigate } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 
-interface ProtectedRouteProps {
-  children: React.ReactNode;
-  requiredRole?: string;
-  redirectTo?: string;
-}
-
-export function ProtectedRoute({
-  children,
-  requiredRole,
-  redirectTo = "/",
-}: ProtectedRouteProps) {
+export function ProtectedRoute({ children, requiredRole, redirectTo = "/" }) {
   const { isLoaded, isSignedIn, user } = useUser();
 
   // loading Clerk session
