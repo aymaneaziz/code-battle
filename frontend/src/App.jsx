@@ -14,10 +14,11 @@ import { Guild } from "./features/guild/Guild";
 import { Shop } from "./features/shop/Shop";
 import { Leaderboard } from "./features/leaderboard/Leaderboard";
 import { AdminPanel } from "./features/admin/AdminPanel";
-import { ProtectedRoute } from "./features/admin/components/ProtectedRoute";
+import { AdminProtectedRoute } from "./features/admin/components/AdminProtectedRoute";
 import { PlayerSetup } from "./features/playerSetup/PlayerSetup";
 
 import { useUserSync } from "./hooks/useUserSync";
+import { PlayerSetupProtectedRoute } from "./features/playerSetup/components/PlayerSetupProtectedRoute";
 
 // Correction : On retire "as const" qui est purement TypeScript
 const CLERK_COMMON_PROPS = {
@@ -53,14 +54,23 @@ function App() {
         <Route path="/guild" element={<Guild />} />
         <Route path="/shop" element={<Shop />} />
         <Route path="/leaderboard" element={<Leaderboard />} />
-        <Route path="/setup" element={<PlayerSetup />} />
-        {/* Route protégée */}
+
+        {/* Route playerSetup protégée */}
+        <Route
+          path="/setup"
+          element={
+            <PlayerSetupProtectedRoute>
+              <PlayerSetup />
+            </PlayerSetupProtectedRoute>
+          }
+        />
+        {/* Route admin  protégée */}
         <Route
           path="/admin"
           element={
-            <ProtectedRoute requiredRole="admin">
+            <AdminProtectedRoute requiredRole="admin">
               <AdminPanel />
-            </ProtectedRoute>
+            </AdminProtectedRoute>
           }
         />
       </Route>

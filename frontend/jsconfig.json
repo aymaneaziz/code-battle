@@ -1,0 +1,13 @@
+{
+    "compilerOptions": {
+        "ignoreDeprecations": "5.0",
+        "paths": {
+            "@/*": [
+                "./src/*"
+            ]
+        }
+    },
+    "exclude": [
+        "node_modules"
+    ]
+}
