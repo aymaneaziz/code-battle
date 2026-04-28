@@ -15,7 +15,7 @@ npm install tailwindcss @tailwindcss/vite socket.io-client @monaco-editor/react
 
 ---
 
-## ⚙️ Backend — node note (cmd)
+## ⚙️ Backend — Node note (cmd)
 
 ```bash
 
