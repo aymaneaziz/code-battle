@@ -1,6 +1,6 @@
 # 🚀 AI-Powered Code Battle Platform
 
-## ⚙️ Frontend — React note (cmd)
+## 🤖 Frontend — React note (cmd)
 
 ```bash
 cd frontend
@@ -15,7 +15,7 @@ npm install tailwindcss @tailwindcss/vite socket.io-client @monaco-editor/react
 
 ---
 
-#### Backend-node note (cmd)
+## ⚙️ Backend-node note (cmd)
 
 ```bash
 
