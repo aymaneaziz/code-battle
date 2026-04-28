@@ -21,7 +21,7 @@ npm install tailwindcss @tailwindcss/vite socket.io-client @monaco-editor/react
 
 cd backend-node 
 npm run dev //to start backend
-npm db:seed //to send the seeders
+npm run db:seed //to send the seeders
 
 ---------------------------------------------------------------------------------
 //special
