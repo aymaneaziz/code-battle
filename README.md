@@ -7,9 +7,12 @@ cd frontend
 npm install
 npm run dev //to start front
 
-```
+---------------------------------------------------------------------------------
 //special
 npm install tailwindcss @tailwindcss/vite socket.io-client @monaco-editor/react
+
+```
+
 ---
 
 #### Backend-node note (cmd)
@@ -20,9 +23,11 @@ cd backend-node
 npm run dev //to start backend
 npm db:seed //to send the seeders
 
-```
+---------------------------------------------------------------------------------
 //special
 npm install --save-dev nodemon  //always restart server whenever make any changes
+```
+
 
 ## 🧰 Stack & Outils (en cours)
 ---
