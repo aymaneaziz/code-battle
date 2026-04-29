@@ -1,11 +1,7 @@
-// src/features/playerSetup/components/CodingProfileSection.jsx
 import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-// Shadcn UI Imports
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Checkbox } from "@/components/ui/checkbox";
 
 const CodingProfileSection = ({
   languages = [],
@@ -13,7 +9,7 @@ const CodingProfileSection = ({
   formData,
   onSelect,
 }) => {
-  //Kat-checki ila kan l'ID deja f l'array, kat-haydo. Ila ma kanch, kat-zidou.
+  //Katchecki ila kan l'ID deja f l'array, kat-haydo. Ila ma kanch, kat-zidou.
   const handleLanguageToggle = (id) => {
     const currentLangs = Array.isArray(formData.languageId)
       ? formData.languageId
@@ -29,7 +25,8 @@ const CodingProfileSection = ({
 
   return (
     <div className="space-y-10">
-      {/* --- SECTION 1: LANGUAGES --- */}
+      {/*LANGUAGES */}
+      {/* hadir raha multiple choice  */}
       <div className="space-y-2 pt-6 border-t border-gray-100">
         <div className="flex items-center gap-3">
           <div className="h-6 w-1 bg-cyan-500 rounded-full shadow-sm"></div>
@@ -90,8 +87,8 @@ const CodingProfileSection = ({
         </p>
       </div>
 
-      {/* --- SECTION 2: EXPERIENCE --- */}
-      {/* Hna l'joueur kikhter ghir wehda  m3a description kamla */}
+      {/*  EXPERIENCE */}
+      {/* Hna player kikhter ghir wehda  m3a description kamla */}
       <div className="space-y-6 pt-6 border-t border-gray-100">
         <div className="flex items-center gap-3">
           <div className="h-6 w-1 bg-purple-500 rounded-full shadow-sm"></div>

@@ -142,7 +142,7 @@ export const PlayerSetup = () => {
               </div>
 
               {/* Actions */}
-              {/* lkhat dyal lfo9 (bordure supérieure) wella gris clair */}
+
               <div className="mt-10 pt-6 border-t border-gray-100 flex justify-between items-center">
                 <Button
                   type="button"
@@ -156,7 +156,6 @@ export const PlayerSetup = () => {
                 <Button
                   type="submit"
                   size="lg"
-                  // 7eyedna l glow zaye9 w darna shadow 3adi (shadow-md classique)
                   className="bg-cyan-600 hover:bg-cyan-700 cursor-pointer text-white px-10 font-bold uppercase tracking-widest transition-all hover:scale-105 shadow-md"
                 >
                   Complete Setup
