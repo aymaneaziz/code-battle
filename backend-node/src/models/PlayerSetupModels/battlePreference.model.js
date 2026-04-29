@@ -2,16 +2,12 @@ import mongoose from "mongoose";
 
 const battlePreferenceSchema = new mongoose.Schema(
   {
-    preferenceId: { type: String, required: true, unique: true, trim: true },
-    label: {
-      type: String,
-      enum: ["Easy", "Medium", "Hard"],
-      required: true,
-    },
-    description: { type: String, required: true, trim: true },
-    iconUrl: { type: String, required: true, trim: true },
+    preferenceId: { type: String, required: true, unique: true },
+    label: { type: String, enum: ["Easy", "Medium", "Hard"], required: true },
+    description: { type: String, required: true },
+    iconUrl: { type: String, required: true },
   },
-  { timestamps: true, _id: false },
+  { timestamps: true },
 );
 
 const BattlePreference = mongoose.model(

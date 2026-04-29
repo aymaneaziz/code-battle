@@ -15,6 +15,5 @@ const languageSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-// Correction : Nom du modèle mis en Majuscule pour la cohérence
 const Language = mongoose.model("Language", languageSchema);
 export default Language;

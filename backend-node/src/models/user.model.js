@@ -1,77 +1,63 @@
 import mongoose from "mongoose";
-const badgeSchema = new mongoose.Schema(
-  {
-    badgeId: { type: String, required: true },
-    name: { type: String, required: true },
-    descrtiption: { type: String, required: true },
-    iconUrl: { type: String, requires: true },
-    earnedAt: { type: Date, default: Date.now },
-  },
-  { _id: false },
-);
+import { statsSchema } from "./stats.model.js";
 
-const statsSchema = new mongoose.Schema(
-  {
-    elo: { type: Number, default: 0 },
-    rank: { type: Number, default: 0 },
-    wins: { type: Number, default: 0 },
-    losses: { type: Number, default: 0 },
-    draws: { type: Number, default: 0 },
-    winRate: { type: Number, default: 0.0 },
-    totalMatches: { type: Number, default: 0 },
-    currentStreak: { type: Number, default: 0 },
-    bestStreak: { type: Number, default: 0 },
-    xp: { type: Number, default: 0 },
-    level: { type: Number, default: 1 },
-    averageSolveTime: { type: Number, default: 0 },
-    fastestSolveTime: { type: Number, default: 0 },
-    hardestWin: { type: String, default: "None" },
-    prefectRuns: { type: Number, default: 0 },
-    itemsUsed: { type: Number, default: 0 },
-    hintUsed: { type: Number, default: 0 },
-  },
-  { _id: false },
-);
 const userSchema = new mongoose.Schema(
   {
-    clerkId: {
+    clerkId: { type: String, required: true, unique: true },
+    username: { type: String, required: true, trim: true, minlength: 3 },
+
+    email: { type: String, required: true, unique: true, lowercase: true },
+
+    // IDENTITY & PROFILE
+    displayName: { type: String, trim: true, default: "" },
+    bio: {
       type: String,
-      required: true,
-      unique: true,
-    },
-    username: {
-      type: String,
-      required: [true, "Username is required"],
       trim: true,
-      minlength: [3, "Too short"],
+      maxlength: [500, "Bio cannot exceed 500 characters"],
+      default: "",
     },
-    email: {
-      type: String,
-      required: [true, "Email is required"],
-      unique: true,
-      lowercase: true,
+    location: { type: String, trim: true, default: "" },
+
+    // PLAYER STATUS & ROLE
+    role: { type: String, enum: ["player", "admin"], default: "player" },
+    status: { type: String, enum: ["online", "offline"], default: "offline" },
+
+    // Référence l'ID de l'avatar actuellement porté
+    selectedAvatar: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Avatar",
     },
-    role: {
-      type: String,
-      enum: ["player", "admin"],
-      default: "player",
+
+    // Liste des IDs d'avatars que le joueur possède
+    unlockedAvatars: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Avatar",
+      },
+    ],
+
+    // Références aux badges gagnés
+    badgesPlayer: [
+      {
+        badge: { type: mongoose.Schema.Types.ObjectId, ref: "Badge" },
+        earnedAt: { type: Date, default: Date.now },
+      },
+    ],
+
+    // Préférences de jeu (Lien avec vos modèles de Setup)
+    preferences: {
+      language: [{ type: mongoose.Schema.Types.ObjectId, ref: "Language" }],
+      battlePreference: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "BattlePreference",
+      },
+      codingExperience: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "CodingExperience",
+      },
     },
-    status: {
-      type: String,
-      enum: ["online", "offline"],
-      default: "offline",
-    },
-    avatar: {
-      type: String,
-      default: "🤖",
-    },
-    unlockedAvatars: {
-      type: [String],
-      default: ["🤖", "💀", "🐶"],
-    },
-    coin: { type: Number, default: 0 },
     stats: { type: statsSchema, default: () => ({}) },
-    badgesPlayer: [badgeSchema],
+
     lastActive: {
       type: Date,
       default: Date.now,
@@ -79,6 +65,9 @@ const userSchema = new mongoose.Schema(
   },
   { timestamps: true },
 );
+
+const User = mongoose.model("User", userSchema);
+export default User;
 
 // Middleware to hash password before saving
 /*
@@ -95,5 +84,3 @@ function hashPassword(password) {
   return password; // Placeholder, replace with actual hashed password
 }
 */
-const User = mongoose.model("User", userSchema);
-export default User;

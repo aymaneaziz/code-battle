@@ -1,11 +1,17 @@
+// src/features/playerSetup/PlayerSetup.jsx
 import { useUser, useAuth } from "@clerk/clerk-react";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom"; // 🟢 navigation
-import AvatarSelector from "./components/AvatarSelector";
+import { useNavigate } from "react-router-dom";
+
 import IdentitySection from "./components/IdentitySection";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+
 import api from "../../service/GlobalApi";
+
+import BattlePreferencesSection from "./components/BattlePreferencesSection";
+import AvatarSelectorSection from "./components/AvatarSelectorSection";
+import CodingProfileSection from "./components/CodingProfileSection";
 
 export const PlayerSetup = () => {
   const { user } = useUser();
@@ -14,14 +20,15 @@ export const PlayerSetup = () => {
 
   // state dyal formulaire
   const [formData, setFormData] = useState({
-    avatarId: "",
     username: "",
     displayName: "",
-    address: "",
-    languageId: "",
+    location: "",
+    bio: "",
+    avatarId: "",
+    languageId: [],
     preferenceId: "",
     experienceId: "",
-    bio: "",
+
     hasAggreedToTerms: false,
   });
 
@@ -87,59 +94,78 @@ export const PlayerSetup = () => {
   };
 
   return (
-    <div className="container max-w-7xl py-10">
-      <form
-        onSubmit={onSubmit}
-        className="grid grid-cols-1 lg:grid-cols-12 gap-8"
-      >
-        {/* Left: Avatar */}
-        <Card className="lg:col-span-4 p-6 shadow-lg">
-          <AvatarSelector
-            avatars={options.avatars}
-            selectedId={formData.avatarId}
-            onSelect={updateForm}
-          />
-        </Card>
-
-        {/* Right: Form */}
-        <div className="lg:col-span-8 space-y-6">
-          <Card className="p-6 bg-blue-50/50 border-blue-200">
-            <p className="text-sm text-blue-700">
-              Your credentials are encrypted by <b>Clerk</b>. Fill your{" "}
-              <b>Game Identity</b>.
-            </p>
-          </Card>
-
-          <Card className="p-8 shadow-md">
-            <IdentitySection
-              formData={formData}
-              handleChange={handleInputChange}
+    <div className="min-h-screen w-full flex items-center justify-center py-5 px-4 md:px-8">
+      <div className="w-full ">
+        {/* max-w-6xl bach tkhlih mytjbdch */}
+        <form
+          onSubmit={onSubmit}
+          className="grid grid-cols-1 lg:grid-cols-12 gap-8"
+        >
+          {/*Avatar Section */}
+          <Card className="lg:col-span-4 p-6 bg-white border-gray-200 shadow-lg h-fit">
+            <AvatarSelectorSection
+              avatars={options.avatars}
+              selectedId={formData.avatarId}
+              onSelect={updateForm}
             />
-
-            {/* Actions */}
-            <div className="mt-8 flex justify-between items-center">
-              {/* Skip button */}
-              <Button
-                type="button"
-                variant="ghost"
-                onClick={() => navigate("/")}
-                className="cursor-pointer"
-              >
-                Skip
-              </Button>
-
-              {/* Submit */}
-              <Button
-                type="submit"
-                size="lg"
-                className="px-12 font-bold uppercase tracking-wider cursor-pointer"
-              >
-                Complete Setup
-              </Button>
-            </div>
           </Card>
-        </div>
-      </form>
+
+          <div className="lg:col-span-8 space-y-6">
+            {/* Right: Form */}
+            <Card className="p-6 bg-blue-50/50 border-blue-200">
+              <p className="text-sm text-blue-700">
+                Your credentials are encrypted by <b>Clerk</b>. Fill your{" "}
+                <b>Game Identity</b>.
+              </p>
+            </Card>
+
+            <Card className="p-8 bg-white border-gray-200 shadow-xl">
+              <div className="space-y-10">
+                <IdentitySection
+                  formData={formData}
+                  handleChange={handleInputChange}
+                />
+
+                <CodingProfileSection
+                  languages={options.languages}
+                  experiences={options.codingExperiences}
+                  formData={formData}
+                  onSelect={updateForm}
+                />
+
+                <BattlePreferencesSection
+                  preferences={options.battlePreferences}
+                  formData={formData}
+                  onSelect={updateForm}
+                  onInputChange={handleInputChange}
+                />
+              </div>
+
+              {/* Actions */}
+              {/* lkhat dyal lfo9 (bordure supérieure) wella gris clair */}
+              <div className="mt-10 pt-6 border-t border-gray-100 flex justify-between items-center">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  onClick={() => navigate("/")}
+                  className="text-gray-500 hover:text-gray-900 hover:bg-gray-100 cursor-pointer"
+                >
+                  Skip Initialization
+                </Button>
+
+                <Button
+                  type="submit"
+                  size="lg"
+                  // 7eyedna l glow zaye9 w darna shadow 3adi (shadow-md classique)
+                  className="bg-cyan-600 hover:bg-cyan-700 cursor-pointer text-white px-10 font-bold uppercase tracking-widest transition-all hover:scale-105 shadow-md"
+                >
+                  Complete Setup
+                </Button>
+              </div>
+            </Card>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };

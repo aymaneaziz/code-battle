@@ -6,21 +6,21 @@ const battlePreferences = [
     preferenceId: "preference1",
     label: "Easy",
     description: "Learn the ropes with easier opponents and challenges",
-    iconUrl: "😊",
+    iconUrl: "🌱",
   },
   {
     preferenceId: "preference2",
     label: "Medium",
     description:
       "Challenge yourself with moderately difficult opponents and problems",
-    iconUrl: "😐",
+    iconUrl: "⚡",
   },
   {
     preferenceId: "preference3",
     label: "Hard",
     description:
       "Test your skills against tough opponents and complex problems",
-    iconUrl: "😠",
+    iconUrl: "🔥",
   },
 ];
 
