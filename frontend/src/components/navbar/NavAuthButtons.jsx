@@ -6,8 +6,9 @@ import {
   useAuth,
   useClerk,
 } from "@clerk/clerk-react";
-
+import { Button } from "@/components/ui/button"; // Shadcn Button
 import api from "../../service/GlobalApi";
+import { LogOut } from "lucide-react";
 
 export function NavAuthButtons() {
   const { signOut } = useClerk();
@@ -29,7 +30,7 @@ export function NavAuthButtons() {
   };
 
   return (
-    <>
+    <div className="flex items-center gap-3">
       <SignedOut>
         <Link
           to="/signin"
@@ -37,6 +38,7 @@ export function NavAuthButtons() {
         >
           Sign In
         </Link>
+
         <Link
           to="/signup"
           className="px-4 py-1.5 text-sm rounded-md border border-gray-600 text-gray-300 hover:border-gray-400 hover:text-white transition-colors"
@@ -46,14 +48,25 @@ export function NavAuthButtons() {
       </SignedOut>
 
       <SignedIn>
-        <button
+        {/* Bouton Logout b style Shadcn  */}
+        <Button
+          variant="ghost"
+          size="sm"
           onClick={handleLogout}
-          className="px-3 py-1.5 text-sm rounded-md text-gray-400 hover:text-red-400 hover:bg-red-500/10 transition-colors cursor-pointer"
+          className="text-gray-400 hover:text-red-400 hover:bg-red-500/10 gap-2 cursor-pointer"
         >
-          Logout
-        </button>
-        <UserButton afterSignOutUrl="/" />
+          <LogOut className="h-4 w-4" />
+          <span className="hidden lg:inline">Logout</span>
+          {/* Katban ghir f l'ecran kbir */}
+        </Button>
+
+        <UserButton
+          afterSignOutUrl="/"
+          appearance={{
+            elements: { userButtonAvatarBox: "h-9 w-9 border border-gray-700" },
+          }}
+        />
       </SignedIn>
-    </>
+    </div>
   );
 }

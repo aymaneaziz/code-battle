@@ -18,7 +18,7 @@ import { AdminProtectedRoute } from "./features/admin/components/AdminProtectedR
 import { PlayerSetup } from "./features/playerSetup/PlayerSetup";
 
 import { useUserSync } from "./hooks/useUserSync";
-import { PlayerSetupProtectedRoute } from "./features/playerSetup/components/PlayerSetupProtectedRoute";
+import { PlayerProtectedRoute } from "./features/playerSetup/components/PlayerProtectedRoute";
 
 // Correction : On retire "as const" qui est purement TypeScript
 const CLERK_COMMON_PROPS = {
@@ -49,19 +49,53 @@ function App() {
       {/* Ces routes utilisent le MainLayout */}
       <Route element={<MainLayout />}>
         <Route path="/" element={<Home />} />
-        <Route path="/challenges" element={<Challenges />} />
-        <Route path="/missions" element={<Missions />} />
-        <Route path="/guild" element={<Guild />} />
-        <Route path="/shop" element={<Shop />} />
-        <Route path="/leaderboard" element={<Leaderboard />} />
-
-        {/* Route playerSetup protégée */}
+        <Route
+          path="/challenges"
+          element={
+            <PlayerProtectedRoute>
+              <Challenges />
+            </PlayerProtectedRoute>
+          }
+        />
+        {/* Route player or login  protégée */}
+        <Route
+          path="/missions"
+          element={
+            <PlayerProtectedRoute>
+              <Missions />
+            </PlayerProtectedRoute>
+          }
+        />
+        <Route
+          path="/guild"
+          element={
+            <PlayerProtectedRoute>
+              <Guild />
+            </PlayerProtectedRoute>
+          }
+        />
+        <Route
+          path="/shop"
+          element={
+            <PlayerProtectedRoute>
+              <Shop />
+            </PlayerProtectedRoute>
+          }
+        />
+        <Route
+          path="/leaderboard"
+          element={
+            <PlayerProtectedRoute>
+              <Leaderboard />
+            </PlayerProtectedRoute>
+          }
+        />
         <Route
           path="/setup"
           element={
-            <PlayerSetupProtectedRoute>
+            <PlayerProtectedRoute>
               <PlayerSetup />
-            </PlayerSetupProtectedRoute>
+            </PlayerProtectedRoute>
           }
         />
         {/* Route admin  protégée */}

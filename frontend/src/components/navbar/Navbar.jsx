@@ -1,86 +1,81 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { useUser, SignedIn, SignedOut } from "@clerk/clerk-react";
+import { useUser, SignedIn } from "@clerk/clerk-react";
 import logo from "../../assets/Code-Arena.svg";
 import { NavLinks } from "./NavLinks";
 import { NavAuthButtons } from "./NavAuthButtons";
 
-export function Navbar() {
-  const [menuOpen, setMenuOpen] = useState(false);
-  const { isSignedIn, user } = useUser();
+// Shadcn UI
+import { Button } from "@/components/ui/button";
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
+import { Menu } from "lucide-react";
 
+export function Navbar() {
+  const { isSignedIn, user } = useUser();
   const isAdmin = user?.publicMetadata?.role === "admin";
 
   return (
-    <nav className="bg-gray-900 border-b border-gray-800 text-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo */}
-          <Link
-            to="/"
-            className="flex items-center gap-2 font-bold text-lg text-white"
-          >
-            <img src={logo} alt="Code Arena" className="h-13 w-auto" />
-            <span className="hidden sm:block">Code Arena</span>
-          </Link>
+    <nav className="sticky top-0 z-50 w-full bg-gray-950/80 backdrop-blur-md border-b border-gray-800 shadow-sm shadow-blue-500/10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+        {/* Left Side: Logo */}
+        <Link
+          to="/"
+          className="flex items-center gap-2 transition-opacity hover:opacity-80"
+        >
+          <img src={logo} alt="Code Arena" className="h-10 w-auto" />
+          <span className="hidden sm:block font-black text-xl tracking-tighter text-white uppercase">
+            Code <span className="text-blue-500">Arena</span>
+          </span>
+        </Link>
 
-          {/* Desktop links */}
-          {isSignedIn && (
-            <div className="hidden md:flex items-center gap-6">
-              <NavLinks isAdmin={isAdmin} />
-            </div>
-          )}
+        {/* Center: Desktop Links (Only if signed in) */}
+        {isSignedIn && (
+          <div className="hidden md:block">
+            <NavLinks isAdmin={isAdmin} />
+          </div>
+        )}
 
-          {/* Desktop auth */}
-          <div className="hidden md:flex items-center gap-3">
+        {/* Right Side: Desktop auth & mobile Toggle */}
+        <div className="flex items-center gap-2">
+          <div className="hidden md:flex">
             <NavAuthButtons />
           </div>
 
-          {/* Mobile toggle */}
-          <button
-            onClick={() => setMenuOpen((prev) => !prev)}
-            className="md:hidden p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-800 transition-colors "
-            aria-label="Toggle menu"
-          >
-            {menuOpen ? "✕" : "☰"}
-          </button>
-        </div>
+          {/* Mobile menu b shadcn sheet  */}
+          <div className="md:hidden">
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="icon" className="text-gray-400">
+                  <Menu className="h-6 w-6" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent
+                side="right"
+                className="bg-gray-900 border-gray-800 text-white w-[300px]"
+              >
+                <SheetHeader className="text-left pb-6">
+                  <SheetTitle className="text-white uppercase tracking-widest text-sm opacity-50">
+                    Menu
+                  </SheetTitle>
+                </SheetHeader>
 
-        {/* Mobile menu */}
-        {menuOpen && (
-          <div className="md:hidden border-t border-gray-800 py-3 space-y-1">
-            {isSignedIn && (
-              <NavLinks
-                isAdmin={isAdmin}
-                vertical
-                onNavigate={() => setMenuOpen(false)}
-              />
-            )}
+                <div className="space-y-6">
+                  {isSignedIn && <NavLinks isAdmin={isAdmin} vertical />}
 
-            <div className="flex flex-col gap-2 pt-3 border-t border-gray-800">
-              <SignedOut>
-                <Link
-                  to="/signin"
-                  onClick={() => setMenuOpen(false)}
-                  className="block px-3 py-2 text-sm text-center rounded-md bg-blue-600 text-white hover:bg-blue-500 transition-colors"
-                >
-                  Sign In
-                </Link>
-                <Link
-                  to="/signup"
-                  onClick={() => setMenuOpen(false)}
-                  className="block px-3 py-2 text-sm text-center rounded-md border border-gray-600 text-gray-300 hover:text-white transition-colors"
-                >
-                  Sign Up
-                </Link>
-              </SignedOut>
-
-              <SignedIn>
-                <NavAuthButtons />
-              </SignedIn>
-            </div>
+                  <div className="pt-6 border-t border-gray-800">
+                    <NavAuthButtons />
+                  </div>
+                </div>
+              </SheetContent>
+            </Sheet>
           </div>
-        )}
+        </div>
       </div>
     </nav>
   );

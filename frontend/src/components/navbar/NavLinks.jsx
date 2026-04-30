@@ -1,4 +1,5 @@
 import { NavLink } from "react-router-dom";
+import { cn } from "@/lib/utils";
 
 const NAV_ITEMS = [
   { to: "/challenges", label: "Challenges" },
@@ -8,22 +9,34 @@ const NAV_ITEMS = [
   { to: "/leaderboard", label: "Leaderboard" },
 ];
 
-// On retire l'interface NavLinksProps et l'annotation de type :NavLinksProps
 export function NavLinks({ isAdmin, vertical, onNavigate }) {
-  const base = vertical
-    ? "block px-3 py-2 rounded-md text-sm text-gray-300 hover:bg-gray-800 hover:text-white transition-colors"
-    : "text-sm text-gray-300 hover:text-white transition-colors";
-
-  const activeClass = vertical ? "bg-gray-800 text-white" : "text-white";
+  // Styles de base li kytbdlo 3la hsab vertical (mobile) ou horizontal (desktop)
+  const baseStyle = vertical
+    ? "flex items-center w-full px-4 py-3 text-base font-medium rounded-lg transition-colors"
+    : "text-sm font-medium transition-colors hover:text-white";
 
   return (
-    <>
+    <div
+      className={cn(
+        "flex",
+        vertical ? "flex-col gap-2" : "items-center gap-6 text-gray-400",
+      )}
+    >
       {NAV_ITEMS.map(({ to, label }) => (
         <NavLink
           key={to}
           to={to}
           onClick={onNavigate}
-          className={({ isActive }) => `${base} ${isActive ? activeClass : ""}`}
+          className={({ isActive }) =>
+            cn(
+              baseStyle,
+              isActive
+                ? vertical
+                  ? "bg-gray-800 text-white"
+                  : "text-white underline underline-offset-8 decoration-blue-500 decoration-2"
+                : "text-gray-400 hover:text-gray-200",
+            )
+          }
         >
           {label}
         </NavLink>
@@ -34,14 +47,17 @@ export function NavLinks({ isAdmin, vertical, onNavigate }) {
           to="/admin"
           onClick={onNavigate}
           className={({ isActive }) =>
-            `${base} text-red-400 hover:text-red-300 font-semibold ${
-              isActive ? "underline underline-offset-2" : ""
-            }`
+            cn(
+              baseStyle,
+              "text-red-400 hover:text-red-300 border-red-900/50",
+              isActive &&
+                (vertical ? "bg-red-500/10" : "text-red-300 font-bold"),
+            )
           }
         >
           Admin Panel
         </NavLink>
       )}
-    </>
+    </div>
   );
 }

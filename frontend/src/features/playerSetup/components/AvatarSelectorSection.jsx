@@ -14,9 +14,9 @@ const AvatarSelectorSection = ({ avatars = [], selectedId, onSelect }) => {
         <div className="h-1 w-12 bg-cyan-500 mx-auto rounded-full"></div>
       </div>
 
-      {/* Preview avec Glow dynamique */}
+      {/* Preview m3a glow dynam */}
       <div className="relative">
-        {/* darna l pulse khfif (effet moins agressif) */}
+        {/* darna l pulse khfif */}
         <div className="relative flex h-36 w-36 items-center justify-center rounded-full bg-gray-50 border-4 border-cyan-500 shadow-md text-7xl transition-transform duration-500 hover:scale-105">
           {previewContent}
         </div>
@@ -36,7 +36,7 @@ const AvatarSelectorSection = ({ avatars = [], selectedId, onSelect }) => {
                 onClick={() => onSelect("avatarId", avatar.avatarId)}
                 className={cn(
                   "flex flex-col items-center p-4 cursor-pointer transition-all duration-300 border-2",
-                  // ila kan selectionné ndiro fond azreq mftou7
+                  // ila kan selectionné ndiro fond zreg mftou7
                   isSelected
                     ? "border-cyan-500 bg-cyan-50 shadow-sm"
                     : "border-gray-200 bg-white hover:border-gray-300 hover:bg-gray-50",
@@ -48,7 +48,7 @@ const AvatarSelectorSection = ({ avatars = [], selectedId, onSelect }) => {
                 <p
                   className={cn(
                     "text-[10px] font-bold uppercase tracking-widest",
-                    // couleur d text hta hya tbedlat
+                    // couleur d text hta hya tbedl
                     isSelected ? "text-cyan-600" : "text-gray-500",
                   )}
                 >
