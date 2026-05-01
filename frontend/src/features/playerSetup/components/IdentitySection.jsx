@@ -41,7 +41,7 @@ const IdentitySection = ({ formData, handleChange }) => {
 
         <div className="md:col-span-2 space-y-2">
           <Label className="text-xs uppercase tracking-widest text-gray-800 ml-1">
-            Countery / Region
+            Countery / Region<b className="text-red-600 ">*</b>
           </Label>
           <Input
             name="location"

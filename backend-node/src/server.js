@@ -10,6 +10,7 @@ import errorMiddleware from "./middlewares/error.middleware.js";
 
 import { clerkMiddleware } from "@clerk/express";
 import errorClerk from "./middlewares/errorClerk.middleware.js";
+import profilePlayer from "./routes/profilePlayer.route.js";
 
 const app = express();
 
@@ -28,6 +29,7 @@ app.use(
 app.use("/api/user", userRouter);
 // Setup player data------------------------------------------
 app.use("/api/data", setupPlayerRouter);
+app.use("/api/data", profilePlayer);
 
 //dima ftali had lmiddelware dyal clerk
 app.use(errorClerk);

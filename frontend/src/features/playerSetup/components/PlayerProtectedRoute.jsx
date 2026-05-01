@@ -1,24 +1,17 @@
+import { Loading } from "@/components/common/Loading";
 import { useUser } from "@clerk/clerk-react";
-import { Loader2 } from "lucide-react";
-import { Navigate } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 
-export function PlayerProtectedRoute({ children, redirectTo = "/" }) {
-  const { isLoaded, isSignedIn, user } = useUser();
+export function PlayerProtectedRoute({ redirectTo = "/signin" }) {
+  const { isLoaded, isSignedIn } = useUser();
 
-  // loading Clerk session
-  if (!isLoaded) {
-    return (
-      <div className="flex items-center justify-center min-h-screen gap-2 text-gray-400">
-        <Loader2 className="h-5 w-5 animate-spin" />
-        <span className="text-sm">Loading...</span>
-      </div>
-    );
-  }
+  // Loading Clerk session
+  if (!isLoaded) return <Loading />;
 
   // Not logged in
   if (!isSignedIn) {
     return <Navigate to={redirectTo} replace />;
   }
 
-  return <>{children}</>;
+  return <Outlet />;
 }

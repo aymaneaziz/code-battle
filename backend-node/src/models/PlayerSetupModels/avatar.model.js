@@ -11,5 +11,5 @@ const avatarSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-const Avatar = mongoose.model("Avatar", avatarSchema);
+const Avatar = mongoose.models.Avatar || mongoose.model("Avatar", avatarSchema);
 export default Avatar;

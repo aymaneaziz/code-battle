@@ -8,7 +8,7 @@ import {
 } from "@clerk/clerk-react";
 import { Button } from "@/components/ui/button"; // Shadcn Button
 import api from "../../service/GlobalApi";
-import { LogOut } from "lucide-react";
+import { LogOut, User } from "lucide-react";
 
 export function NavAuthButtons() {
   const { signOut } = useClerk();
@@ -48,6 +48,17 @@ export function NavAuthButtons() {
       </SignedOut>
 
       <SignedIn>
+        {/* Hna lbouton li ghadi idik l page de profil dyalk  */}
+        <Button
+          asChild
+          variant="ghost"
+          className="text-gray-400 hover:text-blue-400 hover:bg-blue-500/10  gap-2"
+        >
+          <Link to="/profile">
+            <User className="h-4 w-4" />
+            <span className="hidden lg:inline">My Profile</span>
+          </Link>
+        </Button>
         {/* Bouton Logout b style Shadcn  */}
         <Button
           variant="ghost"

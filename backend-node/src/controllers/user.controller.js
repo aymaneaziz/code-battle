@@ -1,14 +1,20 @@
+import Avatar from "../models/PlayerSetupModels/avatar.model.js";
 import User from "../models/user.model.js";
-
+// syncUser ----------------------------------
 const syncUser = async (req, res) => {
   try {
-    // Récupérer le userId ET les sessionClaims
     const { userId, sessionClaims } = req.auth;
     const { email, username } = req.body;
 
-    // Extraire le rôle depuis les claims de session Clerk
     const roleFromClerk = sessionClaims?.role || "player";
 
+    // 1. Njibo ga3 les avatars li huma "default"
+    // On récupère juste le champ 'avatarId' (ou '_id' selon ton choix précédent)
+    const defaultAvatars = await Avatar.find({ isDefault: true }).select(
+      "avatarId",
+    );
+
+    // 2. Synchronisation de l'utilisateur
     const user = await User.findOneAndUpdate(
       { clerkId: userId },
       {
@@ -18,8 +24,17 @@ const syncUser = async (req, res) => {
         role: roleFromClerk,
         status: "online",
         lastActive: Date.now(),
+        // $addToSet: hada kaykhlina n-ajoutiw les IDs bla madir duplication
+        // It only adds if the ID doesn't already exist in the array
+        $addToSet: {
+          unlockedAvatars: { $each: defaultAvatars },
+        },
       },
-      { upsert: true, returnDocument: "after" }, //It returns the updated document (after changes are applied)
+      {
+        upsert: true,
+        returnDocument: "after",
+        setDefaultsOnInsert: true,
+      },
     );
 
     res.status(200).json(user);
@@ -29,6 +44,7 @@ const syncUser = async (req, res) => {
   }
 };
 
+// logout --------------------------
 const logoutUser = async (req, res) => {
   try {
     const { userId } = req.auth;

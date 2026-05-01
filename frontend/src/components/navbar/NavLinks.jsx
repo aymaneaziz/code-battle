@@ -1,3 +1,4 @@
+// src/components/navbar/NavLinks.jsx
 import { NavLink } from "react-router-dom";
 import { cn } from "@/lib/utils";
 

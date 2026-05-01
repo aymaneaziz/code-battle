@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { statsSchema } from "./stats.model.js";
+import { statsSchema } from "./PlayerInfoModels/stats.model.js";
 
 const userSchema = new mongoose.Schema(
   {
@@ -62,13 +62,20 @@ const userSchema = new mongoose.Schema(
       type: Date,
       default: Date.now,
     },
+
+    // Had l-field hada howa li kibin lina wach l-player kemel setup ola la
+    setupCompleted: {
+      type: Boolean,
+      default: false, // Par défaut false hta idir "Complete Setup"
+    },
   },
   { timestamps: true },
 );
 
-const User = mongoose.model("User", userSchema);
-export default User;
+// On vérifie si le modèle 'User' est déjà compilé dans mongoose.models
+const User = mongoose.models.User || mongoose.model("User", userSchema);
 
+export default User;
 // Middleware to hash password before saving
 /*
 userSchema.pre("save", function (next) {

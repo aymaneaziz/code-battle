@@ -14,8 +14,7 @@ const codingExperienceSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-const CodingExperience = mongoose.model(
-  "CodingExperience",
-  codingExperienceSchema,
-);
+const CodingExperience =
+  mongoose.models.CodingExperience ||
+  mongoose.model("CodingExperience", codingExperienceSchema);
 export default CodingExperience;

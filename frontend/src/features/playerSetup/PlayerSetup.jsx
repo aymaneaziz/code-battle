@@ -1,4 +1,3 @@
-// src/features/playerSetup/PlayerSetup.jsx
 import { useUser, useAuth } from "@clerk/clerk-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -6,17 +5,22 @@ import { useNavigate } from "react-router-dom";
 import IdentitySection from "./components/IdentitySection";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox"; // Added for terms
+import { Loading } from "@/components/common/Loading";
 
 import api from "../../service/GlobalApi";
 
 import BattlePreferencesSection from "./components/BattlePreferencesSection";
 import AvatarSelectorSection from "./components/AvatarSelectorSection";
 import CodingProfileSection from "./components/CodingProfileSection";
+import { toast } from "sonner";
 
 export const PlayerSetup = () => {
   const { user } = useUser();
   const { getToken } = useAuth();
   const navigate = useNavigate(); // bach nredirectiw
+  const [loading, setLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // state dyal formulaire
   const [formData, setFormData] = useState({
@@ -40,6 +44,7 @@ export const PlayerSetup = () => {
     languages: [],
   });
 
+  // bach t insializz default value
   useEffect(() => {
     if (!user) return;
 
@@ -66,11 +71,15 @@ export const PlayerSetup = () => {
         }));
       } catch (err) {
         console.error("Failed to load setup data", err);
+      } finally {
+        setLoading(false);
       }
     };
 
     initializeData();
   }, [user, getToken]);
+
+  if (loading) return <Loading />;
 
   // fonction katupdate ayi champ
   const updateForm = (name, value) => {
@@ -82,21 +91,72 @@ export const PlayerSetup = () => {
     updateForm(e.target.name, e.target.value);
   };
 
-  // submit setup
-  const onSubmit = (e) => {
-    e.preventDefault();
-
-    // hna normalement tsift data l backend
-    console.log("Final Submission:", formData);
-
-    // redirect l home
-    navigate("/");
+  // bacht tsifet setupComleted : false l backend
+  const handleSkip = async () => {
+    try {
+      const token = await getToken();
+      await api.put(
+        "/data/setup-comleted",
+        { setupCompleted: false },
+        { headers: { Authorization: `Bearer ${token}` } },
+      );
+      navigate("/");
+    } catch (err) {
+      console.error("Skip failed", err);
+      navigate("/"); // Redirect anyway to not block user
+    }
   };
+  // submit setup
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    // Rules: 3-18 chars, letters, numbers, underscores
+    const displayNameRegex = /^[a-zA-Z0-9_]{3,18}$/;
+
+    // Verification des champs obligatoires (Validation)
+    if (!formData.username.trim()) {
+      return toast.info("Username is required", {
+        description: "Please choose a unique username for your profile.",
+      });
+    }
+    if (!displayNameRegex.test(formData.displayName)) {
+      return toast.info("Invalid Display Name", {
+        description: "3-18 characters. Letters, numbers, and underscores only.",
+      });
+    }
+    if (!formData.location.trim()) {
+      return toast.info("Location is required", {
+        description: "Tell us where you are coding from!",
+      });
+    }
+    if (formData.bio && formData.bio.length > 120) {
+      return toast.info("Bio too long", {
+        description: `Your bio is ${formData.bio.length} characters. Please keep it under 120.`,
+      });
+    }
+    try {
+      setIsSubmitting(true);
+      const token = await getToken();
+      await api.post(
+        "/data/setup",
+        { ...formData, setupCompleted: true },
+        { headers: { Authorization: `Bearer ${token}` } },
+      );
+
+      console.log("Final Submission:", formData);
+      toast.success("Profile created successfully!");
+      navigate("/");
+    } catch (error) {
+      toast.error("Something went wrong during setup.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const isFormValid = formData.hasAggreedToTerms && !isSubmitting;
 
   return (
     <div className="min-h-screen w-full flex items-center justify-center py-5 px-4 md:px-8">
       <div className="w-full ">
-        {/* max-w-6xl bach tkhlih mytjbdch */}
         <form
           onSubmit={onSubmit}
           className="grid grid-cols-1 lg:grid-cols-12 gap-8"
@@ -111,7 +171,6 @@ export const PlayerSetup = () => {
           </Card>
 
           <div className="lg:col-span-8 space-y-6">
-            {/* Right: Form */}
             <Card className="p-6 bg-blue-50/50 border-blue-200">
               <p className="text-sm text-blue-700">
                 Your credentials are encrypted by <b>Clerk</b>. Fill your{" "}
@@ -141,13 +200,30 @@ export const PlayerSetup = () => {
                 />
               </div>
 
-              {/* Actions */}
+              {/* Terms and Conditions Section - Added here */}
+              <div className="mt-8 flex items-center space-x-2">
+                <Checkbox
+                  id="terms"
+                  className={"cursor-pointer"}
+                  checked={formData.hasAggreedToTerms}
+                  onCheckedChange={(checked) =>
+                    updateForm("hasAggreedToTerms", checked)
+                  }
+                />
+                <label
+                  htmlFor="terms"
+                  className="text-sm text-gray-600 cursor-pointer select-none"
+                >
+                  I agree to the terms of service and privacy policy.
+                </label>
+              </div>
 
+              {/* Actions */}
               <div className="mt-10 pt-6 border-t border-gray-100 flex justify-between items-center">
                 <Button
                   type="button"
                   variant="ghost"
-                  onClick={() => navigate("/")}
+                  onClick={handleSkip} // Use handleSkip logic
                   className="text-gray-500 hover:text-gray-900 hover:bg-gray-100 cursor-pointer"
                 >
                   Skip Initialization
@@ -156,9 +232,15 @@ export const PlayerSetup = () => {
                 <Button
                   type="submit"
                   size="lg"
-                  className="bg-cyan-600 hover:bg-cyan-700 cursor-pointer text-white px-10 font-bold uppercase tracking-widest transition-all hover:scale-105 shadow-md"
+                  disabled={!isFormValid} // Button disabled if terms not checked
+                  className={`px-10 font-bold uppercase tracking-widest transition-all shadow-md 
+                    ${
+                      isFormValid
+                        ? "bg-cyan-600 hover:bg-cyan-700 hover:scale-105 text-white cursor-pointer"
+                        : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                    }`}
                 >
-                  Complete Setup
+                  {isSubmitting ? "Processing..." : "Complete Setup"}
                 </Button>
               </div>
             </Card>

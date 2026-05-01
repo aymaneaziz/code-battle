@@ -1,9 +1,10 @@
 import connectToDatabase from "../database/mongodb.js";
 
-import { seedAvatars } from "./PlyaerSetupData/avatar.seeder.js";
-import { seedLanguages } from "./PlyaerSetupData/language.seeder.js";
-import { seedBattlePreferences } from "./PlyaerSetupData/battlePreference.seeder.js";
-import { seedCodingExperiences } from "./PlyaerSetupData/codingExperience.seeder.js";
+import { seedAvatars } from "./PlayerSetupData/avatar.seeder.js";
+import { seedLanguages } from "./PlayerSetupData/language.seeder.js";
+import { seedBattlePreferences } from "./PlayerSetupData/battlePreference.seeder.js";
+import { seedCodingExperiences } from "./PlayerSetupData/codingExperience.seeder.js";
+import { seedBadges } from "./PlayerInfoData/badge.seeder.js";
 
 const runSeeders = async () => {
   try {
@@ -16,6 +17,8 @@ const runSeeders = async () => {
       seedLanguages(),
       seedBattlePreferences(),
       seedCodingExperiences(),
+      seedBadges(),
+
       // zid hna seed function
     ]);
 

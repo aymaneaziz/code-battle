@@ -3,7 +3,7 @@ import BattlePreference from "../models/PlayerSetupModels/battlePreference.model
 import CodingExperience from "../models/PlayerSetupModels/codingExperience.model.js";
 import Language from "../models/PlayerSetupModels/language.model.js";
 
-const setupPlayer = async (req, res) => {
+const getSetupPlayer = async (req, res) => {
   try {
     const [avatars, battlePreferences, codingExperiences, languages] =
       await Promise.all([
@@ -31,4 +31,4 @@ const setupPlayer = async (req, res) => {
   }
 };
 
-export default setupPlayer;
+export default getSetupPlayer;

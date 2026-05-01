@@ -10,8 +10,7 @@ const battlePreferenceSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-const BattlePreference = mongoose.model(
-  "BattlePreference",
-  battlePreferenceSchema,
-);
+const BattlePreference =
+  mongoose.models.BattlePreference ||
+  mongoose.model("BattlePreference", battlePreferenceSchema);
 export default BattlePreference;

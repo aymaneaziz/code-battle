@@ -1,3 +1,4 @@
+// src/components/navbar/Navbar.jsx
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useUser, SignedIn } from "@clerk/clerk-react";
@@ -21,7 +22,7 @@ export function Navbar() {
   const isAdmin = user?.publicMetadata?.role === "admin";
 
   return (
-    <nav className="sticky top-0 z-50 w-full bg-gray-950/80 backdrop-blur-md border-b border-gray-800 shadow-sm shadow-blue-500/10">
+    <nav className="bg-gray-900 border-b border-gray-800 text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
         {/* Left Side: Logo */}
         <Link
@@ -41,23 +42,23 @@ export function Navbar() {
           </div>
         )}
 
-        {/* Right Side: Desktop auth & mobile Toggle */}
+        {/* Right Side: Desktop Auth & Mobile Toggle */}
         <div className="flex items-center gap-2">
           <div className="hidden md:flex">
             <NavAuthButtons />
           </div>
 
-          {/* Mobile menu b shadcn sheet  */}
+          {/* Mobile Menu using Shadcn Sheet (Drawer) */}
           <div className="md:hidden">
             <Sheet>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="text-gray-400">
-                  <Menu className="h-6 w-6" />
+                <Button variant="ghost" size="icon" className="text-gray-400 ">
+                  <Menu className="h-6 w-6 " />
                 </Button>
               </SheetTrigger>
               <SheetContent
                 side="right"
-                className="bg-gray-900 border-gray-800 text-white w-[300px]"
+                className="bg-gray-900 border-gray-800 text-white w-75"
               >
                 <SheetHeader className="text-left pb-6">
                   <SheetTitle className="text-white uppercase tracking-widest text-sm opacity-50">

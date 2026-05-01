@@ -12,7 +12,7 @@ const BattlePreferencesSection = ({
     <div className="space-y-8 pt-6 border-t border-gray-100">
       <div className="flex items-center gap-3">
         <div className="h-6 w-1 bg-red-500"></div>
-        {/* titre dark wela text-gray-900 */}
+        {/* titre dark  */}
         <h2 className="text-xl font-bold uppercase tracking-tight text-gray-900">
           Battle Parameters
         </h2>
@@ -69,6 +69,11 @@ const BattlePreferencesSection = ({
           onChange={onInputChange}
         />
       </div>
+      <p
+        className={`text-xs text-right ${formData.bio.length > 120 ? "text-red-500" : "text-gray-400"}`}
+      >
+        {formData.bio.length} / 120
+      </p>
     </div>
   );
 };

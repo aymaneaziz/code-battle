@@ -19,6 +19,9 @@ import { PlayerSetup } from "./features/playerSetup/PlayerSetup";
 
 import { useUserSync } from "./hooks/useUserSync";
 import { PlayerProtectedRoute } from "./features/playerSetup/components/PlayerProtectedRoute";
+import { PlayerProfile } from "./features/playerProfile/PlayerProfile";
+import { SetupCompletedProtectedRoute } from "./features/playerSetup/components/SetupCompletedProtectedRoute";
+import { SetupNotCompletedProtectedRoute } from "./features/playerSetup/components/SetupNotCompletedProtectedRoute";
 
 // Correction : On retire "as const" qui est purement TypeScript
 const CLERK_COMMON_PROPS = {
@@ -49,55 +52,33 @@ function App() {
       {/* Ces routes utilisent le MainLayout */}
       <Route element={<MainLayout />}>
         <Route path="/" element={<Home />} />
-        <Route
-          path="/challenges"
-          element={
-            <PlayerProtectedRoute>
-              <Challenges />
-            </PlayerProtectedRoute>
-          }
-        />
-        {/* Route player or login  protégée */}
-        <Route
-          path="/missions"
-          element={
-            <PlayerProtectedRoute>
-              <Missions />
-            </PlayerProtectedRoute>
-          }
-        />
-        <Route
-          path="/guild"
-          element={
-            <PlayerProtectedRoute>
-              <Guild />
-            </PlayerProtectedRoute>
-          }
-        />
-        <Route
-          path="/shop"
-          element={
-            <PlayerProtectedRoute>
-              <Shop />
-            </PlayerProtectedRoute>
-          }
-        />
-        <Route
-          path="/leaderboard"
-          element={
-            <PlayerProtectedRoute>
-              <Leaderboard />
-            </PlayerProtectedRoute>
-          }
-        />
-        <Route
-          path="/setup"
-          element={
-            <PlayerProtectedRoute>
-              <PlayerSetup />
-            </PlayerProtectedRoute>
-          }
-        />
+        {/* Protected player routes */}
+        <Route element={<PlayerProtectedRoute />}>
+          <Route path="/challenges" element={<Challenges />} />
+          <Route path="/missions" element={<Missions />} />
+          <Route path="/guild" element={<Guild />} />
+          <Route path="/shop" element={<Shop />} />
+          <Route path="/leaderboard" element={<Leaderboard />} />
+
+          <Route
+            path="/profile"
+            element={
+              <SetupCompletedProtectedRoute>
+                <PlayerProfile />
+              </SetupCompletedProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/setup"
+            element={
+              <SetupNotCompletedProtectedRoute>
+                <PlayerSetup />
+              </SetupNotCompletedProtectedRoute>
+            }
+          />
+        </Route>
+
         {/* Route admin  protégée */}
         <Route
           path="/admin"
