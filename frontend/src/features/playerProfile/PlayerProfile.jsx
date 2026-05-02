@@ -13,6 +13,7 @@ import { CombatStatsTable } from "./components/CombatStatsTable";
 import { BadgesSection } from "./components/BadgesSection";
 import { EditingSection } from "./components/EditingSection";
 import { AddFriendDialog } from "./components/AddFriendDialog";
+import { PreferredStack } from "./components/PreferredStack";
 
 export const PlayerProfile = () => {
   const { user } = useUser();
@@ -81,7 +82,7 @@ export const PlayerProfile = () => {
 
   // XP Progress Calculation
   const currentXp = profileData.stats?.xp;
-  const xpNeeded = 1000;
+  const xpNeeded = 100;
   const xpPercentage = (currentXp / xpNeeded) * 100;
 
   return (
@@ -137,6 +138,7 @@ export const PlayerProfile = () => {
               bio: profileData.bio,
               location: profileData.location,
               avatar: profileData.selectedAvatar,
+              createdAt: profileData.createdAt,
             }}
             rankInfo={{
               elo: profileData.stats?.elo,
@@ -146,7 +148,7 @@ export const PlayerProfile = () => {
         )}
         {/* Barre d'XP  */}
         <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-2">
-          <div className="flex justify-between text-[10px] font-bold uppercase tracking-tighter text-slate-400">
+          <div className="flex justify-between text-[10px] font-bold uppercase tracking-tighter text-slate-800">
             <span>LVL {profileData.stats?.level}</span>
             <span>
               {currentXp} / {xpNeeded} XP
@@ -163,21 +165,7 @@ export const PlayerProfile = () => {
           </div>
           <div className="space-y-6">
             <BadgesSection badges={profileData.badgesPlayer} />
-            <div className="p-6 rounded-xl border border-slate-200 bg-white shadow-sm">
-              <h3 className="text-xs font-bold uppercase text-slate-400 mb-4">
-                Preferred Stack
-              </h3>
-              <div className="flex flex-wrap gap-2">
-                {profileData.preferences?.language?.map((lang) => (
-                  <span
-                    key={lang._id}
-                    className="px-3 py-1 bg-slate-100 text-slate-600 rounded-full text-[11px] font-semibold border border-slate-200"
-                  >
-                    {lang.name}
-                  </span>
-                ))}
-              </div>
-            </div>
+            <PreferredStack preferences={profileData.preferences} />
           </div>
         </div>
       </div>

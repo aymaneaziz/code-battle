@@ -62,12 +62,15 @@ export const PlayerSetup = () => {
         // remplissage par défaut
         setFormData((prev) => ({
           ...prev,
-          username: user?.username || user?.fullName || "",
+          username:
+            user?.username ||
+            user?.fullName?.replace(/\s+/g, "").toLowerCase() ||
+            "",
           displayName: user?.firstName || "",
-          avatarId: data.avatars[0]?.avatarId || "",
-          preferenceId: data.battlePreferences[0]?.preferenceId || "",
-          experienceId: data.codingExperiences[0]?.experienceId || "",
-          languageId: data.languages[0]?.languageId || "",
+          avatarId: data.avatars[0]?._id || "",
+          preferenceId: data.battlePreferences[0]?._id || "",
+          experienceId: data.codingExperiences[0]?._id || "",
+          languageId: data.languages[0] ? [data.languages[0]._id] : [],
         }));
       } catch (err) {
         console.error("Failed to load setup data", err);

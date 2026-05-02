@@ -14,7 +14,7 @@ const IdentitySection = ({ formData, handleChange }) => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-2">
           <Label className="text-xs uppercase tracking-widest text-gray-800 ml-1">
-            Display Name<b className="text-red-600 ">*</b>{" "}
+            Display Name<b className="text-red-600 ">*</b>
           </Label>
           <Input
             name="displayName"
@@ -40,12 +40,22 @@ const IdentitySection = ({ formData, handleChange }) => {
         </div>
 
         <div className="md:col-span-2 space-y-2">
-          <Label className="text-xs uppercase tracking-widest text-gray-800 ml-1">
-            Countery / Region<b className="text-red-600 ">*</b>
-          </Label>
+          <div className="flex justify-between items-center pr-1">
+            <Label className="text-xs uppercase tracking-widest text-gray-800 ml-1">
+              Country / Region<b className="text-red-600">*</b>
+            </Label>
+            {/* Character counter */}
+            <span
+              className={`text-[10px] font-medium ${formData.location.length >= 20 ? "text-red-500" : "text-gray-400"}`}
+            >
+              {formData.location.length}/20
+            </span>
+          </div>
+
           <Input
             name="location"
-            placeholder="Morocco "
+            maxLength={20} // Prevents typing more than 20 chars
+            placeholder="Morocco"
             className="bg-white border-gray-200 focus:border-cyan-500 focus:ring-cyan-500/20 text-gray-900 shadow-sm"
             value={formData.location}
             onChange={handleChange}

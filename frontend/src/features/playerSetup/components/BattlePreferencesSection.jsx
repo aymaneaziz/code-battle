@@ -26,12 +26,12 @@ const BattlePreferencesSection = ({
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {preferences.map((pref) => (
             <div
-              key={pref.preferenceId}
-              onClick={() => onSelect("preferenceId", pref.preferenceId)}
+              key={pref._id}
+              onClick={() => onSelect("preferenceId", pref._id)}
               className={cn(
                 "cursor-pointer p-4 rounded-xl border-2 transition-all flex flex-col items-center text-center gap-2",
                 // style dyal l carte sghira li kankhtaro
-                formData.preferenceId === pref.preferenceId
+                formData.preferenceId === pref._id
                   ? "border-red-500 bg-red-50 shadow-sm"
                   : "border-gray-200 bg-white hover:border-gray-300 hover:bg-gray-50",
               )}
@@ -40,7 +40,7 @@ const BattlePreferencesSection = ({
               <h4
                 className={cn(
                   "font-bold uppercase tracking-tighter",
-                  formData.preferenceId === pref.preferenceId
+                  formData.preferenceId === pref._id
                     ? "text-red-600"
                     : "text-gray-800",
                 )}

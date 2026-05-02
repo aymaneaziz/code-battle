@@ -2,7 +2,7 @@ import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
 const AvatarSelectorSection = ({ avatars = [], selectedId, onSelect }) => {
-  const selectedAvatar = avatars.find((a) => a.avatarId === selectedId);
+  const selectedAvatar = avatars.find((a) => a._id === selectedId);
   const previewContent = selectedAvatar?.iconUrl || "?";
 
   return (
@@ -29,11 +29,11 @@ const AvatarSelectorSection = ({ avatars = [], selectedId, onSelect }) => {
         </p>
         <div className="grid grid-cols-2 gap-3 overflow-y-auto max-h-100 pr-2 custom-scrollbar">
           {avatars.map((avatar) => {
-            const isSelected = selectedId === avatar.avatarId;
+            const isSelected = selectedId === avatar._id;
             return (
               <Card
-                key={avatar.avatarId}
-                onClick={() => onSelect("avatarId", avatar.avatarId)}
+                key={avatar._id}
+                onClick={() => onSelect("avatarId", avatar._id)}
                 className={cn(
                   "flex flex-col items-center p-4 cursor-pointer transition-all duration-300 border-2",
                   // ila kan selectionné ndiro fond zreg mftou7

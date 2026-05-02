@@ -1,12 +1,20 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { MapPin, Shield } from "lucide-react";
+import { MapPin, Shield, Calendar } from "lucide-react"; // Added Calendar
 
 export function ProfileHeader({ identity, rankInfo }) {
+  // Hna bach nriglo l format d createdAt
+  const joinDate = identity.createdAt
+    ? new Date(identity.createdAt).toLocaleDateString("en-US", {
+        month: "long",
+        year: "numeric",
+      })
+    : "Recently joined";
+
   return (
     <Card className="bg-white border-slate-200 shadow-sm overflow-hidden">
       <div className="p-6 md:p-8 flex flex-col md:flex-row gap-6 items-center">
-        {/* Avatar avec un cercle simple et propre */}
+        {/* Avatar */}
         <div className="h-24 w-24 rounded-full border-2 border-slate-100 bg-slate-50 flex items-center justify-center text-4xl shadow-inner">
           {identity.avatar?.iconUrl || "👤"}
         </div>
@@ -29,13 +37,22 @@ export function ProfileHeader({ identity, rankInfo }) {
             <div className="flex items-center gap-1">
               <MapPin size={14} /> {identity.location || "Morocco"}
             </div>
+            {/* JOINED DATE  */}
+            <div className="group relative flex items-center gap-1 cursor-pointer hover:text-slate-600 transition-colors">
+              <Calendar size={14} />
+              <span>Joined</span>
+              <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 px-2 py-1 bg-slate-800 text-white text-[10px] rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10">
+                {joinDate}
+              </div>
+            </div>
+
             <div className="flex items-center gap-1 text-blue-600">
               <Shield size={14} /> Level {rankInfo.level}
             </div>
           </div>
         </div>
 
-        {/* ELO Card Minimaliste */}
+        {/* ELO Card */}
         <div className="bg-slate-50 px-6 py-4 rounded-xl border border-slate-100 text-center">
           <p className="text-[10px] font-bold text-slate-800 uppercase tracking-widest mb-1">
             Global ELO

@@ -38,12 +38,12 @@ const CodingProfileSection = ({
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {languages.map((lang) => {
-          const isSelected = formData.languageId?.includes(lang.languageId);
+          const isSelected = formData.languageId?.includes(lang._id);
 
           return (
             <Card
-              key={lang.languageId}
-              onClick={() => handleLanguageToggle(lang.languageId)}
+              key={lang._id}
+              onClick={() => handleLanguageToggle(lang._id)}
               className={cn(
                 "relative cursor-pointer transition-all duration-300 border-2 overflow-hidden",
                 isSelected
@@ -99,12 +99,12 @@ const CodingProfileSection = ({
 
         <div className="grid grid-cols-1 gap-4">
           {experiences.map((exp) => {
-            const isSelected = formData.experienceId === exp.experienceId;
+            const isSelected = formData.experienceId === exp._id;
 
             return (
               <Card
-                key={exp.experienceId}
-                onClick={() => onSelect("experienceId", exp.experienceId)}
+                key={exp._id}
+                onClick={() => onSelect("experienceId", exp._id)}
                 className={cn(
                   "group relative cursor-pointer border-2 transition-all duration-300",
                   isSelected
