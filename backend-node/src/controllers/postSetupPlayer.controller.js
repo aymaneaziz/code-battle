@@ -12,10 +12,10 @@ const postSetupPlayer = async (req, res) => {
       displayName,
       location,
       bio,
-      avatarId, // Ex: "cyber-ninja" (string)
-      languageId, // Ex: ["js", "python"] (array of strings)
-      preferenceId, // Ex: "hard-mode" (string)
-      experienceId, // Ex: "senior" (string)
+      avatarId,
+      languageId,
+      preferenceId,
+      experienceId,
       setupCompleted,
     } = req.body;
 
@@ -31,15 +31,15 @@ const postSetupPlayer = async (req, res) => {
       }
     }
 
-    // --- LOGIQUE DE MAPPING (Recherche des _id de MongoDB) ---
+    // (Recherche des _id de MongoDB)
 
-    // 1. Trouver l'_id de l'Avatar
+    // Trouver l'_id de l'Avatar
     if (avatarId) {
       const avatarDoc = await Avatar.findOne({ avatarId: avatarId });
       if (avatarDoc) user.selectedAvatar = avatarDoc._id; // On stocke l'ObjectId
     }
 
-    // 2. Trouver les _id des Langages (si c'est un tableau)
+    // Trouver les _id des Langages (si c'est un tableau)
     if (languageId && Array.isArray(languageId)) {
       const languageDocs = await Language.find({
         languageId: { $in: languageId },
@@ -51,7 +51,7 @@ const postSetupPlayer = async (req, res) => {
       if (langDoc) user.preferences.language = [langDoc._id];
     }
 
-    // 3. Trouver l'_id de la Battle Preference
+    // Trouver l'_id de la Battle Preference
     if (preferenceId) {
       const prefDoc = await BattlePreference.findOne({
         preferenceId: preferenceId,
@@ -59,7 +59,7 @@ const postSetupPlayer = async (req, res) => {
       if (prefDoc) user.preferences.battlePreference = prefDoc._id;
     }
 
-    // 4. Trouver l'_id de la Coding Experience
+    // Trouver l'_id de la Coding Experience
     if (experienceId) {
       const expDoc = await CodingExperience.findOne({
         experienceId: experienceId,
@@ -67,7 +67,7 @@ const postSetupPlayer = async (req, res) => {
       if (expDoc) user.preferences.codingExperience = expDoc._id;
     }
 
-    // --- MISE À JOUR DES INFOS CLASSIQUES ---
+    //  mise a jour des infos classiques
     user.username = username || user.username;
     user.displayName = displayName || user.displayName;
     user.location = location || user.location;

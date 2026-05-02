@@ -2,35 +2,32 @@ import { Loading } from "@/components/common/Loading";
 import api from "@/service/GlobalApi";
 import { useAuth, useUser } from "@clerk/clerk-react";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
+import { Pencil, Save, X } from "lucide-react";
+
 import { ProfileHeader } from "./components/ProfileHeader";
 import { StatsGrid } from "./components/StatsGrid";
 import { CombatStatsTable } from "./components/CombatStatsTable";
 import { BadgesSection } from "./components/BadgesSection";
-import { Skeleton } from "@/components/ui/skeleton";
+import { EditingSection } from "./components/EditingSection";
+import { AddFriendDialog } from "./components/AddFriendDialog";
 
 export const PlayerProfile = () => {
   const { user } = useUser();
   const { getToken } = useAuth();
 
   const [loading, setLoading] = useState(true);
+  const [isEditing, setIsEditing] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [profileData, setProfileData] = useState(null);
 
-  // CORRECTION 1 : Utilisation de [ ] au lieu de { } pour useState
-  const [profileData, setProfileData] = useState({
-    username: "",
+  const [formData, setFormData] = useState({
     displayName: "",
     location: "",
     bio: "",
-    selectedAvatar: null, // Correspond au schema
-    unlockedAvatars: [],
-    preferences: {
-      // Nom corrigé pour correspondre au schema et au map plus bas
-      language: [],
-      battlePreference: "",
-      codingExperience: "",
-    },
-    badgesPlayer: [],
-    stats: { elo: 400, level: 1 }, // Valeurs par défaut pour éviter undefined.stats
-    hasAggreedToTerms: false,
+    selectedAvatar: "",
   });
 
   useEffect(() => {
@@ -38,14 +35,19 @@ export const PlayerProfile = () => {
     const fetchProfile = async () => {
       try {
         const token = await getToken();
-
         const data = await api.get("/data/profile", {
           headers: { Authorization: `Bearer ${token}` },
         });
-
+        console.log(data);
         setProfileData(data);
+        setFormData({
+          displayName: data.displayName || "",
+          location: data.location || "",
+          bio: data.bio || "",
+          selectedAvatar: data.selectedAvatar?._id || "",
+        });
       } catch (err) {
-        console.error("Failed to load profile data", err);
+        toast.error("Failed to load profile");
       } finally {
         setLoading(false);
       }
@@ -53,44 +55,123 @@ export const PlayerProfile = () => {
     fetchProfile();
   }, [user, getToken]);
 
-  if (loading || !profileData.username) return <Loading />;
+  const handleUpdate = async () => {
+    try {
+      setIsSubmitting(true);
+      const token = await getToken();
+      await api.put("/data/profile", formData, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      const updatedData = await api.get("/data/profile", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      setProfileData(updatedData);
+      setIsEditing(false);
+      toast.success("Profile updated!");
+    } catch (err) {
+      toast.error("Update failed");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  if (loading || !profileData) return <Loading />;
+
+  // XP Progress Calculation
+  const currentXp = profileData.stats?.xp;
+  const xpNeeded = 1000;
+  const xpPercentage = (currentXp / xpNeeded) * 100;
 
   return (
-    <div className=" bg-slate-50 text-slate-900 p-4 md:p-8">
-      <div className="max-w-5xl mx-auto space-y-6">
-        <ProfileHeader
-          identity={{
-            username: profileData.username,
-            displayName: profileData.displayName,
-            bio: profileData.bio,
-            location: profileData.location,
-            avatar: profileData.selectedAvatar,
-          }}
-          rankInfo={{
-            elo: profileData.stats?.elo,
-            level: profileData.stats?.level,
-          }}
-        />
+    <div className=" text-slate-900 min-h-screen p-4 md:p-8">
+      <div className="max-w-6xl mx-auto space-y-6">
+        {/* Actions Header */}
+        <div className="flex justify-between items-center">
+          <AddFriendDialog />
+
+          <div className="flex gap-2">
+            {!isEditing ? (
+              <Button
+                onClick={() => setIsEditing(true)}
+                variant="outline"
+                className="bg-white cursor-pointer"
+              >
+                <Pencil className="h-4 w-4 mr-2" /> Edit Profile
+              </Button>
+            ) : (
+              <>
+                <Button
+                  onClick={() => setIsEditing(false)}
+                  variant="ghost"
+                  disabled={isSubmitting}
+                  className={"cursor-pointer"}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={handleUpdate}
+                  className="bg-slate-900 text-white hover:bg-slate-800 cursor-pointer"
+                  disabled={isSubmitting}
+                >
+                  <Save className="h-4 w-4 mr-2" /> Save
+                </Button>
+              </>
+            )}
+          </div>
+        </div>
+
+        {/* Main Sections */}
+        {isEditing ? (
+          <EditingSection
+            formData={formData}
+            setFormData={setFormData}
+            unlockedAvatars={profileData.unlockedAvatars}
+          />
+        ) : (
+          <ProfileHeader
+            identity={{
+              username: profileData.username,
+              displayName: profileData.displayName,
+              bio: profileData.bio,
+              location: profileData.location,
+              avatar: profileData.selectedAvatar,
+            }}
+            rankInfo={{
+              elo: profileData.stats?.elo,
+              level: profileData.stats?.level,
+            }}
+          />
+        )}
+        {/* Barre d'XP  */}
+        <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-2">
+          <div className="flex justify-between text-[10px] font-bold uppercase tracking-tighter text-slate-400">
+            <span>LVL {profileData.stats?.level}</span>
+            <span>
+              {currentXp} / {xpNeeded} XP
+            </span>
+            <span>LVL {profileData.stats?.level + 1}</span>
+          </div>
+          <Progress value={xpPercentage} className="h-2 bg-slate-100" />
+        </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 space-y-6">
             <StatsGrid stats={profileData.stats} />
             <CombatStatsTable stats={profileData.stats} />
           </div>
-
           <div className="space-y-6">
             <BadgesSection badges={profileData.badgesPlayer} />
-
-            {/* Section Preferred Stack épurée */}
             <div className="p-6 rounded-xl border border-slate-200 bg-white shadow-sm">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4">
+              <h3 className="text-xs font-bold uppercase text-slate-400 mb-4">
                 Preferred Stack
               </h3>
               <div className="flex flex-wrap gap-2">
                 {profileData.preferences?.language?.map((lang) => (
                   <span
                     key={lang._id}
-                    className="px-3 py-1 bg-slate-100 text-slate-700 rounded-full text-xs font-medium border border-slate-200"
+                    className="px-3 py-1 bg-slate-100 text-slate-600 rounded-full text-[11px] font-semibold border border-slate-200"
                   >
                     {lang.name}
                   </span>
@@ -103,5 +184,3 @@ export const PlayerProfile = () => {
     </div>
   );
 };
-
-export default PlayerProfile;

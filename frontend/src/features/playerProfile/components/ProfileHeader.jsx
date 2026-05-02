@@ -37,7 +37,7 @@ export function ProfileHeader({ identity, rankInfo }) {
 
         {/* ELO Card Minimaliste */}
         <div className="bg-slate-50 px-6 py-4 rounded-xl border border-slate-100 text-center">
-          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">
+          <p className="text-[10px] font-bold text-slate-800 uppercase tracking-widest mb-1">
             Global ELO
           </p>
           <p className="text-3xl font-black text-slate-900">{rankInfo.elo}</p>

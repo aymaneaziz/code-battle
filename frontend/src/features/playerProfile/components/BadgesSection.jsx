@@ -5,11 +5,11 @@ export function BadgesSection({ badges = [] }) {
   return (
     <Card className="bg-white border-slate-200 shadow-sm p-6">
       <div className="flex justify-between items-center mb-6">
-        <h3 className="text-xs font-bold uppercase tracking-widest text-slate-400">
+        <h3 className="text-xs font-bold uppercase tracking-widest text-slate-800">
           Badges
         </h3>
-        <span className="text-[10px] font-mono text-slate-400">
-          {badges.length} / 42
+        <span className="text-[10px] font-mono text-slate-600">
+          {badges.length} / 10
         </span>
       </div>
 

@@ -8,24 +8,25 @@ const syncUser = async (req, res) => {
 
     const roleFromClerk = sessionClaims?.role || "player";
 
-    // 1. Njibo ga3 les avatars li huma "default"
+    // Njibo ga3 les avatars li huma "default"
     // On récupère juste le champ 'avatarId' (ou '_id' selon ton choix précédent)
     const defaultAvatars = await Avatar.find({ isDefault: true }).select(
       "avatarId",
     );
 
-    // 2. Synchronisation de l'utilisateur
+    // Synchronisation de l'utilisateur
     const user = await User.findOneAndUpdate(
       { clerkId: userId },
       {
         clerkId: userId,
         email,
         username,
+        displayName: username,
         role: roleFromClerk,
         status: "online",
         lastActive: Date.now(),
-        // $addToSet: hada kaykhlina n-ajoutiw les IDs bla madir duplication
-        // It only adds if the ID doesn't already exist in the array
+        // $addToSet: hada kaykhlina najoutiw les IDs bla madir duplication
+
         $addToSet: {
           unlockedAvatars: { $each: defaultAvatars },
         },

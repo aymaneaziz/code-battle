@@ -3,7 +3,7 @@ import User from "../models/User.model.js";
 const putSetupPlayer = async (req, res) => {
   try {
     const clerkId = req.auth.userId;
-    const { setupCompleted } = req.body; // Katji mn l-frontend (true/false)
+    const { setupCompleted } = req.body; // Katji mn lfrontend (true/false)
 
     // On s'assure que la valeur est bien un booléen
     if (typeof setupCompleted !== "boolean") {

@@ -8,11 +8,14 @@ import "../models/PlayerSetupModels/codingExperience.model.js";
 const getProfilePlayer = async (req, res) => {
   try {
     const clerkId = req.auth.userId;
+
     // Recherche de l'utilisateur avec "populate" pour transformer les IDs en objets complets
     const player = await User.findOne({ clerkId })
       .populate("selectedAvatar") // Tjib les détails de l'avatar porté
       .populate("preferences.language") // Tjib les noms/icons des langages
       .populate("preferences.codingExperience") // Tjib les détails d'expérience
+      .populate("preferences.battlePreference")
+      .populate("unlockedAvatars")
       .populate({
         path: "badgesPlayer.badge", // Tjib les détails de chaque badge gagné
         model: "Badge",
@@ -36,7 +39,24 @@ const getProfilePlayer = async (req, res) => {
     player.status = "online"; // Kat-welli online melli kat-fetchi l'profile
     await player.save();
 
-    res.status(200).json(player);
+    // Construction de l'objet de réponse avec uniquement les champs spécifiques
+    // Hna kansifto ghir dakchi li htajiti bdebt f l-front
+    const profileResponse = {
+      username: player.username, // Inclus car nécessaire pour l'identité
+      displayName: player.displayName,
+      bio: player.bio,
+      location: player.location,
+      status: player.status,
+      selectedAvatar: player.selectedAvatar,
+      unlockedAvatars: player.unlockedAvatars,
+      badgesPlayer: player.badgesPlayer,
+      preferences: player.preferences,
+      stats: player.stats,
+      lastActive: player.lastActive,
+      createdAt: player.createdAt,
+    };
+
+    res.status(200).json(profileResponse);
   } catch (error) {
     console.error("Error in getProfilePLayer:", error);
     res.status(500).json({
