@@ -1,16 +1,22 @@
+// Dependencies
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import { PORT, VITE_FRONTEND_URL } from "./config/env.js";
+
+// Routes
 import userRouter from "./routes/user.routes.js";
 import setupPlayerRouter from "./routes/setupPlayer.routes.js";
+import profilePlayer from "./routes/profilePlayer.route.js";
+import homePage from "./routes/homePage.route.js";
 
-import connectToDatabase from "./database/mongodb.js";
+// Middlewares
 import errorMiddleware from "./middlewares/error.middleware.js";
-
 import { clerkMiddleware } from "@clerk/express";
 import errorClerk from "./middlewares/errorClerk.middleware.js";
-import profilePlayer from "./routes/profilePlayer.route.js";
+
+// DataBase
+import connectToDatabase from "./database/mongodb.js";
 
 const app = express();
 
@@ -23,13 +29,15 @@ app.use(
   cors({
     origin: VITE_FRONTEND_URL,
     credentials: true,
-  }),
+  })
 );
-//Synch and add new User------------------------------------------
+// Synch and add new User------------------------------------------
 app.use("/api/user", userRouter);
 // Setup player data------------------------------------------
 app.use("/api/data", setupPlayerRouter);
 app.use("/api/data", profilePlayer);
+// To get The data we need for the HomePage
+app.use("/api/home", homePage);
 
 //dima ftali had lmiddelware dyal clerk
 app.use(errorClerk);

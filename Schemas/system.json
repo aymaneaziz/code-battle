@@ -1,0 +1,17 @@
+{
+  "name": "hna ya dok swalh likaybdlhom systeme automatiquement (admin y9dr ymodifi rire chi haja srira (exemple ymodifi season)",
+  "system": {
+    "currentSeason": 1,
+    "currentWeek": 1,
+    "activePlayers": 0,
+    "battlesToday": 0,
+    "liveMaches": 0,
+    "topPlayersThisWeek": [
+      {
+        "id": "mongoDBID",
+        "rank": 1,
+        "score": 1000
+      }
+    ]
+  }
+}

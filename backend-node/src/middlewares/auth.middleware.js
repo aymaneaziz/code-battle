@@ -1,3 +1,5 @@
+// Middleware qui vérifie si l'utilisateur est authentifié
+// via Clerk avant d'accéder à la route protégée.
 import { getAuth } from "@clerk/express";
 
 export const protect = (req, res, next) => {

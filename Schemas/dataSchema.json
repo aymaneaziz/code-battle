@@ -1,145 +1,180 @@
-{   
-    "filedescription" : "hna schema dayal dok data li makaytbdloch f database only admin kaytbdlo",
-    "avatars": [
-        {
-            "id": "avatar1",
-            "label": "Warrior",
-            "iconUrl": "🛡️"
-        },
-        {
-            "id": "avatar2",
-            "label": "Mage",
-            "iconUrl": "🔮"
-        },
-        {
-            "id": "avatar3",
-            "label": "Rogue",
-            "iconUrl": "🗡️"
-        }
-    ],
-    "languages": [
-        {
-            "id": "lang1",
-            "name": "Python",
-            "iconUrl": "🐍"
-        },
-        {
-            "id": "lang2",
-            "name": "JavaScript",
-            "iconUrl": "📜"
-        },
-        {
-            "id": "lang3",
-            "name": "Java",
-            "iconUrl": "☕"
-        },
-        {
-            "id": "lang4",
-            "name": "C++",
-            "iconUrl": "💻"
-        },
-        {
-            "id": "lang5",
-            "name": "Ruby",
-            "iconUrl": "💎"
-        },
-        {
-            "id": "lang6",
-            "name": "Go",
-            "iconUrl": "🐹"
-        },
-        {
-            "id": "lang7",
-            "name": "Rust",
-            "iconUrl": "🦀"
-        },
-        {
-            "id": "lang8",
-            "name": "TypeScript",
-            "iconUrl": "📘"
-        }
-    ],
-    "badges": [
-        {
-            "id": "badge1",
-            "label": "Top Player",
-            "description": "Awarded for being a top player in the game",
-            "iconUrl": "🐄"
-        },
-        {
-            "id": "badge2",
-            "label": "Active Player",
-            "description": "Awarded for being an active player in the game",
-            "iconUrl": "🏃"
-        },
-        {
-            "id": "badge3",
-            "label": "Community Contributor",
-            "description": "Awarded for contributing to the game community",
-            "iconUrl": "👥"
-        }
-    ],
-    "battlePreference": [
-        {
-            "id": "preference1",
-            "label": "Easy",
-            "description": "Learn the ropes with easier opponents and challenges",
-            "iconUrl": "😊"
-        },
-        {
-            "id": "preference2",
-            "label": "Medium",
-            "description": "Challenge yourself with moderately difficult opponents and problems",
-            "iconUrl": "😐"
-        },
-        {
-            "id": "preference3",
-            "label": "Hard",
-            "description": "Test your skills against tough opponents and complex problems",
-            "iconUrl": "😠"
-        }
-    ],
-    "codingExperience": [
-        {
-            "id": "experience1",
-            "label": "Beginner",
-            "description": "Just starting out with coding, learning the basics",
-            "iconUrl": "👶"
-        },
-        {
-            "id": "experience2",
-            "label": "Intermediate",
-            "description": "Comfortable with coding, can solve common problems",
-            "iconUrl": "🧑‍💻"
-        },
-        {
-            "id": "experience3",
-            "label": "Advanced",
-            "description": "Experienced coder, can tackle complex problems and algorithms",
-            "iconUrl": "🧙‍♂️"
-        }
-    ],  
-    "rank": [
-        {
-            "id": "rank1",
-            "label": "Bronze",
-            "minElo": 0,
-            "maxElo": 999,
-            "icon": "🥉"
-        },
-        {
-            "id": "rank2",
-            "label": "Silver",
-            "minElo": 1000,
-            "maxElo": 1999,
-            "icon": "🥈"
-        },
-        {
-            "id": "rank3",
-            "label": "Gold",
-            "minElo": 2000,
-            "maxElo": 9999,
-            "icon": "🥇"
-        }
-    ]
+{
+  "filedescription": "hna schema dayal dok data li makaytbdloch f database only admin kaytbdlo",
+  "avatars": [
+    {
+      "id": "avatar1",
+      "label": "Warrior",
+      "iconUrl": "🛡️"
+    },
+    {
+      "id": "avatar2",
+      "label": "Mage",
+      "iconUrl": "🔮"
+    },
+    {
+      "id": "avatar3",
+      "label": "Rogue",
+      "iconUrl": "🗡️"
+    }
+  ],
+  "languages": [
+    {
+      "id": "lang1",
+      "name": "Python",
+      "iconUrl": "🐍"
+    },
+    {
+      "id": "lang2",
+      "name": "JavaScript",
+      "iconUrl": "📜"
+    },
+    {
+      "id": "lang3",
+      "name": "Java",
+      "iconUrl": "☕"
+    },
+    {
+      "id": "lang4",
+      "name": "C++",
+      "iconUrl": "💻"
+    },
+    {
+      "id": "lang5",
+      "name": "Ruby",
+      "iconUrl": "💎"
+    },
+    {
+      "id": "lang6",
+      "name": "Go",
+      "iconUrl": "🐹"
+    },
+    {
+      "id": "lang7",
+      "name": "Rust",
+      "iconUrl": "🦀"
+    },
+    {
+      "id": "lang8",
+      "name": "TypeScript",
+      "iconUrl": "📘"
+    }
+  ],
+  "badges": [
+    {
+      "id": "badge1",
+      "label": "Top Player",
+      "description": "Awarded for being a top player in the game",
+      "iconUrl": "🐄"
+    },
+    {
+      "id": "badge2",
+      "label": "Active Player",
+      "description": "Awarded for being an active player in the game",
+      "iconUrl": "🏃"
+    },
+    {
+      "id": "badge3",
+      "label": "Community Contributor",
+      "description": "Awarded for contributing to the game community",
+      "iconUrl": "👥"
+    }
+  ],
+  "battlePreference": [
+    {
+      "id": "preference1",
+      "label": "Easy",
+      "description": "Learn the ropes with easier opponents and challenges",
+      "iconUrl": "😊"
+    },
+    {
+      "id": "preference2",
+      "label": "Medium",
+      "description": "Challenge yourself with moderately difficult opponents and problems",
+      "iconUrl": "😐"
+    },
+    {
+      "id": "preference3",
+      "label": "Hard",
+      "description": "Test your skills against tough opponents and complex problems",
+      "iconUrl": "😠"
+    }
+  ],
+  "codingExperience": [
+    {
+      "id": "experience1",
+      "label": "Beginner",
+      "description": "Just starting out with coding, learning the basics",
+      "iconUrl": "👶"
+    },
+    {
+      "id": "experience2",
+      "label": "Intermediate",
+      "description": "Comfortable with coding, can solve common problems",
+      "iconUrl": "🧑‍💻"
+    },
+    {
+      "id": "experience3",
+      "label": "Advanced",
+      "description": "Experienced coder, can tackle complex problems and algorithms",
+      "iconUrl": "🧙‍♂️"
+    }
+  ],
+  "ranks": [
+    {
+      "id": "rank1",
+      "label": "Dirt",
+      "minElo": 0,
+      "maxElo": 499,
+      "icon": "🟫"
+    },
+    {
+      "id": "rank2",
+      "label": "Stone",
+      "minElo": 500,
+      "maxElo": 999,
+      "icon": "🗿"
+    },
+    {
+      "id": "rank3",
+      "label": "Coal",
+      "minElo": 1000,
+      "maxElo": 1499,
+      "icon": "⚫"
+    },
+    {
+      "id": "rank4",
+      "label": "Bronze",
+      "minElo": 1500,
+      "maxElo": 1999,
+      "icon": "🥉"
+    },
+    {
+      "id": "rank5",
+      "label": "Silver",
+      "minElo": 2000,
+      "maxElo": 2499,
+      "icon": "🥈"
+    },
+    {
+      "id": "rank6",
+      "label": "Gold",
+      "minElo": 2500,
+      "maxElo": 2999,
+      "icon": "🥇"
+    },
+    {
+      "id": "rank7",
+      "label": "Platinum",
+      "minElo": 3000,
+      "maxElo": 3499,
+      "icon": "💠"
+    },
+    {
+      "id": "rank8",
+      "label": "Diamond",
+      "minElo": 3500,
+      "maxElo": 3999,
+      "icon": "💎"
+    }
+  ]
 }

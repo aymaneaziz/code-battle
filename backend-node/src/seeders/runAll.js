@@ -5,6 +5,8 @@ import { seedLanguages } from "./PlayerSetupData/language.seeder.js";
 import { seedBattlePreferences } from "./PlayerSetupData/battlePreference.seeder.js";
 import { seedCodingExperiences } from "./PlayerSetupData/codingExperience.seeder.js";
 import { seedBadges } from "./PlayerInfoData/badge.seeder.js";
+import { seedSystemInfo } from "./System/systemInfo.seeder.js";
+import { seedRank } from "./System/rank.seeder.js";
 
 const runSeeders = async () => {
   try {
@@ -18,6 +20,8 @@ const runSeeders = async () => {
       seedBattlePreferences(),
       seedCodingExperiences(),
       seedBadges(),
+      seedSystemInfo(),
+      seedRank(),
 
       // zid hna seed function
     ]);
