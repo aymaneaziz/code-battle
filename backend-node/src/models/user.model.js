@@ -72,7 +72,7 @@ const userSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-// On vérifie si le modèle 'User' est déjà compilé dans mongoose.models
+// On verifie si le modele 'User' est deja compilé dans mongoose.models
 const User = mongoose.models.User || mongoose.model("User", userSchema);
 
 export default User;

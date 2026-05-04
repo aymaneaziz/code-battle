@@ -1,7 +1,7 @@
-import Avatar from "../models/PlayerSetupModels/avatar.model.js";
-import BattlePreference from "../models/PlayerSetupModels/battlePreference.model.js";
-import CodingExperience from "../models/PlayerSetupModels/codingExperience.model.js";
-import Language from "../models/PlayerSetupModels/language.model.js";
+import Avatar from "../../models/PlayerSetupModels/avatar.model.js";
+import BattlePreference from "../../models/PlayerSetupModels/battlePreference.model.js";
+import CodingExperience from "../../models/PlayerSetupModels/codingExperience.model.js";
+import Language from "../../models/PlayerSetupModels/language.model.js";
 
 const getSetupPlayer = async (req, res) => {
   try {

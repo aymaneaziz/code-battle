@@ -20,7 +20,7 @@ export function StatsGrid({ stats }) {
     },
     {
       label: "Total XP",
-      value: stats.totalXp?.toLocaleString() || 0,
+      value: stats.xp?.toLocaleString() || 0,
       icon: <Zap className="h-5 w-5 text-blue-500" />,
       bg: "bg-blue-50",
     },

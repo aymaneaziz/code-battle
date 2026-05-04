@@ -1,12 +1,12 @@
 import { Router } from "express";
 import { protect } from "../middlewares/auth.middleware.js";
-import { getSystemInfo } from "../controllers/HomePage/getSystemInfo.controller.js";
-import { getPlayerData } from "../controllers/HomePage/getPlayerData.controller.js";
+import { getSystemInfo } from "../controllers/HomePageControllers/getSystemInfo.controller.js";
+import { getPlayerData } from "../controllers/HomePageControllers/getPlayerData.controller.js";
 
-const homePage = Router();
+const homePageRouter = Router();
 // GET api/home/data
-homePage.get("/data", getSystemInfo);
+homePageRouter.get("/data", getSystemInfo);
 // GET api/home/player
-homePage.get("/player", protect, getPlayerData);
+homePageRouter.get("/player", protect, getPlayerData);
 
-export default homePage;
+export default homePageRouter;

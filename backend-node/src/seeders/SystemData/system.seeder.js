@@ -1,4 +1,4 @@
-import SystemInfo from "../../models/System/systemInfo.model.js";
+import System from "../../models/SystemModels/system.model.js";
 import { seedData } from "../seederEngine.js";
 
 const system = [
@@ -14,4 +14,4 @@ const system = [
   },
 ];
 
-export const seedSystemInfo = () => seedData(SystemInfo, system, "_id");
+export const seedSystem = () => seedData(System, system, "_id");

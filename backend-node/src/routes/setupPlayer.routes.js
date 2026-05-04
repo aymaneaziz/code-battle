@@ -1,9 +1,9 @@
 import { Router } from "express";
 import { protect } from "../middlewares/auth.middleware.js";
-import getSetupPlayer from "../controllers/getSetupPlayer.controller.js";
-import postSetupPlayer from "../controllers/postSetupPlayer.controller.js";
-import getSetupCompleted from "../controllers/getSetupCompleted.controller.js";
-import putSetupCompleted from "../controllers/putSetupCompleted.controller.js";
+import getSetupPlayer from "../controllers/SetupPlayerControllers/getSetupPlayer.controller.js";
+import postSetupPlayer from "../controllers/SetupPlayerControllers/postSetupPlayer.controller.js";
+import getSetupCompleted from "../controllers/SetupPlayerControllers/getSetupCompleted.controller.js";
+import putSetupCompleted from "../controllers/SetupPlayerControllers/putSetupCompleted.controller.js";
 
 const setupPlayerRouter = Router();
 // GET api/data/setup

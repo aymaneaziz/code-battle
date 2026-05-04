@@ -7,8 +7,9 @@ import { PORT, VITE_FRONTEND_URL } from "./config/env.js";
 // Routes
 import userRouter from "./routes/user.routes.js";
 import setupPlayerRouter from "./routes/setupPlayer.routes.js";
-import profilePlayer from "./routes/profilePlayer.route.js";
-import homePage from "./routes/homePage.route.js";
+import profilePlayerRouter from "./routes/profilePlayer.route.js";
+
+import homePageRouter from "./routes/homePage.route.js";
 
 // Middlewares
 import errorMiddleware from "./middlewares/error.middleware.js";
@@ -29,15 +30,15 @@ app.use(
   cors({
     origin: VITE_FRONTEND_URL,
     credentials: true,
-  })
+  }),
 );
 // Synch and add new User------------------------------------------
 app.use("/api/user", userRouter);
 // Setup player data------------------------------------------
 app.use("/api/data", setupPlayerRouter);
-app.use("/api/data", profilePlayer);
-// To get The data we need for the HomePage
-app.use("/api/home", homePage);
+app.use("/api/data", profilePlayerRouter);
+// To get The data we need for the HomePage-----------------------------------
+app.use("/api/home", homePageRouter);
 
 //dima ftali had lmiddelware dyal clerk
 app.use(errorClerk);

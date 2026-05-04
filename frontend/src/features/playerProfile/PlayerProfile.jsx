@@ -60,18 +60,20 @@ export const PlayerProfile = () => {
     try {
       setIsSubmitting(true);
       const token = await getToken();
+
       await api.put("/data/profile", formData, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      const updatedData = await api.get("/data/profile", {
+      const data = await api.get("/data/profile", {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      setProfileData(updatedData);
+      setProfileData(data);
       setIsEditing(false);
       toast.success("Profile updated!");
     } catch (err) {
+      console.error("Update error:", err);
       toast.error("Update failed");
     } finally {
       setIsSubmitting(false);
@@ -82,7 +84,7 @@ export const PlayerProfile = () => {
 
   // XP Progress Calculation
   const currentXp = profileData.stats?.xp;
-  const xpNeeded = 100;
+  const xpNeeded = 500;
   const xpPercentage = (currentXp / xpNeeded) * 100;
 
   return (

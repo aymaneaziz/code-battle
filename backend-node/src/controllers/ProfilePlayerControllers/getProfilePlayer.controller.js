@@ -1,9 +1,9 @@
-import User from "../models/user.model.js";
+import User from "../../models/user.model.js";
 
-import "../models/PlayerInfoModels/badge.model.js";
-import "../models/PlayerSetupModels/avatar.model.js";
-import "../models/PlayerSetupModels/language.model.js";
-import "../models/PlayerSetupModels/codingExperience.model.js";
+import "../../models/PlayerInfoModels/badge.model.js";
+import "../../models/PlayerSetupModels/avatar.model.js";
+import "../../models/PlayerSetupModels/language.model.js";
+import "../../models/PlayerSetupModels/codingExperience.model.js";
 
 const getProfilePlayer = async (req, res) => {
   try {
@@ -16,10 +16,7 @@ const getProfilePlayer = async (req, res) => {
       .populate("preferences.codingExperience") // Tjib les détails d'expérience
       .populate("preferences.battlePreference")
       .populate("unlockedAvatars")
-      .populate({
-        path: "badgesPlayer.badge", // Tjib les détails de chaque badge gagné
-        model: "Badge",
-      });
+      .populate("badgesPlayer.badge");
 
     if (!player) {
       return res

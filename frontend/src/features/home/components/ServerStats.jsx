@@ -3,6 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Users, Swords, Activity, Globe } from "lucide-react";
 
 const ServerStats = ({ stats }) => {
+  console.log(stats);
   const items = [
     {
       label: "Active Players",
