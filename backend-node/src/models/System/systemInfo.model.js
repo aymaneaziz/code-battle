@@ -12,6 +12,7 @@ const systemInfoSchema = new mongoose.Schema({
   activePlayers: { type: Number, default: 0 },
   battlesToday: { type: Number, default: 0 },
   liveMaches: { type: Number, default: 0 },
+  totalPlayers: { type: Number, default: 0 },
 
   topPlayersThisWeek: [
     {

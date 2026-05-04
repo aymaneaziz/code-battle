@@ -9,6 +9,7 @@ const system = [
     activePlayers: 0,
     battlesToday: 0,
     liveMaches: 0,
+    totalPlayers: 0,
     topPlayersThisWeek: [],
   },
 ];

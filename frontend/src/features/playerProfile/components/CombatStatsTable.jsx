@@ -51,7 +51,7 @@ export function CombatStatsTable({ stats }) {
             <span
               className={cn(
                 "text-sm font-semibold text-slate-900",
-                item.className,
+                item.className
               )}
             >
               {item.value}
