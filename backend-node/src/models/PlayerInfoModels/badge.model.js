@@ -12,7 +12,7 @@ const badgeSchema = new mongoose.Schema(
       default: "Common",
     },
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
 const Badge = mongoose.models.Badge || mongoose.model("Badge", badgeSchema);

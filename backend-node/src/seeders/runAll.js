@@ -7,6 +7,8 @@ import { seedCodingExperiences } from "./PlayerSetupData/codingExperience.seeder
 import { seedBadges } from "./PlayerInfoData/badge.seeder.js";
 import { seedSystem } from "./SystemData/system.seeder.js";
 import { seedRank } from "./SystemData/rank.seeder.js";
+import { seedProblems } from "./Gameplay/problem.seeder.js";
+import { seedChallenges } from "./Gameplay/challenge.seeder.js";
 
 const runSeeders = async () => {
   try {
@@ -15,6 +17,7 @@ const runSeeders = async () => {
 
     // Execute all seeders Using Promise.all makes it scalable and fast.
     await Promise.all([
+      await seedProblems(), //5ass dima problemes t executa lawla bach challenge seed t5dm
       seedAvatars(),
       seedLanguages(),
       seedBattlePreferences(),
@@ -22,6 +25,7 @@ const runSeeders = async () => {
       seedBadges(),
       seedSystem(),
       seedRank(),
+      seedChallenges(),
 
       // zid hna seed function
     ]);

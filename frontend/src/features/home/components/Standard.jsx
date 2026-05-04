@@ -1,7 +1,6 @@
 import React from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import CodeArenaLogo from "../../../assets/Code-Arena.svg";
 
 const Standard = ({ season, week, handleClick }) => {
   return (

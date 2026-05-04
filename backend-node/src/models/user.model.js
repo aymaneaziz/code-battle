@@ -69,7 +69,7 @@ const userSchema = new mongoose.Schema(
       default: false, // Par défaut false hta idir "Complete Setup"
     },
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
 // On verifie si le modele 'User' est deja compilé dans mongoose.models

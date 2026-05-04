@@ -9,6 +9,7 @@ import Welcome from "./components/Welcome";
 import PlayerCard from "./components/PlayerCard";
 import ServerStats from "./components/ServerStats";
 import CodeArenaLogo from "../../assets/Code-Arena.svg";
+import { Challenges } from "../challenges/Challenges";
 
 const Home = () => {
   const { user } = useUser();
@@ -74,6 +75,14 @@ const Home = () => {
               <div className="h-px flex-1 bg-slate-200"></div>
             </div>
             <ServerStats stats={data.home} />
+          </section>
+          <section className="space-y-4">
+            <div className="flex items-center gap-2">
+              <h2 className="text-sm font-bold text-slate-500 uppercase tracking-widest">
+                Featured Challenges
+              </h2>
+              <div className="h-px flex-1 bg-slate-200"></div>
+            </div>
           </section>
         </main>
       </div>

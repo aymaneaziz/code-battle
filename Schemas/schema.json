@@ -1,153 +1,100 @@
 {
-    "users": [
+  "users": [
+    {
+      "id": "dfbhufbezih13333A",
+      "username": "John Doe",
+      "email": "john.doe@example.com",
+      "createdAt": "2024-01-01T12:00:00Z",
+      "updatedAt": "2024-01-01T12:00:00Z",
+      "lastSeen": "2024-06-01T12:00:00Z",
+      "isOnline": true,
+      "role": "player",
+      "alias": "JohnD",
+      "location": "New York, USA",
+      "bio": "Gamer and streamer",
+      "avatarUrl": "https://example.com/avatar.jpg",
+      "coin": 100,
+      "gems": 50,
+      "preferredLanguages": ["python", "javascript"],
+      "badgesPlayer": [
         {
-            "id": "dfbhufbezih13333A",
-            "username": "John Doe",
-            "email": "john.doe@example.com",
-            "createdAt": "2024-01-01T12:00:00Z",
-            "updatedAt": "2024-01-01T12:00:00Z",
-            "lastSeen": "2024-06-01T12:00:00Z",
-            "isOnline": true,
-            "role": "player",
-            "alias": "JohnD",
-            "location": "New York, USA",
-            "bio": "Gamer and streamer",
-            "avatarUrl": "https://example.com/avatar.jpg",
-            "coin": 100,
-            "gems": 50,
-            "preferredLanguages": [
-                "python",
-                "javascript"
-            ],
-            "badgesPlayer": [
-                {
-                    "id": "badge1",
-                    "earnedAt": "2024-05-01T12:00:00Z"
-                },
-                {
-                    "id": "badge2",
-                    "earnedAt": "2024-06-01T12:00:00Z"
-                }
-            ],
-            "friendsIds": [
-                "idplayer2",
-                "idplayer3"
-            ],
-            "stats": {
-                "elo": 10,
-                "rank": 7,
-                "wins": 5,
-                "losses": 3,
-                "draws": 2,
-                "winRate": 50.0,
-                "totalMatches": 10,
-                "currentStreak": 3,
-                "bestStreak": 5,
-                "xp": 1500,
-                "level": 10,
-                "averageSolveTime": 15.5,
-                "fastestSolveTime": 10.0,
-                "hardestWin": "Extreme",
-                "prefectRuns": 2,
-                "itemsUsed": 4,
-                "hintUsed": 1
-            }
-        }
-    ],
-    "problems": [
-        {
-            "id": "problem1",
-            "title": "Two Sum",
-            "slug": "two-sum",
-            "description": "Given an array of integers, return indices of the two numbers such that they add up to a specific target.",
-            "difficulty": "easy",
-            "timeLimit": 1000,
-            "tags": [
-                "array",
-                "hash-table"
-            ],
-            "example": [
-                {
-                    "input": "nums = [2, 7, 11, 15], target = 9",
-                    "output": "[0, 1]",
-                    "explanation": "Because nums[0] + nums[1] == 9, we return [0, 1]."
-                }
-            ],
-            "testCases": [
-                {
-                    "id": "testcase1",
-                    "input": "[1, 2, 3]",
-                    "output": "[1, 2]",
-                    "points": 10
-                },
-                {
-                    "id": "testcase2",
-                    "input": "[3, 3]",
-                    "output": "[0, 1]",
-                    "points": 20
-                }
-            ],
-            "starterCode": {
-                "python": "def two_sum(nums, target):\n    # Your code here\n    pass",
-                "javascript": "function twoSum(nums, target) {\n    // Your code here\n}"
-            },
-            "constraints": [
-                "2 <= nums.length <= 10^4",
-                "-10^9 <= nums[i] <= 10^9",
-                "-10^9 <= target <= 10^9",
-                "Only one valid answer exists."
-            ],
-            "createdAt": "2024-01-01T12:00:00Z",
-            "updatedAt": "2024-01-01T12:00:00Z"
-        }
-    ],
-    "matches": {
-        "id": "match1",
-        "player1Id": "player1",
-        "player2Id": "player2",
-        "problemId": "problem1",
-        "createdAt": "2024-01-01T12:00:00Z"
-    },
-    "items": [
-        {
-            "id": "item1",
-            "name": "Extra Hint",
-            "description": "Get an extra hint for a problem",
-            "price": 50,
-            "iconUrl": "💡"
+          "id": "badge1",
+          "earnedAt": "2024-05-01T12:00:00Z"
         },
         {
-            "id": "item2",
-            "name": "Time Extension",
-            "description": "Get extra time to solve a problem",
-            "price": 100,
-            "iconUrl": "⏰"
-        },
-        {
-            "id": "item3",
-            "name": "Skip Problem",
-            "description": "Skip a problem and move to the next one",
-            "price": 200,
-            "iconUrl": "⏭️"
+          "id": "badge2",
+          "earnedAt": "2024-06-01T12:00:00Z"
         }
-    ],
-    "shop": {
-        "itemsShop": [
-            {
-                "idItem": "item1",
-                "discount": 10,
-                "itemNumber": 5
-            },
-            {
-                "idItem": "item2",
-                "discount": 20,
-                "itemNumber": 3
-            },
-            {
-                "idItem": "item3",
-                "discount": 30,
-                "itemNumber": 1
-            }
-        ]
+      ],
+      "friendsIds": ["idplayer2", "idplayer3"],
+      "stats": {
+        "elo": 10,
+        "rank": 7,
+        "wins": 5,
+        "losses": 3,
+        "draws": 2,
+        "winRate": 50.0,
+        "totalMatches": 10,
+        "currentStreak": 3,
+        "bestStreak": 5,
+        "xp": 1500,
+        "level": 10,
+        "averageSolveTime": 15.5,
+        "fastestSolveTime": 10.0,
+        "hardestWin": "Extreme",
+        "prefectRuns": 2,
+        "itemsUsed": 4,
+        "hintUsed": 1
+      }
     }
+  ],
+  "matches": {
+    "id": "match1",
+    "player1Id": "player1",
+    "player2Id": "player2",
+    "problemId": "problem1",
+    "createdAt": "2024-01-01T12:00:00Z"
+  },
+  "items": [
+    {
+      "id": "item1",
+      "name": "Extra Hint",
+      "description": "Get an extra hint for a problem",
+      "price": 50,
+      "iconUrl": "💡"
+    },
+    {
+      "id": "item2",
+      "name": "Time Extension",
+      "description": "Get extra time to solve a problem",
+      "price": 100,
+      "iconUrl": "⏰"
+    },
+    {
+      "id": "item3",
+      "name": "Skip Problem",
+      "description": "Skip a problem and move to the next one",
+      "price": 200,
+      "iconUrl": "⏭️"
+    }
+  ],
+  "shop": {
+    "itemsShop": [
+      {
+        "idItem": "item1",
+        "discount": 10,
+        "itemNumber": 5
+      },
+      {
+        "idItem": "item2",
+        "discount": 20,
+        "itemNumber": 3
+      },
+      {
+        "idItem": "item3",
+        "discount": 30,
+        "itemNumber": 1
+      }
+    ]
+  }
 }
