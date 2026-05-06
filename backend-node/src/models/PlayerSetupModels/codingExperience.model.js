@@ -1,8 +1,14 @@
 import mongoose from "mongoose";
+import { generateId } from "../../config/idGenerator.js";
 
 const codingExperienceSchema = new mongoose.Schema(
   {
-    experienceId: { type: String, required: true, unique: true },
+    experienceId: {
+      type: String,
+      required: true,
+      unique: true,
+      default: () => generateId("experience"),
+    },
     label: {
       type: String,
       enum: ["Beginner", "Intermediate", "Advanced"],

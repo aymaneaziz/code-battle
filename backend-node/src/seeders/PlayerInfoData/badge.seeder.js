@@ -1,5 +1,5 @@
 import Badge from "../../models/PlayerInfoModels/badge.model.js";
-import { seedData } from "../seederEngine.js";
+import { seedData } from "../../config/seederEngine.js";
 
 const badges = [
   {

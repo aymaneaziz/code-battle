@@ -1,5 +1,5 @@
-import { seedData } from "../seederEngine.js";
 import Rank from "../../models/SystemModels/rank.model.js";
+import { seedData } from "../../config/seederEngine.js";
 
 const ranks = [
   {

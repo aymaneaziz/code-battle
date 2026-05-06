@@ -20,7 +20,7 @@ export function BadgesSection({ badges = [] }) {
               key={item.badge?._id}
               title={item.badge?.name}
               className={cn(
-                "aspect-square rounded-xl border flex items-center justify-center text-xl transition-all hover:shadow-md cursor-help",
+                "aspect-square rounded-xl border flex items-center justify-center text-xl transition-all hover:shadow-md cursor-pointer",
                 item.badge?.rarity === "Legendary"
                   ? "border-amber-200 bg-amber-50"
                   : item.badge?.rarity === "Epic"

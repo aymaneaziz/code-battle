@@ -19,12 +19,10 @@ const getProfilePlayer = async (req, res) => {
       .populate("badgesPlayer.badge");
 
     if (!player) {
-      return res
-        .status(404)
-        .json({ message: "Joueur introuvable dans la base de données" });
+      return res.status(404).json({ message: "Player not found " });
     }
 
-    // Logic pour vérifier le winRate avant d'envoyer (Hta f l'Schema default 0)
+    // Logic pour vérifier le winRate avant d'envoyer
     const total = player.stats.wins + player.stats.losses;
     if (total > 0 && player.stats.totalMatches !== total) {
       player.stats.totalMatches = total;
@@ -33,11 +31,10 @@ const getProfilePlayer = async (req, res) => {
 
     // Mise à jour de la dernière activité
     player.lastActive = new Date();
-    player.status = "online"; // Kat-welli online melli kat-fetchi l'profile
+    player.status = "online"; // Kat-welli online melli katfetchi l'profile
     await player.save();
 
-    // Construction de l'objet de réponse avec uniquement les champs spécifiques
-    // Hna kansifto ghir dakchi li htajiti bdebt f l-front
+    // Hna kansifto ghir dakchi li htajiti bdebt f lfront
     const profileResponse = {
       username: player.username, // Inclus car nécessaire pour l'identité
       displayName: player.displayName,

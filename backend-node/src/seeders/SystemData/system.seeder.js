@@ -1,5 +1,5 @@
 import System from "../../models/SystemModels/system.model.js";
-import { seedData } from "../seederEngine.js";
+import { seedData } from "../../config/seederEngine.js";
 
 const system = [
   {

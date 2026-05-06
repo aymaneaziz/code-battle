@@ -9,7 +9,6 @@ import Welcome from "./components/Welcome";
 import PlayerCard from "./components/PlayerCard";
 import ServerStats from "./components/ServerStats";
 import CodeArenaLogo from "../../assets/Code-Arena.svg";
-import { Challenges } from "../challenges/Challenges";
 
 const Home = () => {
   const { user } = useUser();
@@ -36,7 +35,7 @@ const Home = () => {
         // Hna f Fetch, homeData hwa lobj lli fih currentSeason
         setData({ home: homeData, player: playerData });
       } catch (err) {
-        console.error("Erreur f l-khidma:", err);
+        console.error("Erreur server:", err);
       } finally {
         setLoading(false);
       }

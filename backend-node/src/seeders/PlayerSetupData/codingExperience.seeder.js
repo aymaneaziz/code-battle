@@ -1,5 +1,5 @@
 import CodingExperience from "../../models/PlayerSetupModels/codingExperience.model.js";
-import { seedData } from "../seederEngine.js";
+import { seedData } from "../../config/seederEngine.js";
 
 const codingExperiences = [
   {

@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { generateId } from "../../config/idGenerator.js";
 
 const languageSchema = new mongoose.Schema(
   {
@@ -6,8 +7,7 @@ const languageSchema = new mongoose.Schema(
       type: String,
       required: true,
       unique: true,
-      trim: true,
-      lowercase: true,
+      default: () => generateId("language"),
     },
     name: { type: String, required: true, trim: true },
     iconUrl: { type: String, required: true, trim: true },

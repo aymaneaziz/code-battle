@@ -1,5 +1,5 @@
 import BattlePreference from "../../models/PlayerSetupModels/battlePreference.model.js";
-import { seedData } from "../seederEngine.js";
+import { seedData } from "../../config/seederEngine.js";
 
 const battlePreferences = [
   {

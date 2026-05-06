@@ -1,8 +1,14 @@
 import mongoose from "mongoose";
+import { generateId } from "../../config/idGenerator.js";
 
 const battlePreferenceSchema = new mongoose.Schema(
   {
-    preferenceId: { type: String, required: true, unique: true },
+    preferenceId: {
+      type: String,
+      required: true,
+      unique: true,
+      default: () => generateId("preference"),
+    },
     label: { type: String, enum: ["Easy", "Medium", "Hard"], required: true },
     description: { type: String, required: true },
     iconUrl: { type: String, required: true },

@@ -1,9 +1,17 @@
 import mongoose from "mongoose";
 import { statsSchema } from "./PlayerInfoModels/stats.model.js";
+import { generateId } from "../config/idGenerator.js";
 
 const userSchema = new mongoose.Schema(
   {
     clerkId: { type: String, required: true, unique: true },
+
+    userId: {
+      type: String,
+      unique: true,
+      required: true,
+      default: () => generateId("user"),
+    },
     username: { type: String, required: true, trim: true, minlength: 3 },
 
     email: { type: String, required: true, unique: true, lowercase: true },
@@ -69,7 +77,7 @@ const userSchema = new mongoose.Schema(
       default: false, // Par défaut false hta idir "Complete Setup"
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 // On verifie si le modele 'User' est deja compilé dans mongoose.models

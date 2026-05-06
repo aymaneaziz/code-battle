@@ -1,6 +1,6 @@
-import { seedData } from "../seederEngine.js";
-import PowerUp from "../../models/Gameplay/powerUps.models.js";
-import ShopItem from "../../models/Shop/shopItem.model.js";
+import PowerUp from "../../models/ShopModels/powerUps.models.js";
+import ShopItem from "../../models/ShopModels/shopItem.model.js";
+import { seedData } from "../../config/seederEngine.js";
 
 export const seedShopItems = async () => {
   const powerUps = await PowerUp.find();

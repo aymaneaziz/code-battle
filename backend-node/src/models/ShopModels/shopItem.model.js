@@ -1,8 +1,14 @@
 import mongoose from "mongoose";
+import { generateId } from "../../config/idGenerator.js";
 
 const shopItemSchema = new mongoose.Schema(
   {
-    shopItemId: { type: String, required: true, unique: true },
+    shopItemId: {
+      type: String,
+      required: true,
+      unique: true,
+      default: () => generateId("shop"),
+    },
     refId: { type: mongoose.Schema.Types.ObjectId, required: true },
     refType: {
       type: String,
@@ -14,7 +20,7 @@ const shopItemSchema = new mongoose.Schema(
       gems: { type: Number, required: true },
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 const ShopItem =

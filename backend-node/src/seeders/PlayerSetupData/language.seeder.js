@@ -1,6 +1,5 @@
 import Language from "../../models/PlayerSetupModels/language.model.js";
-
-import { seedData } from "../seederEngine.js";
+import { seedData } from "../../config/seederEngine.js";
 
 const Languages = [
   { languageId: "lang1", name: "Python", iconUrl: "🐍" },

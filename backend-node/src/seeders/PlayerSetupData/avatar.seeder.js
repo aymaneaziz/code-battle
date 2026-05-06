@@ -1,5 +1,5 @@
 import Avatar from "../../models/PlayerSetupModels/avatar.model.js";
-import { seedData } from "../seederEngine.js";
+import { seedData } from "../../config/seederEngine.js";
 
 const avatars = [
   { avatarId: "avatar1", label: "Warrior", iconUrl: "🛡️", isDefault: true },

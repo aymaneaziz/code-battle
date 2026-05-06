@@ -1,8 +1,14 @@
 import mongoose from "mongoose";
+import { generateId } from "../../config/idGenerator.js";
 
 const powerUpSchema = new mongoose.Schema(
   {
-    powerUpId: { type: String, required: true, unique: true },
+    powerUpId: {
+      type: String,
+      required: true,
+      unique: true,
+      default: () => generateId("powerUp"),
+    },
     label: { type: String, required: true, unique: true },
     icon: { type: String, required: true, unique: true },
     description: { type: String, required: true },
@@ -11,7 +17,7 @@ const powerUpSchema = new mongoose.Schema(
     maxUsesPerMatch: { type: Number, required: true },
     effect: { type: Object, required: true },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 const PowerUp =

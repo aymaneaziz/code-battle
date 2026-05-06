@@ -18,6 +18,7 @@ import errorClerk from "./middlewares/errorClerk.middleware.js";
 
 // DataBase
 import connectToDatabase from "./database/mongodb.js";
+import challengePageRouter from "./routes/challengesPage.route.js";
 
 const app = express();
 
@@ -39,6 +40,8 @@ app.use("/api/data", setupPlayerRouter);
 app.use("/api/data", profilePlayerRouter);
 // To get The data we need for the HomePage-----------------------------------
 app.use("/api/home", homePageRouter);
+// To get The data we need for the challenges-----------------------------------
+app.use("/api/challenges", challengePageRouter);
 
 //dima ftali had lmiddelware dyal clerk
 app.use(errorClerk);

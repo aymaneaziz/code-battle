@@ -7,7 +7,7 @@ import { AuthLayout } from "./layouts/AuthLayout";
 
 // les routes principales
 import Home from "./features/home/Home";
-import { Challenges } from "./features/challenges/Challenges";
+import Challenges from "./features/challenges/Challenges";
 import { Missions } from "./features/missions/Missions";
 import { Guild } from "./features/guild/Guild";
 

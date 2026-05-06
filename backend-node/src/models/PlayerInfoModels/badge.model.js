@@ -1,8 +1,14 @@
 import mongoose from "mongoose";
+import { generateId } from "../../config/idGenerator.js";
 
 const badgeSchema = new mongoose.Schema(
   {
-    badgeId: { type: String, required: true, unique: true },
+    badgeId: {
+      type: String,
+      required: true,
+      unique: true,
+      default: () => generateId("badge"),
+    },
     name: { type: String, required: true },
     description: { type: String, required: true },
     iconUrl: { type: String, required: true },
@@ -12,7 +18,7 @@ const badgeSchema = new mongoose.Schema(
       default: "Common",
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 const Badge = mongoose.models.Badge || mongoose.model("Badge", badgeSchema);

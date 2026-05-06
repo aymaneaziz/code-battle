@@ -1,5 +1,5 @@
-import { seedData } from "../seederEngine.js";
-import PowerUp from "../../models/Gameplay/powerUps.models.js";
+import PowerUp from "../../models/ShopModels/powerUps.models.js";
+import { seedData } from "../../config/seederEngine.js";
 
 const powerUps = [
   {

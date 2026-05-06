@@ -1,8 +1,14 @@
 import mongoose from "mongoose";
+import { generateId } from "../../config/idGenerator.js";
 
 const problemSchema = new mongoose.Schema(
   {
-    problemId: { type: String, required: true, unique: true },
+    problemId: {
+      type: String,
+      required: true,
+      unique: true,
+      default: () => generateId("problem"),
+    },
     title: { type: String, required: true },
     slug: { type: String, required: true, unique: true },
     description: { type: String, required: true },
@@ -43,7 +49,7 @@ const problemSchema = new mongoose.Schema(
 
     constraints: { type: mongoose.Schema.Types.Mixed },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 const Problem =
