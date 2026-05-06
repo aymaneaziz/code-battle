@@ -1,10 +1,11 @@
 import api from "../../../service/GlobalApi.js";
 
-// Fetch all challenges based on filters
+// Njibu ga3 les challenges 3la hsab lfilters li dar l user
 export const fetchChallenges = async (filters, token) => {
   try {
-    // Build the query string dynamically
+    // Kandiro lbuild dyal query string bghit nchof chno bgha luser
     const params = new URLSearchParams();
+    // kadir gestion de format o l (codage) dyl Url ex : /challenges?difficulty=HARD&status=solved
 
     if (filters.difficulty && filters.difficulty !== "All") {
       params.append("difficulty", filters.difficulty);
@@ -29,7 +30,7 @@ export const fetchChallenges = async (filters, token) => {
   }
 };
 
-// Fetch the daily challenge
+// Njibu lchallenge dyal l-youm
 export const fetchDailyChallenge = async (token) => {
   try {
     return await api.get("/challenges/daily", {
@@ -43,7 +44,7 @@ export const fetchDailyChallenge = async (token) => {
   }
 };
 
-// Fetch the user's progress stats for the widget
+// Njibu lprogres dyal luser fin wsel f les stats
 export const fetchUserProgress = async (token) => {
   try {
     return await api.get("/challenges/progress", {

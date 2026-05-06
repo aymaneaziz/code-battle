@@ -25,6 +25,7 @@ const Challenges = () => {
       try {
         const token = await getToken();
         const data = await fetchChallenges(filters, token);
+
         setChallenges(data);
       } catch (error) {
         console.error("Error loading challenges");
@@ -43,7 +44,10 @@ const Challenges = () => {
         <h1 className="text-3xl font-extrabold tracking-tight">
           Challenge Vault
         </h1>
-        <Button variant="outline" className="gap-2 font-semibold shadow-sm">
+        <Button
+          variant="outline"
+          className="gap-2 font-semibold shadow-sm cursor-pointer"
+        >
           <Dices className="w-4 h-4" />
           Random Challenge
         </Button>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -9,7 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { CheckCircle2, Circle } from "lucide-react";
+import { CheckCircle2, ChevronDown, ChevronUp, Circle } from "lucide-react";
 
 const getDifficultyBadge = (difficulty) => {
   const styles = {
@@ -28,8 +28,9 @@ const getDifficultyBadge = (difficulty) => {
 };
 
 const ChallengeList = ({ challenges = [], loading }) => {
-  const displayData = challenges.length > 0 ? challenges : [];
-
+  const [showAll, setShowAll] = useState(false);
+  // If showAll is true, show everything. Otherwise, show 3la 7ssab li bghit .
+  const displayData = showAll ? challenges : challenges.slice(0, 5);
   return (
     <Card className="shadow-sm border-slate-200 overflow-hidden bg-white">
       <Table>
@@ -99,9 +100,24 @@ const ChallengeList = ({ challenges = [], loading }) => {
         </TableBody>
       </Table>
 
-      <div className="p-4 text-center text-sm font-semibold text-blue-600 hover:text-blue-700 bg-slate-50/50 hover:bg-blue-50/50 cursor-pointer border-t border-slate-100 transition-colors">
-        Show more &gt;&gt;
-      </div>
+      {/* Show More  and Show Less Button */}
+      {!loading && challenges.length > 5 && (
+        <div
+          onClick={() => setShowAll(!showAll)}
+          className="p-4 flex items-center justify-center gap-2 text-sm font-bold text-blue-600 hover:text-blue-700 bg-slate-50/50 hover:bg-blue-50/50 cursor-pointer border-t border-slate-100 transition-all select-none"
+        >
+          {showAll ? (
+            <>
+              Show less <ChevronUp className="w-4 h-4" />
+            </>
+          ) : (
+            <>
+              Show more ({challenges.length}){" "}
+              <ChevronDown className="w-4 h-4" />
+            </>
+          )}
+        </div>
+      )}
     </Card>
   );
 };

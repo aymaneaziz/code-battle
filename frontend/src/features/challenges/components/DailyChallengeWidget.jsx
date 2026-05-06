@@ -11,7 +11,21 @@ import { Button } from "@/components/ui/button";
 import { Clock } from "lucide-react";
 import { useAuth } from "@clerk/clerk-react";
 import { fetchDailyChallenge } from "../services/challengeApi";
-
+const getDifficultyBadge = (difficulty) => {
+  const styles = {
+    Easy: "bg-green-100 text-green-700 border-green-200 hover:bg-green-100",
+    Medium:
+      "bg-yellow-100 text-yellow-700 border-yellow-200 hover:bg-yellow-100",
+    Hard: "bg-red-100 text-red-700 border-red-200 hover:bg-red-100",
+    Extreme:
+      "bg-purple-100 text-purple-700 border-purple-200 hover:bg-purple-100",
+  };
+  return (
+    <Badge variant="outline" className={`${styles[difficulty]} font-semibold`}>
+      {difficulty}
+    </Badge>
+  );
+};
 const DailyChallengeWidget = () => {
   const { getToken } = useAuth();
   const [daily, setDaily] = useState(null);
@@ -22,6 +36,7 @@ const DailyChallengeWidget = () => {
       try {
         const token = await getToken();
         const data = await fetchDailyChallenge(token);
+
         setDaily(data);
       } catch (err) {
         console.error("Error loading daily challenge");
@@ -33,7 +48,7 @@ const DailyChallengeWidget = () => {
   }, [getToken]);
 
   if (loading) return <Card className="p-6">Loading...</Card>;
-  // Safety check: Ensure both daily and the populated problemId exist
+
   if (!daily || !daily.problemId) return null;
 
   return (
@@ -57,13 +72,16 @@ const DailyChallengeWidget = () => {
         </p>
 
         <div className="flex justify-between items-center mt-6">
-          <Badge
-            variant="outline"
-            className="bg-green-50 text-green-600 border-green-200 shadow-none font-bold"
-          >
-            {/* FIX: Changed daily.xpBonus to daily.xp based on your model */}+
-            {daily.xp} XP
-          </Badge>
+          <div className="flex gap-2">
+            <Badge
+              variant="outline"
+              className="bg-green-50 text-green-600 border-green-200 shadow-none font-bold"
+            >
+              {daily.xp} XP
+            </Badge>
+            {getDifficultyBadge(daily.problemId.difficulty)}
+          </div>
+
           <div className="flex items-center text-slate-400 text-xs font-medium gap-1">
             <Clock className="w-3.5 h-3.5" />
             24h Left
@@ -72,7 +90,7 @@ const DailyChallengeWidget = () => {
       </CardContent>
 
       <CardFooter>
-        <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold shadow-sm">
+        <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold shadow-sm cursor-pointer">
           Play Daily
         </Button>
       </CardFooter>

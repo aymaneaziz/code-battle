@@ -11,9 +11,7 @@ const MyProgressWidget = () => {
     const loadProgress = async () => {
       try {
         const token = await getToken();
-        const response = await fetchUserProgress(token);
-
-        const data = Array.isArray(response) ? response : response.stats || [];
+        const data = await fetchUserProgress(token);
 
         const coloredStats = data.map((stat) => {
           let colorClass = "bg-slate-500";
@@ -27,7 +25,7 @@ const MyProgressWidget = () => {
         setStats(coloredStats);
       } catch (err) {
         console.error("Error loading progress:", err);
-        setStats([]); // Prevent UI crash
+        setStats([]);
       }
     };
     loadProgress();

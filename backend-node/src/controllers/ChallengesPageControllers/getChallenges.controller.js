@@ -8,46 +8,44 @@ export const getChallenges = async (req, res, next) => {
     const { difficulty, search, status } = req.query;
     const clerkIdFromAuth = req.auth.userId;
 
-    // Get User and Solved IDs
+    // Njibu luser mn Bd bach nchofo chno hell (solved)
     const user = await User.findOne({ clerkId: clerkIdFromAuth }).select("_id");
     let solvedChallengeIds = new Set();
 
     if (user) {
       const userProgress = await UserProgress.findOne({ userId: user._id });
       if (userProgress?.solvedChallenges) {
+        // Kandirohom f Set bach lrecherche ikoun khfif o omptimizer
         userProgress.solvedChallenges.forEach((id) =>
           solvedChallengeIds.add(id.toString()),
         );
       }
     }
 
-    // Build the Problem Match Filter
+    // Filter dyal  difficulty w title
     let problemMatch = {};
     if (difficulty && difficulty !== "All") {
       problemMatch.difficulty = difficulty.toUpperCase();
     }
     if (search) {
-      problemMatch.title = { $regex: search, $options: "i" };
+      problemMatch.title = { $regex: search, $options: "i" }; // "i" bach ignore case
     }
 
-    // Fetch and Populate
-    // We filter nested fields using the 'match' property in populate
+    // Kandiro populate bach njibu lproblem li lié b lchallenge
     const challenges = await Challenge.find({}).populate({
       path: "problemId",
       match: problemMatch,
     });
 
-    // Transform and Filter by Status
+    // Nettoyage dyal les données
     const formattedChallenges = challenges
-      .filter((ch) => ch.problemId !== null) // Remove challenges that didn't match difficulty/search
+      .filter((ch) => ch.problemId !== null) // Nhaydo li mal9awch fihom match
       .map((ch) => {
         const isSolved = solvedChallengeIds.has(ch._id.toString());
         return {
           id: ch.challengeId,
           title: ch.problemId.title,
-          difficulty:
-            ch.problemId.difficulty.charAt(0) +
-            ch.problemId.difficulty.slice(1).toLowerCase(),
+          difficulty: ch.problemId.difficulty,
           xp: ch.xp,
           solves: ch.solvedCount,
           winRate: `${ch.acceptanceRate}%`,
@@ -55,7 +53,7 @@ export const getChallenges = async (req, res, next) => {
         };
       });
 
-    // Apply Status Filter (Solved/Unsolved)
+    // Ila khtar luser filter b status (solved/unsolved)
     const finalResult =
       status && status !== "All"
         ? formattedChallenges.filter(

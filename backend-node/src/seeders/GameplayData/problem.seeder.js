@@ -107,6 +107,88 @@ const problems = [
       nValue: { min: 0, max: 37 },
     },
   },
+  {
+    problemId: "prob_valid_palindrome",
+    title: "Valid Palindrome",
+    slug: "valid-palindrome",
+    description:
+      "Given a string, return true if it is a palindrome, considering only alphanumeric characters and ignoring cases.",
+    difficulty: "EASY",
+    timeLimitMs: 1000,
+    tags: ["string", "two-pointers"],
+    returnType: "boolean",
+    functionName: "isPalindrome",
+    examples: [
+      { input: { s: "A man, a plan, a canal: Panama" }, output: true },
+    ],
+    testCases: [
+      {
+        testCaseId: "tc1",
+        input: { s: "race a car" },
+        output: false,
+        points: 10,
+      },
+    ],
+    starterCode: {
+      python: "def isPalindrome(s):\n    pass",
+      javascript: "function isPalindrome(s) {\n\n}",
+    },
+    constraints: { sLength: { min: 1, max: 200000 } },
+  },
+  {
+    problemId: "prob_coin_change",
+    title: "Coin Change",
+    slug: "coin-change",
+    description:
+      "Return the fewest number of coins that you need to make up a specific amount. If that amount of money cannot be made up by any combination of the coins, return -1.",
+    difficulty: "MEDIUM",
+    timeLimitMs: 2000,
+    tags: ["dynamic-programming", "array"],
+    returnType: "number",
+    functionName: "coinChange",
+    examples: [
+      {
+        input: { coins: [1, 2, 5], amount: 11 },
+        output: 3,
+        explanation: "11 = 5 + 5 + 1",
+      },
+    ],
+    testCases: [
+      {
+        testCaseId: "tc1",
+        input: { coins: [2], amount: 3 },
+        output: -1,
+        points: 20,
+      },
+    ],
+    starterCode: {
+      python: "def coinChange(coins, amount):\n    pass",
+      javascript: "function coinChange(coins, amount) {\n\n}",
+    },
+    constraints: {
+      coinsLength: { min: 1, max: 12 },
+      amount: { min: 0, max: 10000 },
+    },
+  },
+  {
+    problemId: "prob_n_queens",
+    title: "N-Queens Puzzle",
+    slug: "n-queens",
+    description:
+      "The n-queens puzzle is the problem of placing n queens on an n x n chessboard such that no two queens attack each other. Return the number of distinct solutions.",
+    difficulty: "EXTREME",
+    timeLimitMs: 3000,
+    tags: ["backtracking", "recursion"],
+    returnType: "number",
+    functionName: "totalNQueens",
+    examples: [{ input: { n: 4 }, output: 2 }],
+    testCases: [{ testCaseId: "tc1", input: { n: 8 }, output: 92, points: 50 }],
+    starterCode: {
+      python: "def totalNQueens(n):\n    pass",
+      javascript: "function totalNQueens(n) {\n\n}",
+    },
+    constraints: { n: { min: 1, max: 9 } },
+  },
 ];
 
 export const seedProblems = () => seedData(Problem, problems, "problemId");

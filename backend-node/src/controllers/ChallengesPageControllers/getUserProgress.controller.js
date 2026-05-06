@@ -21,14 +21,15 @@ export const getUserProgress = async (req, res) => {
       userProgress?.solvedChallenges?.map((id) => id.toString()) || [],
     );
 
-    const difficulties = ["EASY", "MEDIUM", "HARD", "EXTREME"];
+    const difficulties = ["Easy", "Medium", "Hard", "Extreme"];
 
+    // Kandiro boucle bach nhsbo chhal mn wahda hel f koulla niveau
     const stats = difficulties.map((diff) => {
-      // Filter challenges by difficulty (with safety check for problemId)
+      // Njibu ga3 les challenges dyal had ldifficulty
       const challengesInDiff = allChallenges.filter(
         (c) => c.problemId && c.problemId.difficulty === diff,
       );
-
+      // Nhsbo chhal mn wahda hel fihom
       const solvedInDiff = challengesInDiff.filter((c) =>
         solvedIds.has(c._id.toString()),
       );
