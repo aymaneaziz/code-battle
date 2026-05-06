@@ -38,7 +38,7 @@ const Challenges = () => {
   }, [filters, getToken]);
 
   return (
-    <div className="min-h-screen bg-slate-50/50 text-slate-900 p-6 md:p-10 font-sans">
+    <div className="min-h-screen bg-slate-50/50 text-slate-900 p-6 md:p-8 font-sans">
       {/* Header */}
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-extrabold tracking-tight">

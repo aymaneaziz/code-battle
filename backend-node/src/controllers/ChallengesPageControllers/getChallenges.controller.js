@@ -25,7 +25,7 @@ export const getChallenges = async (req, res, next) => {
     // Filter dyal  difficulty w title
     let problemMatch = {};
     if (difficulty && difficulty !== "All") {
-      problemMatch.difficulty = difficulty.toUpperCase();
+      problemMatch.difficulty = difficulty;
     }
     if (search) {
       problemMatch.title = { $regex: search, $options: "i" }; // "i" bach ignore case
@@ -50,6 +50,7 @@ export const getChallenges = async (req, res, next) => {
           solves: ch.solvedCount,
           winRate: `${ch.acceptanceRate}%`,
           status: isSolved ? "solved" : "unsolved",
+          reward: ch.reward,
         };
       });
 

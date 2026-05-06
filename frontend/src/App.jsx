@@ -22,6 +22,7 @@ import { PlayerProtectedRoute } from "./features/playerSetup/components/PlayerPr
 import { PlayerProfile } from "./features/playerProfile/PlayerProfile";
 import { SetupCompletedProtectedRoute } from "./features/playerSetup/components/SetupCompletedProtectedRoute";
 import { SetupNotCompletedProtectedRoute } from "./features/playerSetup/components/SetupNotCompletedProtectedRoute";
+import ChallengePlay from "./features/challengePlay/ChallengePlay";
 
 // Correction : On retire "as const" qui est purement TypeScript
 const CLERK_COMMON_PROPS = {
@@ -55,6 +56,7 @@ function App() {
         {/* Protected player routes */}
         <Route element={<PlayerProtectedRoute />}>
           <Route path="/challenges" element={<Challenges />} />
+          <Route path="/challenges/:challengeId" element={<ChallengePlay />} />
           <Route path="/missions" element={<Missions />} />
           <Route path="/guild" element={<Guild />} />
           <Route path="/shop" element={<Shop />} />

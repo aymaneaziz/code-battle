@@ -5,7 +5,7 @@ export const fetchChallenges = async (filters, token) => {
   try {
     // Kandiro lbuild dyal query string bghit nchof chno bgha luser
     const params = new URLSearchParams();
-    // kadir gestion de format o l (codage) dyl Url ex : /challenges?difficulty=HARD&status=solved
+    // kadir gestion de format o l (codage) dyl Url ex : /challenges?difficulty=Hard&status=solved
 
     if (filters.difficulty && filters.difficulty !== "All") {
       params.append("difficulty", filters.difficulty);

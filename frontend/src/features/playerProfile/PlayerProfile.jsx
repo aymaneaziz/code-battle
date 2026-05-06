@@ -89,7 +89,7 @@ export const PlayerProfile = () => {
 
   return (
     <div className=" text-slate-900 bg-gray-50 min-h-screen p-4 md:p-8">
-      <div className="max-w-6xl mx-auto space-y-6">
+      <div className=" mx-auto space-y-6">
         {/* Actions Header */}
         <div className="flex justify-between items-center">
           <AddFriendDialog />

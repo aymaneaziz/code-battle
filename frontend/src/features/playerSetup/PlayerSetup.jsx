@@ -158,7 +158,7 @@ export const PlayerSetup = () => {
   const isFormValid = formData.hasAggreedToTerms && !isSubmitting;
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center py-5 px-4 md:px-8">
+    <div className="min-h-screen w-full flex items-center bg-slate-50/50 justify-center py-5 px-4 md:px-8">
       <div className="w-full ">
         <form
           onSubmit={onSubmit}

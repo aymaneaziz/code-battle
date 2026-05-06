@@ -8,9 +8,10 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Clock } from "lucide-react";
+import { Clock, Coins, Gem, Zap } from "lucide-react";
 import { useAuth } from "@clerk/clerk-react";
 import { fetchDailyChallenge } from "../services/challengeApi";
+import { useNavigate } from "react-router-dom";
 const getDifficultyBadge = (difficulty) => {
   const styles = {
     Easy: "bg-green-100 text-green-700 border-green-200 hover:bg-green-100",
@@ -31,11 +32,20 @@ const DailyChallengeWidget = () => {
   const [daily, setDaily] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const navigate = useNavigate();
+  const handleChallengeClick = (id) => {
+    navigate(`/challenges/${id}`, {
+      state: { fromVault: true },
+      // Katsift w7d state ghir bach tgol bli m y9drch ymchi '/challenges/${id}'mn ghir chi blassa mn ghir hadi
+    });
+  };
+
   useEffect(() => {
     const loadDaily = async () => {
       try {
         const token = await getToken();
         const data = await fetchDailyChallenge(token);
+        console.log(data);
 
         setDaily(data);
       } catch (err) {
@@ -52,18 +62,25 @@ const DailyChallengeWidget = () => {
   if (!daily || !daily.problemId) return null;
 
   return (
-    <Card className="shadow-sm border-slate-200 bg-white flex flex-col ">
+    <Card className="shadow-sm border-slate-200 bg-white flex flex-col">
       <CardHeader className="flex flex-row items-center justify-between pb-2 border-b border-slate-100">
         <CardTitle className="text-lg font-extrabold tracking-tight text-slate-900">
           Daily Challenge
         </CardTitle>
-        <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-200 shadow-none">
-          New
-        </Badge>
-      </CardHeader>
 
-      <CardContent className="pt-4 ">
-        {/* FIX: Use daily.problemId to reach title and description */}
+        <div className="flex items-center gap-3">
+          <div className="flex items-center text-slate-400 text-xs font-medium gap-1">
+            <Clock className="w-3.5 h-3.5" />
+            <span>24h Left</span>
+          </div>
+
+          <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-200 shadow-none border-none">
+            New
+          </Badge>
+        </div>
+      </CardHeader>
+      <CardContent>
+        {/* title and description */}
         <h3 className="text-md font-bold text-slate-800 mb-2">
           {daily.problemId.title}
         </h3>
@@ -73,24 +90,44 @@ const DailyChallengeWidget = () => {
 
         <div className="flex justify-between items-center mt-6">
           <div className="flex gap-2">
-            <Badge
-              variant="outline"
-              className="bg-green-50 text-green-600 border-green-200 shadow-none font-bold"
-            >
-              {daily.xp} XP
-            </Badge>
+            {/* Difficulty  */}
             {getDifficultyBadge(daily.problemId.difficulty)}
-          </div>
-
-          <div className="flex items-center text-slate-400 text-xs font-medium gap-1">
-            <Clock className="w-3.5 h-3.5" />
-            24h Left
+            {/* XP  */}
+            {daily.xp > 0 && (
+              <Badge className="flex items-center gap-1 px-1 py-1 bg-indigo-50 text-green-600 rounded-full border border-green-600">
+                <Zap size={10} className="fill-green-600" />
+                <span className="text-[10px] font-bold uppercase">
+                  +{daily.xp} XP
+                </span>
+              </Badge>
+            )}
+            {/* Coins  */}
+            {daily.reward?.coins > 0 && (
+              <Badge className="flex items-center gap-1 px-1 py-1 bg-amber-50 text-amber-600 rounded-full border border-amber-600">
+                <Coins size={10} className="fill-amber-600" />
+                <span className="text-[10px] font-bold uppercase">
+                  +{daily.reward.coins} Coins
+                </span>
+              </Badge>
+            )}
+            {/* Gems  */}
+            {daily.reward?.gems > 0 && (
+              <Badge className="flex items-center gap-1 px-1 py-1 bg-indigo-50 text-indigo-600 rounded-full border border-indigo-600">
+                <Gem size={10} className="fill-indigo-600" />
+                <span className="text-[10px] font-bold uppercase">
+                  +{daily.reward.gems} Gems
+                </span>
+              </Badge>
+            )}
           </div>
         </div>
       </CardContent>
 
       <CardFooter>
-        <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold shadow-sm cursor-pointer">
+        <Button
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold shadow-sm cursor-pointer"
+          onClick={() => handleChallengeClick(daily.challengeId)}
+        >
           Play Daily
         </Button>
       </CardFooter>

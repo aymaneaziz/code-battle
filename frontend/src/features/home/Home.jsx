@@ -50,7 +50,7 @@ const Home = () => {
   if (loading || !data.home) return <Loading />;
   return (
     <div className="text-slate-900 min-h-screen p-4 md:p-8 bg-slate-50">
-      <div className="flex flex-col max-w-6xl mx-auto space-y-8">
+      <div className="flex flex-col  mx-auto space-y-8">
         <main className="space-y-10">
           {data.player ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
