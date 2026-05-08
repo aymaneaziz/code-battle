@@ -12,7 +12,8 @@ export const statsSchema = new mongoose.Schema(
     currentStreak: { type: Number, default: 0 },
     bestStreak: { type: Number, default: 0 },
     xp: { type: Number, default: 0 },
-    coin: { type: Number, default: 0 },
+    coins: { type: Number, default: 0 },
+    gems: { type: Number, default: 0 },
     level: { type: Number, default: 1 },
     averageSolveTime: { type: Number, default: 0 },
     fastestSolveTime: { type: Number, default: 0 },
@@ -21,5 +22,5 @@ export const statsSchema = new mongoose.Schema(
     itemsUsed: { type: Number, default: 0 },
     hintUsed: { type: Number, default: 0 },
   },
-  { _id: false },
+  { _id: false }
 );

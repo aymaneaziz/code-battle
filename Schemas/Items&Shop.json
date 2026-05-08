@@ -156,5 +156,12 @@
     "dailyDeals": ["DD1", "DD2"],
     "seasonItems": ["SI1", "SI2"],
     "bundel": ["BD1"]
+  },
+  "seasonSpotlight": {
+    "seasonSpotlightId": "seasonSpotlight1",
+    "shopItemId": "shopItem3",
+    "purchaseLimit": 20,
+    "startTime": "2026-05-01T00:00:00Z",
+    "endTime": "2026-11-01T00:00:00Z"
   }
 }

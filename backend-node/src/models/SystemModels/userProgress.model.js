@@ -19,7 +19,7 @@ const userProgressSchema = new mongoose.Schema(
       type: Date,
     },
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
 // This index ensures a user has only one progress record total

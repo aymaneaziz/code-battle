@@ -11,18 +11,14 @@ const bundleSchema = new mongoose.Schema(
     },
     name: { type: String, required: true },
     description: { type: String, required: true },
+    type: { type: String, default: "bundle" },
     icon: { type: String, required: true },
     items: [
       {
         refId: {
           type: mongoose.Schema.Types.ObjectId,
           required: true,
-          refPath: "items.refType",
-        },
-        refType: {
-          type: String,
-          required: true,
-          enum: ["PowerUp", "Avatar", "Badge"],
+          ref: "ShopItem",
         },
         quantity: { type: Number, required: true },
       },

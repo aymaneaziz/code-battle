@@ -1,7 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
-const DailyDeals = ({ data, purchase }) => {
+const SeasonSpotlights = ({ data, purchase }) => {
   return (
     <Card className="h-full relative bg-white/80 backdrop-blur border border-slate-200 shadow-sm hover:shadow-md transition-all duration-300 rounded-2xl overflow-hidden p-6">
       <div className="absolute inset-0 bg-linear-to-br from-slate-100/40 to-transparent pointer-events-none" />
@@ -9,7 +9,7 @@ const DailyDeals = ({ data, purchase }) => {
       {/* EMPTY STATE */}
       {(!data || data.length === 0) && (
         <div className="relative h-full flex items-center justify-center text-slate-500 font-semibold">
-          No daily deals available
+          No season spotlight available
         </div>
       )}
 
@@ -17,21 +17,8 @@ const DailyDeals = ({ data, purchase }) => {
         {(data || []).map((item) => {
           const ref = item?.shopItemId?.refId;
 
-          const coinDiscount = item?.discountPercentage?.coins ?? 0;
-          const gemDiscount = item?.discountPercentage?.gems ?? 0;
-
-          const originalCoins = item?.shopItemId?.price?.coins ?? 0;
-          const originalGems = item?.shopItemId?.price?.gems ?? 0;
-
-          const discountedCoins = Math.max(
-            Math.floor(originalCoins * (1 - coinDiscount / 100)),
-            0
-          );
-
-          const discountedGems = Math.max(
-            Math.floor(originalGems * (1 - gemDiscount / 100)),
-            0
-          );
+          const coins = item?.shopItemId?.price?.coins ?? 0;
+          const gems = item?.shopItemId?.price?.gems ?? 0;
 
           return (
             <div
@@ -53,45 +40,16 @@ const DailyDeals = ({ data, purchase }) => {
               <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
                 Type : {ref?.type}
               </p>
-
-              {/* Coins price */}
-              <div className="flex items-center gap-2 text-sm">
-                <span className="font-bold text-yellow-600">
-                  💰 {discountedCoins}
-                </span>
-
-                {coinDiscount > 0 && (
-                  <>
-                    <span className="line-through text-slate-400 text-xs">
-                      {originalCoins}
-                    </span>
-
-                    <span className="text-[10px] font-bold bg-red-100 text-red-500 px-2 py-0.5 rounded-full">
-                      -{coinDiscount}%
-                    </span>
-                  </>
-                )}
+              <div className="flex flex-row justify-center items-center gap-2">
+                {/* Coins price */}
+                <div className="flex items-center gap-2 text-sm">
+                  <span className="font-bold text-yellow-600">💰 {coins}</span>
+                </div>
+                {/* Gems price */}
+                <div className="flex items-center gap-2 text-sm">
+                  <span className="font-bold text-cyan-600">💎 {gems}</span>
+                </div>
               </div>
-
-              {/* Gems price */}
-              <div className="flex items-center gap-2 text-sm">
-                <span className="font-bold text-cyan-600">
-                  💎 {discountedGems}
-                </span>
-
-                {gemDiscount > 0 && (
-                  <>
-                    <span className="line-through text-slate-400 text-xs">
-                      {originalGems}
-                    </span>
-
-                    <span className="text-[10px] font-bold bg-cyan-100 text-cyan-600 px-2 py-0.5 rounded-full">
-                      -{gemDiscount}%
-                    </span>
-                  </>
-                )}
-              </div>
-
               {/* Purchase limit */}
               <p className="text-[10px] text-slate-500">
                 Limit: {item?.purchaseLimit}
@@ -112,4 +70,4 @@ const DailyDeals = ({ data, purchase }) => {
   );
 };
 
-export default DailyDeals;
+export default SeasonSpotlights;

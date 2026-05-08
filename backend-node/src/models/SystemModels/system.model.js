@@ -14,7 +14,10 @@ const systemSchema = new mongoose.Schema(
     battlesToday: { type: Number, default: 0 },
     liveMaches: { type: Number, default: 0 },
     totalPlayers: { type: Number, default: 0 },
-
+    weeklyStartDate: { type: Date },
+    weeklyEndDate: { type: Date },
+    seasonStartDate: { type: Date },
+    seasonEndDate: { type: Date },
     topPlayersThisWeek: [
       {
         userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
@@ -23,7 +26,7 @@ const systemSchema = new mongoose.Schema(
       },
     ],
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
 const System = mongoose.models.System || mongoose.model("System", systemSchema);

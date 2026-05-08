@@ -7,7 +7,7 @@ const getSetupPlayer = async (req, res) => {
   try {
     const [avatars, battlePreferences, codingExperiences, languages] =
       await Promise.all([
-        Avatar.find().lean(), //lean() katrj3 l'objet mongoose sous forme de json
+        Avatar.find({ isDefault: true }).lean(), //lean() katrj3 l'objet mongoose sous forme de json
         BattlePreference.find().lean(),
         CodingExperience.find().lean(),
         Language.find().lean(),

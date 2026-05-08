@@ -71,13 +71,20 @@ const userSchema = new mongoose.Schema(
       default: Date.now,
     },
 
+    powerUps: [
+      {
+        powerUp: { type: mongoose.Schema.Types.ObjectId, ref: "PowerUp" },
+        quantity: { type: Number, default: 1 },
+      },
+    ],
+
     // Had l-field hada howa li kibin lina wach l-player kemel setup ola la
     setupCompleted: {
       type: Boolean,
       default: false, // Par défaut false hta idir "Complete Setup"
     },
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
 // On verifie si le modele 'User' est deja compilé dans mongoose.models

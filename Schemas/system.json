@@ -7,6 +7,10 @@
     "battlesToday": 0,
     "liveMaches": 0,
     "totalPlayers": 0,
+    "weeklyStartDate": "2026-05-04",
+    "weeklyEndDate": "2026-05-10",
+    "seasonStartDate": "2026-05-01",
+    "seasonEndDate": "2026-11-01",
     "topPlayersThisWeek": [
       {
         "id": "mongoDBID",

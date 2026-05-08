@@ -3,7 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Users, Swords, Activity, Globe } from "lucide-react";
 
 const ServerStats = ({ stats }) => {
-  console.log(stats);
+  console.log("s", stats);
   const items = [
     {
       label: "Active Players",
@@ -31,27 +31,31 @@ const ServerStats = ({ stats }) => {
     },
   ];
 
-  <Card className="h-full relative bg-white/80 backdrop-blur border border-slate-200 shadow-sm hover:shadow-md transition-all duration-300 rounded-2xl overflow-hidden p-6">
-    {/* background effect */}
-    <div className="absolute inset-0 bg-linear-to-br from-slate-100/40 to-transparent pointer-events-none" />
+  return (
+    <Card className="h-full relative bg-white/80 backdrop-blur border border-slate-200 shadow-sm hover:shadow-md transition-all duration-300 rounded-2xl overflow-hidden p-6">
+      {/* background effect */}
+      <div className="absolute inset-0 bg-linear-to-br from-slate-100/40 to-transparent pointer-events-none" />
 
-    <div className="relative grid grid-cols-2 md:grid-cols-4 gap-4 h-full items-stretch">
-      {items.map((item, i) => (
-        <div
-          key={i}
-          className="flex flex-row items-center justify-center text-center gap-3 p-4 rounded-xl bg-white border border-slate-200 shadow-sm hover:shadow-md transition-all"
-        >
-          <div className={`p-3 rounded-xl ${item.bg}`}>{item.icon}</div>
+      <div className="relative grid grid-cols-2 md:grid-cols-4 gap-4 h-full items-stretch">
+        {items.map((item, i) => (
+          <div
+            key={i}
+            className="flex flex-row items-center justify-center text-center gap-3 p-4 rounded-xl bg-white border border-slate-200 shadow-sm hover:shadow-md transition-all"
+          >
+            <div className={`p-3 rounded-xl ${item.bg}`}>{item.icon}</div>
 
-          <p className="text-2xl font-extrabold text-slate-900">{item.value}</p>
+            <p className="text-2xl font-extrabold text-slate-900">
+              {item.value}
+            </p>
 
-          <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
-            {item.label}
-          </p>
-        </div>
-      ))}
-    </div>
-  </Card>;
+            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+              {item.label}
+            </p>
+          </div>
+        ))}
+      </div>
+    </Card>
+  );
 };
 
 export default ServerStats;

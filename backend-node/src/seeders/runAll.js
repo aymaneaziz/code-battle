@@ -20,6 +20,7 @@ import { seedPowerUp } from "./ShopData/powerUps.seeder.js";
 import { seedShopItems } from "./ShopData/shopItem.seeder.js";
 import { seedDailyDeals } from "./ShopData/dailyDeals.seeder.js";
 import { seedBundles } from "./ShopData/bundles.seeder.js";
+import { seedSeasonSpotlight } from "./ShopData/seasonSpotlight.seeder.js";
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -51,7 +52,7 @@ const runSeeders = async () => {
 
     console.log("Seeding Phase3 ...");
     await sleep(1000);
-    await Promise.all([seedDailyDeals(), seedBundles()]);
+    await Promise.all([seedDailyDeals(), seedBundles(), seedSeasonSpotlight()]);
 
     console.log("✅ All seed data has been synchronized!");
     process.exit(0);

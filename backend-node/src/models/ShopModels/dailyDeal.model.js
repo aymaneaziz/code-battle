@@ -9,6 +9,7 @@ const dailyDealSchema = new mongoose.Schema(
       unique: true,
       default: () => generateId("dailyDeal"),
     },
+    type: { type: String, default: "dailyDeal" },
     shopItemId: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,

@@ -5,7 +5,7 @@ const powerUps = [
   {
     powerUpId: "PU1",
     label: "+30S",
-    icon: "⏱",
+    iconUrl: "⏱",
     description: "Adds 30 seconds to your timer",
     type: "time",
     cooldownSec: 0,
@@ -18,7 +18,7 @@ const powerUps = [
   {
     powerUpId: "PU2",
     label: "SPY",
-    icon: "🔍",
+    iconUrl: "🔍",
     description: "Peek at opponent info for 5 seconds",
     type: "vision",
     cooldownSec: 120,
@@ -31,7 +31,7 @@ const powerUps = [
   {
     powerUpId: "PU3",
     label: "RUSH",
-    icon: "⚡",
+    iconUrl: "⚡",
     description: "Skip queue and evaluate instantly",
     type: "action",
     cooldownSec: 0,
@@ -43,7 +43,7 @@ const powerUps = [
   {
     powerUpId: "PU4",
     label: "LOCK",
-    icon: "🔒",
+    iconUrl: "🔒",
     description: "Freeze opponent for 30 seconds",
     type: "debuff",
     cooldownSec: 60,
@@ -56,7 +56,7 @@ const powerUps = [
   {
     powerUpId: "PU5",
     label: "HINT",
-    icon: "💡",
+    iconUrl: "💡",
     description: "Get a free AI hint",
     type: "hint",
     cooldownSec: 0,
