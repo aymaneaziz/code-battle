@@ -17,9 +17,9 @@ const powerUpSchema = new mongoose.Schema(
     maxUsesPerMatch: { type: Number, required: true },
     effect: { type: Object, required: true },
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
 const PowerUp =
-  mongoose.models.PowerUp || mongoose.model("PowerUps", powerUpSchema);
+  mongoose.models.PowerUp || mongoose.model("PowerUp", powerUpSchema);
 export default PowerUp;

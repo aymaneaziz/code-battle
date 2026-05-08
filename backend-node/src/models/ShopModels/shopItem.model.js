@@ -9,7 +9,11 @@ const shopItemSchema = new mongoose.Schema(
       unique: true,
       default: () => generateId("shop"),
     },
-    refId: { type: mongoose.Schema.Types.ObjectId, required: true },
+    refId: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      refPath: "refType",
+    },
     refType: {
       type: String,
       required: true,
@@ -20,7 +24,7 @@ const shopItemSchema = new mongoose.Schema(
       gems: { type: Number, required: true },
     },
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
 const ShopItem =

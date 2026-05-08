@@ -1,4 +1,4 @@
-import PowerUp from "../../models/ShopModels/powerUps.models.js";
+import PowerUp from "../../models/ShopModels/powerUp.model.js";
 import { seedData } from "../../config/seederEngine.js";
 
 const powerUps = [

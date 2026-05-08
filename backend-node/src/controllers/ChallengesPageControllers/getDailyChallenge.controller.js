@@ -5,7 +5,7 @@ export const getDailyChallenge = async (req, res) => {
   try {
     // Look for the challenge where isDaily is true
     const daily = await Challenge.findOne({ isDaily: true }).populate(
-      "problemId",
+      "problemId"
     );
 
     if (!daily) {

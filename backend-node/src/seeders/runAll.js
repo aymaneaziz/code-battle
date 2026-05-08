@@ -18,6 +18,10 @@ import { seedChallenges } from "./GameplayData/challenge.seeder.js";
 
 import { seedPowerUp } from "./ShopData/powerUps.seeder.js";
 import { seedShopItems } from "./ShopData/shopItem.seeder.js";
+import { seedDailyDeals } from "./ShopData/dailyDeals.seeder.js";
+import { seedBundles } from "./ShopData/bundles.seeder.js";
+
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const runSeeders = async () => {
   try {
@@ -25,10 +29,11 @@ const runSeeders = async () => {
     console.log("Connected to Database for seeding...");
 
     // Execute all seeders Using Promise.all makes it scalable and fast.
+    console.log("Seeding Phase1 ...");
+    await sleep(1000);
     await Promise.all([
       seedPowerUp(),
       seedProblems(),
-      seedShopItems(),
       seedAvatars(), // had awit dartli mochkil 7it  Promise.all katakhod array dyl promises, machi awaited values.
       seedLanguages(),
       seedBattlePreferences(),
@@ -40,8 +45,13 @@ const runSeeders = async () => {
       // zid hna seed function
     ]);
     // Seed dependent data last (ex Challenges need Problems to exist)
-    console.log("Seeding challenges...");
-    await seedChallenges();
+    console.log("Seeding Phase2 ...");
+    await sleep(1000);
+    await Promise.all([seedShopItems(), seedChallenges()]);
+
+    console.log("Seeding Phase3 ...");
+    await sleep(1000);
+    await Promise.all([seedDailyDeals(), seedBundles()]);
 
     console.log("✅ All seed data has been synchronized!");
     process.exit(0);
