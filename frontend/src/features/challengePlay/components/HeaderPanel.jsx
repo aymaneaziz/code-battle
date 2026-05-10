@@ -52,7 +52,7 @@ const HeaderPanel = ({
 
   return (
     <div className="px-4 py-3 border-b border-slate-100 flex items-center justify-between bg-white shrink-0 w-full gap-4">
-      {/* Branding */}
+      {/* 1. Branding (Left) */}
       <div className="flex items-center gap-3 shrink-0">
         <div className="bg-black p-1.5 rounded-lg text-white">
           <Monitor size={18} />
@@ -67,8 +67,27 @@ const HeaderPanel = ({
         </div>
       </div>
 
-      {/* Controls */}
+      {/* 2. Controls (Middle/Right) */}
       <div className="flex items-center gap-4 sm:gap-5 overflow-x-auto no-scrollbar ml-auto">
+        {/* Language Select */}
+        <div className="flex flex-col gap-1 shrink-0">
+          <label className="text-[10px] uppercase font-bold text-slate-500 tracking-wider">
+            Language
+          </label>
+          <select
+            value={languageId ?? ""}
+            onChange={(e) => setLanguageId(Number(e.target.value))}
+            className="h-7 w-28 sm:w-36 px-2 text-xs font-bold bg-slate-50 border border-slate-200 rounded-md cursor-pointer outline-none hover:bg-slate-100 transition-colors"
+          >
+            {availableLanguages.map((lang) => (
+              <option key={lang.id} value={lang.id}>
+                {lang.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Theme Select */}
         <div className="flex flex-col gap-1 shrink-0">
           <label className="text-[10px] uppercase font-bold text-slate-500 tracking-wider">
             Theme
@@ -83,6 +102,7 @@ const HeaderPanel = ({
           </select>
         </div>
 
+        {/* Font Size Slider */}
         <div className="flex flex-col gap-1 w-24 sm:w-28 shrink-0">
           <div className="flex justify-between items-center">
             <label className="text-[10px] uppercase font-bold text-slate-500 tracking-wider">
@@ -104,14 +124,14 @@ const HeaderPanel = ({
         </div>
       </div>
 
-      {/* Code Stats - Far Right */}
+      {/* 3. Code Stats (Far Right) */}
       <div className="hidden md:flex items-center gap-2 shrink-0 border-l border-slate-100 pl-4">
         <Badge
           variant="secondary"
           className="flex items-center gap-1.5 px-2.5 py-1 font-bold bg-slate-100 text-slate-600 border-slate-200 whitespace-nowrap"
         >
           <Hash size={12} className="opacity-70" />
-          <span>Lines : {lineCount}</span>
+          <span>LINES: {lineCount}</span>
         </Badge>
 
         {cx && (
@@ -119,10 +139,8 @@ const HeaderPanel = ({
             variant="outline"
             className={`flex items-center gap-1.5 px-2.5 py-1 font-bold ${cx.bg} ${cx.text} border-slate-200 whitespace-nowrap`}
           >
-            <span className="flex items-center gap-1.5">
-              <Activity size={12} className="opacity-70" />
-              Complexity : {complexity}
-            </span>
+            <Activity size={12} className="opacity-70" />
+            <span>{complexity}</span>
           </Badge>
         )}
       </div>
