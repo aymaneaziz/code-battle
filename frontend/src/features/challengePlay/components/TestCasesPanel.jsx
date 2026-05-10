@@ -2,6 +2,20 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Plus, Play, Send, X, FlaskConical } from "lucide-react";
 
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+const formatValue = (val) => {
+  if (val === undefined || val === null) return "";
+  return typeof val === "object" ? JSON.stringify(val) : String(val);
+};
+
+const tryParse = (raw) => {
+  try {
+    return JSON.parse(raw);
+  } catch {
+    return raw;
+  }
+};
+
 const TestCasesPanel = ({
   testCases,
   setTestCases,
@@ -11,97 +25,89 @@ const TestCasesPanel = ({
 }) => {
   const [activeTab, setActiveTab] = useState("0");
 
+  // ── Add custom case ─────────────────────────────────────────────────────────
   const addCase = () => {
-    // Intelligently copy the structure of the first test case's input if it exists
-    const baseInput = testCases.length > 0 ? testCases[0].input : {};
-
-    // Create an empty mock object retaining the keys
+    const baseInput = testCases[0]?.input ?? {};
     const emptyInput =
       typeof baseInput === "object"
-        ? Object.keys(baseInput).reduce(
-            (acc, key) => ({ ...acc, [key]: "" }),
-            {},
-          )
+        ? Object.keys(baseInput).reduce((acc, k) => ({ ...acc, [k]: "" }), {})
         : "";
 
-    const newIdx = testCases.length;
     const newCase = {
       testCaseId: `custom-${Date.now()}`,
       input: emptyInput,
       output: "",
       isCustom: true,
     };
-
     setTestCases([...testCases, newCase]);
-    setActiveTab(String(newIdx));
+    setActiveTab(String(testCases.length));
   };
 
-  const removeCase = (e, indexToRemove) => {
-    e.stopPropagation(); // Prevents the click from triggering the tab selection
-    const filtered = testCases.filter((_, idx) => idx !== indexToRemove);
-    setTestCases(filtered);
-
-    // Smart active tab resolution
-    const currentActive = parseInt(activeTab);
-    if (currentActive === indexToRemove) {
-      // If we deleted the active tab, move left (or stay at 0)
-      setActiveTab(String(Math.max(0, indexToRemove - 1)));
-    } else if (currentActive > indexToRemove) {
-      // If we deleted a tab before the active one, shift the active index down
-      setActiveTab(String(currentActive - 1));
-    }
+  // ── Remove custom case ──────────────────────────────────────────────────────
+  const removeCase = (e, idx) => {
+    e.stopPropagation();
+    const next = testCases.filter((_, i) => i !== idx);
+    const active = parseInt(activeTab);
+    setTestCases(next);
+    if (active === idx) setActiveTab(String(Math.max(0, idx - 1)));
+    else if (active > idx) setActiveTab(String(active - 1));
   };
 
-  const updateCase = (field, value) => {
+  // ── Update a key inside the input object of the active custom case ──────────
+  const updateInputKey = (key, raw) => {
     const idx = parseInt(activeTab);
     const updated = [...testCases];
+    updated[idx] = {
+      ...updated[idx],
+      input: { ...updated[idx].input, [key]: tryParse(raw) },
+    };
+    setTestCases(updated);
+  };
 
-    try {
-      // Attempt to parse as JSON first (handles arrays and objects nicely)
-      updated[idx][field] = JSON.parse(value);
-    } catch {
-      // Fallback to raw string if they are typing mid-word or want string output
-      updated[idx][field] = value;
-    }
-
+  // ── Update expected output of the active custom case ───────────────────────
+  const updateOutput = (raw) => {
+    const idx = parseInt(activeTab);
+    const updated = [...testCases];
+    updated[idx] = { ...updated[idx], output: tryParse(raw) };
     setTestCases(updated);
   };
 
   const currentCase = testCases[parseInt(activeTab)];
 
-  // Helper to format values for the textarea reliably
-  const formatForTextarea = (val) => {
-    if (val === undefined || val === null) return "";
-    return typeof val === "object" ? JSON.stringify(val, null, 2) : String(val);
-  };
+  // Build input rows: each key of the input object becomes one labeled row
+  const inputEntries = currentCase
+    ? typeof currentCase.input === "object" && currentCase.input !== null
+      ? Object.entries(currentCase.input)
+      : [["input", currentCase.input]]
+    : [];
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200 shadow-sm h-full flex flex-col overflow-hidden">
-      {/* Top Action Bar */}
-      <div className="px-4 py-3 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
-        <div className="flex gap-2">
-          <Button
-            onClick={onSubmit}
-            disabled={loading}
-            className="bg-green-600 hover:bg-green-700 h-8 font-bold text-xs cursor-pointer"
-          >
-            <Send size={14} className="mr-2" />
-            {loading ? "Sending..." : "Submit"}
-          </Button>
-          <Button
-            onClick={onRun}
-            disabled={loading}
-            variant="outline"
-            className="text-blue-600 h-8 font-bold text-xs cursor-pointer"
-          >
-            <Play size={14} className="mr-2 fill-blue-600" /> Run
-          </Button>
-        </div>
+    <div className="flex flex-col bg-white">
+      {/* ── Action bar ────────────────────────────────────────────────────── */}
+      <div className="px-4 py-3 border-b border-slate-100 flex items-center gap-2 bg-slate-50/50 shrink-0">
+        <Button
+          onClick={onSubmit}
+          disabled={loading}
+          className="bg-green-600 hover:bg-green-700 h-8 font-bold text-xs cursor-pointer"
+        >
+          <Send size={13} className="mr-1.5" />
+          {loading ? "Sending…" : "Submit"}
+        </Button>
+        <Button
+          onClick={onRun}
+          disabled={loading}
+          variant="outline"
+          className="text-blue-600 h-8 font-bold text-xs cursor-pointer"
+        >
+          <Play size={13} className="mr-1.5 fill-blue-600" />
+          Run
+        </Button>
       </div>
 
-      <div className="p-4 flex-1 flex flex-col min-h-0">
-        {/* Custom Tabs Header */}
-        <div className="flex items-center justify-between mb-3 shrink-0">
+      {/* ── Body ──────────────────────────────────────────────────────────── */}
+      <div className="flex flex-col p-4 gap-3">
+        {/* Tab strip */}
+        <div className="flex items-center justify-between shrink-0">
           <div className="flex items-center gap-1 overflow-x-auto no-scrollbar bg-slate-100 p-1 rounded-lg">
             {testCases.map((tc, idx) => {
               const isActive = activeTab === String(idx);
@@ -109,13 +115,13 @@ const TestCasesPanel = ({
                 <div
                   key={idx}
                   onClick={() => setActiveTab(String(idx))}
-                  className={`flex items-center text-[10px] font-bold px-3 py-1.5 rounded-md relative group cursor-pointer transition-all whitespace-nowrap ${
+                  className={`flex items-center text-[10px] font-bold px-3 py-1.5 rounded-md group cursor-pointer transition-all whitespace-nowrap ${
                     isActive
                       ? "bg-white text-slate-900 shadow-sm"
                       : "text-slate-500 hover:text-slate-700 hover:bg-slate-200/50"
                   }`}
                 >
-                  Case {idx + 1}
+                  {tc.isCustom ? `Custom ${idx + 1}` : `Case ${idx + 1}`}
                   {tc.isCustom && (
                     <button
                       type="button"
@@ -131,54 +137,81 @@ const TestCasesPanel = ({
           </div>
           <button
             onClick={addCase}
-            className="text-blue-600 font-bold text-[11px] flex items-center cursor-pointer  ml-4 shrink-0"
+            className="text-blue-600 font-bold text-[11px] flex items-center cursor-pointer ml-4 shrink-0"
           >
-            <Plus size={14} className="mr-1" /> Add Custom
+            <Plus size={13} className="mr-1" /> Add Custom
           </button>
         </div>
 
-        {/* Content Area */}
+        {/* Case content — grows to fill  */}
         {currentCase ? (
-          <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4 min-h-0">
-            {/* Input Area */}
-            <div className="flex flex-col gap-2">
-              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest italic">
+          <div className="flex flex-col gap-3">
+            {/* Input: one row per argument key */}
+            <div className="shrink-0">
+              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2 italic">
                 {currentCase.isCustom
                   ? "Input (Editable)"
                   : "Input (Read Only)"}
-              </label>
-              <textarea
-                className={`flex-1 border border-slate-200 rounded-xl p-3 font-mono text-xs outline-none focus:ring-1 focus:ring-blue-500 resize-none ${
-                  !currentCase.isCustom
-                    ? "bg-slate-100 cursor-not-allowed"
-                    : "bg-slate-50"
-                }`}
-                value={formatForTextarea(currentCase.input)}
-                onChange={(e) => updateCase("input", e.target.value)}
-                readOnly={!currentCase.isCustom}
-              />
+              </span>
+              <div className="flex flex-col gap-2">
+                {inputEntries.map(([key, val]) => (
+                  <div key={key} className="flex items-center gap-3">
+                    {/* Key label */}
+                    <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest w-16 shrink-0 truncate">
+                      {key}
+                    </span>
+                    {/* Value input */}
+                    <input
+                      type="text"
+                      value={formatValue(val)}
+                      onChange={
+                        currentCase.isCustom
+                          ? (e) => updateInputKey(key, e.target.value)
+                          : undefined
+                      }
+                      readOnly={!currentCase.isCustom}
+                      className={`flex-1 border border-slate-200 rounded-lg px-3 py-1.5 font-mono text-xs outline-none focus:ring-1 focus:ring-blue-400 transition-colors ${
+                        currentCase.isCustom
+                          ? "bg-slate-50 hover:border-slate-300"
+                          : "bg-slate-100 cursor-not-allowed text-slate-600"
+                      }`}
+                    />
+                  </div>
+                ))}
+              </div>
             </div>
-            {/* Output Area */}
-            <div className="flex flex-col gap-2">
-              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+
+            {/* Expected output */}
+            <div className="shrink-0">
+              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2">
                 Expected Output
-              </label>
-              <textarea
-                className={`flex-1 border border-slate-200 rounded-xl p-3 font-mono text-xs outline-none focus:ring-1 focus:ring-blue-500 resize-none ${
-                  !currentCase.isCustom
-                    ? "bg-slate-100 cursor-not-allowed"
-                    : "bg-slate-50"
-                }`}
-                value={formatForTextarea(currentCase.output)}
-                onChange={(e) => updateCase("output", e.target.value)}
-                readOnly={!currentCase.isCustom}
-              />
+              </span>
+              <div className="flex items-center gap-3">
+                <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest w-16 shrink-0">
+                  result
+                </span>
+                <input
+                  type="text"
+                  value={formatValue(currentCase.output)}
+                  onChange={
+                    currentCase.isCustom
+                      ? (e) => updateOutput(e.target.value)
+                      : undefined
+                  }
+                  readOnly={!currentCase.isCustom}
+                  className={`flex-1 border border-slate-200 rounded-lg px-3 py-1.5 font-mono text-xs outline-none focus:ring-1 focus:ring-green-400 transition-colors ${
+                    currentCase.isCustom
+                      ? "bg-slate-50 hover:border-slate-300"
+                      : "bg-slate-100 cursor-not-allowed text-slate-600"
+                  }`}
+                />
+              </div>
             </div>
           </div>
         ) : (
           <div className="flex-1 flex flex-col items-center justify-center text-slate-400 text-xs italic gap-2">
             <FlaskConical size={32} className="opacity-20" />
-            No test cases selected.
+            No test cases available.
           </div>
         )}
       </div>

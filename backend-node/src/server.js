@@ -21,6 +21,8 @@ import connectToDatabase from "./database/mongodb.js";
 import challengePageRouter from "./routes/challengesPage.route.js";
 import shopPageRouter from "./routes/shopPage.route.js";
 
+import compilerRouter from "./routes/compilerCode.route.js";
+
 const app = express();
 
 app.use(cors()); // used to enable CORS (Cross-Origin Resource Sharing) for all routes, allowing requests from different origins.
@@ -32,7 +34,7 @@ app.use(
   cors({
     origin: VITE_FRONTEND_URL,
     credentials: true,
-  })
+  }),
 );
 // Synch and add new User------------------------------------------
 app.use("/api/user", userRouter);
@@ -45,6 +47,9 @@ app.use("/api/home", homePageRouter);
 app.use("/api/challenges", challengePageRouter);
 // To get The data we need for the shop-----------------------------------
 app.use("/api/shop", shopPageRouter);
+// To execute code for a challenge-----------------------------------
+app.use("/api/execution", compilerRouter);
+
 //dima ftali had lmiddelware dyal clerk
 app.use(errorClerk);
 app.use(errorMiddleware); // Global error handling middleware

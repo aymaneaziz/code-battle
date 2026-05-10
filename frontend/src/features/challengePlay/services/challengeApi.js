@@ -6,3 +6,12 @@ export const fetchChallengeDetails = async (challengeId, token) => {
     headers: { Authorization: `Bearer ${token}` },
   });
 };
+
+// Run code for a challenge
+export const runChallengeCode = async (payload, token) => {
+  return await api.post("/execution/run", payload, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};

@@ -1,14 +1,14 @@
 import Challenge from "../../models/GameplayModels/challenge.model.js";
-import "../../models/GameplayModels/problem.model.js"; // Register schema for population
+import "../../models/GameplayModels/problem.model.js";
 
 const getChallengeById = async (req, res) => {
   try {
     const { challengeId } = req.params;
 
-    // Search by your custom challengeId
-    const challenge = await Challenge.findOne({
-      challengeId: challengeId,
-    }).populate("problemId");
+    const challenge = await Challenge.findOne({ challengeId }).populate(
+      "problemId",
+      "-runnerCode",
+    );
 
     if (!challenge) {
       return res.status(404).json({ message: "Challenge not found" });

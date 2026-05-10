@@ -12,7 +12,6 @@ const problemSchema = new mongoose.Schema(
     title: { type: String, required: true },
     slug: { type: String, required: true, unique: true },
     description: { type: String, required: true },
-
     timeLimitMs: { type: Number, default: 1000 },
     tags: { type: [String], required: true },
     returnType: { type: String, required: true },
@@ -42,7 +41,18 @@ const problemSchema = new mongoose.Schema(
       },
     ],
 
+    // Shown in the editor — clean function signature only
     starterCode: {
+      python: { type: String, required: true },
+      javascript: { type: String, required: true },
+    },
+
+    /**
+     * Appended server-side to the user's code before sending to Judge0.
+     * NEVER sent to the frontend (excluded via .select() in the challenge query).
+     * Handles: reading stdin → calling the function → printing the result.
+     */
+    runnerCode: {
       python: { type: String, required: true },
       javascript: { type: String, required: true },
     },
