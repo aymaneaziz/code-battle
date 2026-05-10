@@ -1,16 +1,20 @@
 import { getToken } from "@clerk/react";
 import React, { useEffect, useState } from "react";
 import { Loading } from "@/components/common/Loading";
+import { toast } from "sonner";
 
 import getDailyDeals from "./services/getDailyDeals";
 import getSeasonSpotlights from "./services/getSeasonSpotlights";
 import getBundles from "./services/getBundles";
 import getSeasonEnd from "./services/getSeasonEndDate";
 import putPurchasedItems from "./services/putPurchasedItems";
+import updateSeasonTimer from "./services/updateSeasonTimer";
+import updateDailyTimer from "./services/updateDailyTimer";
 
-import DailyDeals from "./components/DailyDeals";
-import SeasonSpotlights from "./components/SeasonSpotlights";
+import Deals from "./components/Deals";
 import Bundles from "./components/Bundles";
+import Confirm from "./components/Confirm";
+import Purchasing from "./components/Purchasing";
 
 export const Shop = () => {
   const [data, setData] = useState({
@@ -20,6 +24,8 @@ export const Shop = () => {
     bundles: null,
   });
 
+  const [selectedItem, setSelectedItem] = useState("");
+  const [mode, setMode] = useState("");
   const [loading, setLoading] = useState(true);
 
   // 🟢 DAILY TIMER (reset chaque jour à minuit)
@@ -27,33 +33,57 @@ export const Shop = () => {
   // 🔵 SEASON TIMER (expire à date fixe backend)
   const [seasonTimeLeft, setSeasonTimeLeft] = useState("");
 
+  const handlePurchase = (item) => {
+    setSelectedItem(item);
+    setMode("Confirm");
+  };
+
+  const handleClose = () => {
+    setMode(null);
+  };
+
   const purchase = async (item) => {
-    const token = await getToken();
-    if (!token) return;
-    await putPurchasedItems(token, item);
+    setMode("Purchase");
+    try {
+      const token = await getToken();
+      if (!token) return;
+      await putPurchasedItems(token, item);
+      const [seasonEndDate, dailyDeals, seasonSpotlights, bundles] =
+        await Promise.all([
+          getSeasonEnd(token),
+          getDailyDeals(token),
+          getSeasonSpotlights(token),
+          getBundles(token),
+        ]);
+
+      setData({
+        seasonEndDate,
+        dailyDeals,
+        seasonSpotlights,
+        bundles,
+      });
+      toast.success("Purchase Succeeded!");
+    } catch (error) {
+      console.log(error);
+      toast.error("Purchase failed");
+    } finally {
+      setMode(null);
+    }
   };
 
   // -------------------------------------------------------
   // ⏱ DAILY DEALS TIMER
   // -------------------------------------------------------
   useEffect(() => {
-    const updateDailyTimer = () => {
-      const now = new Date();
-      // 👉 prochain reset = minuit (00:00 du jour suivant)
-      const nextMidnight = new Date();
-      nextMidnight.setHours(24, 0, 0, 0);
-      const diff = nextMidnight - now;
-      const hours = Math.floor(diff / (1000 * 60 * 60));
-      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-      setDailyTimeLeft(
-        `${hours.toString().padStart(2, "0")}h ${minutes
-          .toString()
-          .padStart(2, "0")}m ${seconds.toString().padStart(2, "0")}s`
-      );
-    };
-    updateDailyTimer();
-    const interval = setInterval(updateDailyTimer, 1000);
+    // premier lancement immédiat
+    updateDailyTimer(setDailyTimeLeft);
+
+    // exécution chaque seconde
+    const interval = setInterval(() => {
+      updateDailyTimer(setDailyTimeLeft);
+    }, 1000);
+
+    // nettoyage du interval
     return () => clearInterval(interval);
   }, []);
 
@@ -61,22 +91,10 @@ export const Shop = () => {
   // 🌍 SEASON TIMER (basé sur backend)
   // -------------------------------------------------------
   useEffect(() => {
-    const updateSeasonTimer = () => {
-      const seasonEndDate = data?.seasonEndDate?.seasonEndDate || null;
-      const now = new Date();
-      const end = seasonEndDate ? new Date(seasonEndDate) : null;
-      if (!end) return;
-      const diff = end - now;
-      if (diff <= 0) {
-        setSeasonTimeLeft("Season Ended");
-        return;
-      }
-      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-      setSeasonTimeLeft(`${days}d ${hours}h`);
-    };
-    updateSeasonTimer();
-    const interval = setInterval(updateSeasonTimer, 60000); // update chaque minute
+    updateSeasonTimer(data, setSeasonTimeLeft);
+    const interval = setInterval(() => {
+      updateSeasonTimer(data, setSeasonTimeLeft);
+    }, 60000); // update chaque minute
     return () => clearInterval(interval);
   }, [data?.seasonEndDate?.seasonEndDate]);
 
@@ -133,7 +151,7 @@ export const Shop = () => {
               </span>
               <div className="h-px flex-1 bg-slate-200"></div>
             </div>
-            <DailyDeals data={data.dailyDeals} purchase={purchase} />
+            <Deals data={data.dailyDeals} purchase={handlePurchase} />
           </section>
 
           {/* ------------------------------------------------ */}
@@ -150,10 +168,7 @@ export const Shop = () => {
               </span>
               <div className="h-px flex-1 bg-slate-200"></div>
             </div>
-            <SeasonSpotlights
-              data={data.seasonSpotlights}
-              purchase={purchase}
-            />
+            <Deals data={data.seasonSpotlights} purchase={handlePurchase} />
           </section>
 
           {/* ------------------------------------------------ */}
@@ -166,10 +181,21 @@ export const Shop = () => {
               </h2>
               <div className="h-px flex-1 bg-slate-200"></div>
             </div>
-            <Bundles data={data.bundles} purchase={purchase} />
+            <Bundles data={data.bundles} purchase={handlePurchase} />
           </section>
         </main>
       </div>
+      {/* Confirm Modal */}
+      {mode === "Confirm" && selectedItem && (
+        <Confirm
+          mode={mode}
+          selectedItem={selectedItem}
+          handleClose={() => handleClose()}
+          purchase={purchase}
+        />
+      )}
+
+      {mode === "Purchase" && <Purchasing />}
     </div>
   );
 };

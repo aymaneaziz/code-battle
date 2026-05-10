@@ -5,7 +5,7 @@ import { getUserShopTracker } from "./Utils/getShopTracker.js";
 export const getSeasonSpotlights = async (req, res) => {
   try {
     const now = new Date();
-    const SeasonSpotlights = await SeasonSpotlight.find({
+    let SeasonSpotlights = await SeasonSpotlight.find({
       startTime: { $lte: now },
       endTime: { $gte: now },
     }).populate({
@@ -15,7 +15,7 @@ export const getSeasonSpotlights = async (req, res) => {
       },
     });
     if (SeasonSpotlights.length === 0) {
-      var latest = await SeasonSpotlight.find({
+      SeasonSpotlights = await SeasonSpotlight.find({
         endTime: { $lt: now },
       })
         .sort({ endTime: -1 })
@@ -28,23 +28,21 @@ export const getSeasonSpotlights = async (req, res) => {
         });
     }
 
-    // kan modifie l purchaseLimite
-    const deals =
-      SeasonSpotlights && SeasonSpotlights.length
-        ? SeasonSpotlights
-        : latest || [];
-    for (const item of deals) {
-      const quantity = await getUserShopTracker(
-        req,
-        item._id,
-        "SeasonSpotlights",
-        "seasonSpotlight"
-      );
-      if (quantity) {
-        item.purchaseLimit -= quantity;
-      }
-    }
+    // update purchaseLimit + filtrage
+    const updatedDeals = await Promise.all(
+      SeasonSpotlights.map(async (item) => {
+        const quantity = await getUserShopTracker(req, item);
 
+        if (quantity) {
+          item.purchaseLimit -= quantity;
+        }
+
+        return item;
+      })
+    );
+
+    // ✅ enlever ceux dont purchaseLimit <= 0
+    const deals = updatedDeals.filter((item) => item.purchaseLimit > 0);
     return res.status(200).json(deals);
   } catch (error) {
     res.status(500).json({ message: error.message });

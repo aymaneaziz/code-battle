@@ -9,7 +9,7 @@ import { getUserShopTracker } from "./Utils/getShopTracker.js";
 export const getBundles = async (req, res) => {
   try {
     const now = new Date();
-    const bundles = await Bundle.find({
+    let bundles = await Bundle.find({
       $and: [
         {
           $or: [{ startTime: null }, { startTime: { $lte: now } }],
@@ -27,7 +27,7 @@ export const getBundles = async (req, res) => {
 
     // fallback si aucun bundle actif
     if (bundles.length === 0) {
-      var backup = await Bundle.find().populate({
+      bundles = await Bundle.find().populate({
         path: "items.refId",
         populate: {
           path: "refId",
@@ -35,19 +35,20 @@ export const getBundles = async (req, res) => {
       });
     }
 
-    // kan modifie l purchaseLimite
-    const deals = bundles && bundles.length ? bundles : backup || [];
-    for (const item of deals) {
-      const quantity = await getUserShopTracker(
-        req,
-        item._id,
-        "Bundles",
-        "bundle"
-      );
-      if (quantity) {
-        item.purchaseLimit -= quantity;
-      }
-    }
+    const updatedDeals = await Promise.all(
+      bundles.map(async (item) => {
+        const quantity = await getUserShopTracker(req, item);
+
+        if (quantity) {
+          item.purchaseLimit -= quantity;
+        }
+
+        return item;
+      })
+    );
+
+    // ✅ enlever ceux dont purchaseLimit <= 0
+    const deals = updatedDeals.filter((item) => item.purchaseLimit > 0);
     return res.status(200).json(deals);
   } catch (error) {
     return res.status(500).json({

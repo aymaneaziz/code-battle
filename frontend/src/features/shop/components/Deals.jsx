@@ -1,7 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
-const DailyDeals = ({ data, purchase }) => {
+const Deals = ({ data, purchase, type }) => {
   return (
     <Card className="h-full relative bg-white/80 backdrop-blur border border-slate-200 shadow-sm hover:shadow-md transition-all duration-300 rounded-2xl overflow-hidden p-6">
       <div className="absolute inset-0 bg-linear-to-br from-slate-100/40 to-transparent pointer-events-none" />
@@ -9,7 +9,7 @@ const DailyDeals = ({ data, purchase }) => {
       {/* EMPTY STATE */}
       {(!data || data.length === 0) && (
         <div className="relative h-full flex items-center justify-center text-slate-500 font-semibold">
-          No daily deals available
+          No deals available
         </div>
       )}
 
@@ -44,52 +44,62 @@ const DailyDeals = ({ data, purchase }) => {
                   {ref?.iconUrl}
                 </div>
 
-                <p className="text-xl font-extrabold text-slate-900">
-                  {ref?.label}
-                </p>
+                {/* infos */}
+                <div className="text-left">
+                  <p className="text-xl font-extrabold text-slate-900">
+                    {ref?.label ?? ref?.name}
+                  </p>
+
+                  <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1">
+                    {ref?.type}
+                  </p>
+                </div>
               </div>
 
-              {/* Type */}
+              {/* description */}
               <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
-                Type : {ref?.type}
+                {ref?.description}
               </p>
 
-              {/* Coins price */}
-              <div className="flex items-center gap-2 text-sm">
-                <span className="font-bold text-yellow-600">
-                  💰 {discountedCoins}
-                </span>
+              {/* prix */}
+              <div className="flex justify-center items-center gap-4 mt-2">
+                {/* coins */}
+                <div className="flex items-center gap-2 text-sm bg-yellow-100 px-4 py-2 rounded-full">
+                  <span className="font-bold text-yellow-600 text-sm">
+                    💰 {discountedCoins}
+                  </span>
 
-                {coinDiscount > 0 && (
-                  <>
-                    <span className="line-through text-slate-400 text-xs">
-                      {originalCoins}
-                    </span>
+                  {coinDiscount > 0 && (
+                    <>
+                      <span className="line-through text-slate-400 text-xs">
+                        {originalCoins}
+                      </span>
 
-                    <span className="text-[10px] font-bold bg-red-100 text-red-500 px-2 py-0.5 rounded-full">
-                      -{coinDiscount}%
-                    </span>
-                  </>
-                )}
-              </div>
+                      <span className="text-[10px] font-bold bg-red-100 text-red-500 px-2 py-0.5 rounded-full">
+                        -{coinDiscount}%
+                      </span>
+                    </>
+                  )}
+                </div>
 
-              {/* Gems price */}
-              <div className="flex items-center gap-2 text-sm">
-                <span className="font-bold text-cyan-600">
-                  💎 {discountedGems}
-                </span>
+                {/* gems */}
+                <div className="flex items-center gap-2 text-sm bg-cyan-100 px-4 py-2 rounded-full">
+                  <span className="font-bold text-cyan-600 text-sm">
+                    💎 {discountedGems}
+                  </span>
 
-                {gemDiscount > 0 && (
-                  <>
-                    <span className="line-through text-slate-400 text-xs">
-                      {originalGems}
-                    </span>
+                  {gemDiscount > 0 && (
+                    <>
+                      <span className="line-through text-slate-400 text-xs">
+                        {originalGems}
+                      </span>
 
-                    <span className="text-[10px] font-bold bg-cyan-100 text-cyan-600 px-2 py-0.5 rounded-full">
-                      -{gemDiscount}%
-                    </span>
-                  </>
-                )}
+                      <span className="text-[10px] font-bold bg-red-100 text-red-500 px-2 py-0.5 rounded-full">
+                        -{gemDiscount}%
+                      </span>
+                    </>
+                  )}
+                </div>
               </div>
 
               {/* Purchase limit */}
@@ -112,4 +122,4 @@ const DailyDeals = ({ data, purchase }) => {
   );
 };
 
-export default DailyDeals;
+export default Deals;

@@ -14,7 +14,6 @@ export const addPowerUp = (user, item) => {
       quantity: 1,
     });
   }
-  console.log("existe", existingPowerUp);
 
   return user;
 };

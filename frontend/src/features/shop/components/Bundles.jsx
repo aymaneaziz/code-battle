@@ -36,7 +36,7 @@ const Bundles = ({ data, purchase }) => {
               {/* Header */}
               <div className="flex items-center gap-3">
                 <div className="p-3 rounded-xl bg-slate-100 text-2xl group-hover:scale-110 transition-transform duration-300">
-                  {item?.icon}
+                  {item?.iconUrl}
                 </div>
 
                 <div>
@@ -60,10 +60,17 @@ const Bundles = ({ data, purchase }) => {
                   return (
                     <div
                       key={bundleItem._id}
-                      className="flex items-center gap-1 px-2 py-1 rounded-lg bg-slate-100 text-xs font-semibold text-slate-700"
+                      className="flex flex-col items-center gap-1 px-2 py-1 rounded-lg bg-slate-100 text-xs font-semibold text-slate-700"
                     >
-                      <span>{ref?.refId?.iconUrl}</span>
-                      <span>x{bundleItem?.quantity}</span>
+                      <div className="flex items-center">
+                        <span>{ref?.refId?.iconUrl}</span>
+                        <span>x{bundleItem?.quantity}</span>
+                      </div>
+
+                      {/* type */}
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500">
+                        {ref?.refType}
+                      </span>
                     </div>
                   );
                 })}

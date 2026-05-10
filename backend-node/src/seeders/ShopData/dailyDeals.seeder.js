@@ -22,7 +22,7 @@ export const seedDailyDeals = async () => {
       shopItemId: shopItems[1]._id,
       discountPercentage: {
         coins: 50,
-        gems: 0,
+        gems: 50,
       },
       purchaseLimit: 3,
       startTime: new Date(2026, 4, 7),

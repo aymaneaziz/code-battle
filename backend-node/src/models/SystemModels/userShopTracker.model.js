@@ -7,25 +7,14 @@ const userShopTrackerSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    purchasedDailyDeals: [
+    purchasedItems: [
       {
-        dailyDeal: { type: mongoose.Schema.Types.ObjectId, ref: "DailyDeal" },
-        quantity: { type: Number, default: 0 },
-      },
-    ],
-    purchasedSeasonSpotlights: [
-      {
-        seasonSpotlight: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "SeasonSpotlight",
+        itemId: mongoose.Schema.Types.ObjectId,
+        itemType: {
+          type: String,
+          enum: ["dailyDeal", "seasonSpotlight", "bundle"],
         },
-        quantity: { type: Number, default: 0 },
-      },
-    ],
-    purchasedBundles: [
-      {
-        bundle: { type: mongoose.Schema.Types.ObjectId, ref: "Bundle" },
-        quantity: { type: Number, default: 0 },
+        quantity: { type: Number, default: 1 },
       },
     ],
   },

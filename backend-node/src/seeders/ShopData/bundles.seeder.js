@@ -10,7 +10,7 @@ export const seedBundles = async () => {
       bundleId: "bundle1",
       name: "Starter Pack",
       description: "Best pack to start your journey",
-      icon: "🎁",
+      iconUrl: "🎁",
       items: [
         { refId: items[3]._id, refType: "PowerUp", quantity: 3 },
         { refId: items[4]._id, refType: "PowerUp", quantity: 3 },
@@ -23,7 +23,7 @@ export const seedBundles = async () => {
       bundleId: "bundle2",
       name: "Value Pack",
       description: "Great for regular play, more power-ups and a cosmetic",
-      icon: "💎",
+      iconUrl: "💎",
       items: [
         { refId: items[2]._id, quantity: 3 },
         { refId: items[3]._id, quantity: 3 },

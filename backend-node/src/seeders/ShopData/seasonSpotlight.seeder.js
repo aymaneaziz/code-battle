@@ -37,7 +37,7 @@ export const seedSeasonSpotlight = async () => {
     },
     {
       seasonSpotlightId: "seasonSpotlight5",
-      shopItemId: shopItems[3]._id,
+      shopItemId: shopItems[4]._id,
       purchaseLimit: 20,
       startTime: new Date(2026, 4, 1),
       endTime: new Date(2026, 10, 1),

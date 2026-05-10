@@ -5,7 +5,7 @@ import { getUserShopTracker } from "./Utils/getShopTracker.js";
 export const getDailyDeals = async (req, res) => {
   try {
     const now = new Date();
-    const dailyDeals = await DailyDeal.find({
+    let dailyDeals = await DailyDeal.find({
       startTime: { $lte: now },
       endTime: { $gte: now },
     }).populate({
@@ -16,7 +16,7 @@ export const getDailyDeals = async (req, res) => {
     });
 
     if (dailyDeals.length === 0) {
-      var latest = await DailyDeal.find({
+      dailyDeals = await DailyDeal.find({
         endTime: { $lt: now },
       })
         .sort({ endTime: -1 })
@@ -29,19 +29,21 @@ export const getDailyDeals = async (req, res) => {
         });
     }
 
-    // kan modifie l purchaseLimite
-    const deals = dailyDeals && dailyDeals.length ? dailyDeals : latest || [];
-    for (const item of deals) {
-      const quantity = await getUserShopTracker(
-        req,
-        item._id,
-        "DailyDeals",
-        "dailyDeal"
-      );
-      if (quantity) {
-        item.purchaseLimit -= quantity;
-      }
-    }
+    // update purchaseLimit + filtrage
+    const updatedDeals = await Promise.all(
+      dailyDeals.map(async (item) => {
+        const quantity = await getUserShopTracker(req, item);
+
+        if (quantity) {
+          item.purchaseLimit -= quantity;
+        }
+
+        return item;
+      })
+    );
+
+    // ✅ enlever ceux dont purchaseLimit <= 0
+    const deals = updatedDeals.filter((item) => item.purchaseLimit > 0);
     return res.status(200).json(deals);
   } catch (error) {
     res.status(500).json({ message: error.message });

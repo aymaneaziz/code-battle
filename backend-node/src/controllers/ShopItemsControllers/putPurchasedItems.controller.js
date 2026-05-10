@@ -1,20 +1,17 @@
 import User from "../../models/user.model.js";
-import { addPowerUp } from "./Utils/addPowerUp.js";
+import { addItem } from "./Utils/addItem.js";
+import UserShopTracker from "../../models/SystemModels/userShopTracker.model.js";
 
 export const putPurchasedItems = async (req, res) => {
   try {
     const clerkId = req.auth.userId;
     let user = await User.findOne({ clerkId });
 
-    const data = req.body;
-
-    if (data.type === "bundle") {
-      console.log(data);
-
-      return res.status(200).json({
-        message: "done!!",
-      });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
     }
+
+    const data = req.body;
 
     const item = data.shopItemId;
 
@@ -45,16 +42,60 @@ export const putPurchasedItems = async (req, res) => {
     }
 
     // retirer les coins/gems
-    user.stats.coins -= priceCoins;
-    user.stats.gems -= priceGems;
+    user.stats.coins -= finalPriceCoins;
+    user.stats.gems -= finalPriceGems;
 
-    // =========================
-    // POWER UP
-    // =========================
-    if (item?.refType === "PowerUp") {
-      user = addPowerUp(user, item);
+    user = addItem(user, item);
+
+    // if he purchased a bundle
+    if (data.type === "bundle") {
+      if (userCoins < data?.price?.coins || userGems < data?.price?.gems) {
+        return res.status(400).json({
+          message: "Not enough money",
+        });
+      }
+      data.items.map((item) => {
+        user = addItem(user, item.refId);
+      });
     }
 
+    const updated = await UserShopTracker.findOneAndUpdate(
+      {
+        userId: user._id,
+        purchasedItems: {
+          $elemMatch: {
+            // kay9lb 3la hadak element bdbt
+            itemId: data._id,
+            itemType: data.type,
+          },
+        },
+      },
+      {
+        $inc: {
+          "purchasedItems.$.quantity": 1,
+        },
+      },
+      { returnDocument: "after" }
+    );
+
+    if (!updated) {
+      await UserShopTracker.findOneAndUpdate(
+        { userId: user._id },
+        {
+          $push: {
+            purchasedItems: {
+              itemId: data._id,
+              itemType: data.type,
+              quantity: 1,
+            },
+          },
+        },
+        {
+          upsert: true,
+          returnDocument: "after",
+        }
+      );
+    }
     await user.save();
 
     return res.status(200).json({

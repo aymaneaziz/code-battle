@@ -12,7 +12,7 @@ const bundleSchema = new mongoose.Schema(
     name: { type: String, required: true },
     description: { type: String, required: true },
     type: { type: String, default: "bundle" },
-    icon: { type: String, required: true },
+    iconUrl: { type: String, required: true },
     items: [
       {
         refId: {
