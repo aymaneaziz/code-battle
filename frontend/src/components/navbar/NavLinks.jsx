@@ -1,8 +1,8 @@
-// src/components/navbar/NavLinks.jsx
 import { NavLink } from "react-router-dom";
 import { cn } from "@/lib/utils";
 
 const NAV_ITEMS = [
+  { to: "/", label: "Home" },
   { to: "/challenges", label: "Challenges" },
   { to: "/missions", label: "Missions" },
   { to: "/guild", label: "Guild" },
@@ -10,7 +10,7 @@ const NAV_ITEMS = [
   { to: "/leaderboard", label: "Leaderboard" },
 ];
 
-export function NavLinks({ isAdmin, vertical, onNavigate }) {
+export function NavLinks({ isAdmin, isBlocked, vertical, onNavigate }) {
   // Styles de base li kytbdlo 3la hsab vertical (mobile) ou horizontal (desktop)
   const baseStyle = vertical
     ? "flex items-center w-full px-4 py-3 text-base font-medium rounded-lg transition-colors"
@@ -21,13 +21,17 @@ export function NavLinks({ isAdmin, vertical, onNavigate }) {
       className={cn(
         "flex",
         vertical ? "flex-col gap-2" : "items-center gap-6 text-gray-400",
+        isBlocked && "opacity-50 pointer-events-none",
       )}
     >
       {NAV_ITEMS.map(({ to, label }) => (
         <NavLink
           key={to}
           to={to}
-          onClick={onNavigate}
+          onClick={(e) => {
+            if (isBlocked) e.preventDefault();
+            else if (onNavigate) onNavigate();
+          }}
           className={({ isActive }) =>
             cn(
               baseStyle,
@@ -46,7 +50,10 @@ export function NavLinks({ isAdmin, vertical, onNavigate }) {
       {isAdmin && (
         <NavLink
           to="/admin"
-          onClick={onNavigate}
+          onClick={(e) => {
+            if (isBlocked) e.preventDefault();
+            else if (onNavigate) onNavigate();
+          }}
           className={({ isActive }) =>
             cn(
               baseStyle,

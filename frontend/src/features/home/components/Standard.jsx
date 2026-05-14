@@ -1,8 +1,28 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import wsClient from "@/service/wsClient";
+import { useNavigate } from "react-router-dom";
 
-const Standard = ({ season, week, handleClick }) => {
+const Standard = ({ season, week, handleClick, player }) => {
+  const navigate = useNavigate();
+
+  const { playerInfo } = player;
+  console.log("Player info :", player);
+
+  // Handle the "Find Match" button click
+  const handleFindMatch = () => {
+    if (!playerInfo) return;
+
+    wsClient.send({
+      type: "JOIN_QUEUE",
+      userId: playerInfo.userId,
+      displayName: playerInfo.displayName,
+      elo: playerInfo.stats?.elo,
+    });
+    navigate("/matchmaking", { state: { fromStandard: true } });
+  };
+
   return (
     <Card className="h-full relative bg-white border border-slate-200 shadow-sm hover:shadow-md transition-all duration-300 rounded-2xl overflow-hidden">
       {/* Subtle background effect */}
@@ -38,9 +58,9 @@ const Standard = ({ season, week, handleClick }) => {
         {/* Action Buttons */}
         <div className="flex gap-4 mt-2">
           <Button
-            className="flex-1 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold transition-all duration-200 cursor-pointer shadow-none"
-            variant="outline"
-            onClick={() => handleClick("findMatch")}
+            onClick={handleFindMatch}
+            disabled={!playerInfo}
+            className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold transition-all duration-200 cursor-pointer"
           >
             Find Match
           </Button>

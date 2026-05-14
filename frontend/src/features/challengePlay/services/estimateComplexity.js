@@ -1,20 +1,3 @@
-// ─── Complexity estimator ─────────────────────────────────────────────────────
-/**
- * Multi-signal static analysis.
- *
- * Priority order (highest wins):
- *  1. Explicit nested loops in written code      → O(n²) / O(n³+)
- *  2. Sorting builtins + a loop                  → O(n log n)
- *  3. Sorting builtins alone                     → O(n log n)
- *  4. Binary-search pattern (halving)            → O(log n)
- *  5. Single loop OR linear builtins             → O(n)
- *  6. Nothing iterative found                    → O(1)
- *
- * "Linear builtins": functions that are O(n) even with no visible loop —
- *  max(), min(), sum(), len(), count(), find(), includes(), indexOf(),
- *  filter(), map(), reduce(), forEach(), every(), some(), join(), split(),
- *  reverse(), Array.from(), list(), set(), dict(), str(), int() on iterables.
- */
 export const estimateComplexity = (code) => {
   if (!code || !code.trim()) return null;
 

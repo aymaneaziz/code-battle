@@ -1,7 +1,7 @@
 import { Navigate, Outlet } from "react-router-dom";
 
 import { Loading } from "@/components/common/Loading";
-import { useSetupStatus } from "../services/useSetupStatus";
+import { useSetupStatus } from "../hooks/useSetupStatus";
 
 export const SetupNotCompletedProtectedRoute = ({
   children,

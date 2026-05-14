@@ -1,83 +1,122 @@
 import { Link } from "react-router-dom";
 import {
-  SignedIn,
   SignedOut,
+  SignedIn,
   UserButton,
   useAuth,
   useClerk,
 } from "@clerk/clerk-react";
-import { Button } from "@/components/ui/button"; // Shadcn Button
+import { Button } from "@/components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import api from "../../service/GlobalApi";
 import { LogOut, User } from "lucide-react";
+import wsClient from "@/service/wsClient";
+import { cn } from "@/lib/utils";
 
-export function NavAuthButtons() {
+export function NavAuthButtons({ mobile = false, isBlocked = false }) {
   const { signOut } = useClerk();
   const { getToken } = useAuth();
 
   const handleLogout = async () => {
+    if (isBlocked) return;
     try {
       const token = await getToken();
       await api.post(
         "/user/logout",
         {},
-        { headers: { Authorization: `Bearer ${token}` } },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        },
       );
     } catch (err) {
       console.error("Logout error:", err);
     } finally {
-      signOut({ redirectUrl: "/" });
+      wsClient.disconnect();
+      setTimeout(() => signOut({ redirectUrl: "/" }), 100);
     }
   };
 
+  const containerClasses = cn(
+    "flex",
+    mobile ? "flex-col gap-2" : "items-center gap-1",
+    isBlocked && "opacity-40 pointer-events-none", // Hard block for the whole group
+  );
+
   return (
-    <div className="flex items-center gap-3">
-      <SignedOut>
-        <Link
-          to="/signin"
-          className="px-4 py-1.5 text-sm rounded-md bg-blue-600 text-white hover:bg-blue-500 transition-colors"
-        >
-          Sign In
-        </Link>
-
-        <Link
-          to="/signup"
-          className="px-4 py-1.5 text-sm rounded-md border border-gray-600 text-gray-300 hover:border-gray-400 hover:text-white transition-colors"
-        >
-          Sign Up
-        </Link>
-      </SignedOut>
-
-      <SignedIn>
-        {/* Hna lbouton li ghadi idik l page de profil dyalk  */}
-        <Button
-          asChild
-          variant="ghost"
-          className="text-gray-400 hover:text-blue-400 hover:bg-blue-500/10  gap-2"
-        >
-          <Link to="/profile">
-            <User className="h-4 w-4" />
-            <span className="hidden lg:inline">My Profile</span>
+    <TooltipProvider delayDuration={300}>
+      <div className={containerClasses}>
+        <SignedOut>
+          <Link
+            to={isBlocked ? "#" : "/signin"}
+            className="px-4 py-1.5 text-sm rounded-md bg-blue-600 text-white"
+          >
+            Sign In
           </Link>
-        </Button>
-        {/* Bouton Logout b style Shadcn  */}
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={handleLogout}
-          className="text-gray-400 hover:text-red-400 hover:bg-red-500/10 gap-2 cursor-pointer"
-        >
-          <LogOut className="h-4 w-4" />
-          <span className="hidden lg:inline">Logout</span>
-          {/* Katban ghir f l'ecran kbir */}
-        </Button>
+        </SignedOut>
 
-        <UserButton
-          afterSignOutUrl="/"
-          appearance={{
-            elements: { userButtonAvatarBox: "h-9 w-9 border border-gray-700" },
-          }}
-        />
-      </SignedIn>
-    </div>
+        <SignedIn>
+          {/* My Profile */}
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                asChild
+                disabled={isBlocked}
+                variant="ghost"
+                size={mobile ? "default" : "icon"}
+                className={cn(
+                  "transition-all duration-300 ease-in-out",
+                  mobile ? "justify-start gap-3 w-full px-4" : "w-9 h-9",
+                  "text-gray-400 hover:text-blue-400 hover:bg-blue-500/10",
+                  isBlocked && "opacity-40 cursor-not-allowed",
+                )}
+              >
+                <Link to={isBlocked ? "#" : "/profile"}>
+                  <User className="h-4 w-4" />
+                  {mobile && <span>My Profile</span>}
+                </Link>
+              </Button>
+            </TooltipTrigger>
+            {!mobile && <TooltipContent>My Profile</TooltipContent>}
+          </Tooltip>
+
+          {/* Logout */}
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                disabled={isBlocked}
+                size={mobile ? "default" : "icon"}
+                onClick={handleLogout}
+                className={cn(
+                  "transition-all duration-300 ease-in-out ",
+                  mobile ? "justify-start gap-3 w-full px-4" : "w-9 h-9",
+                  "text-gray-400 hover:text-red-400 hover:bg-red-500/10 cursor-pointer",
+                  isBlocked && "opacity-40 cursor-not-allowed",
+                )}
+              >
+                <LogOut className="h-4 w-4" />
+                {mobile && <span>Logout</span>}
+              </Button>
+            </TooltipTrigger>
+            {!mobile && <TooltipContent>Logout</TooltipContent>}
+          </Tooltip>
+
+          {/* User Button Wrapper - Clerk logic */}
+          <div
+            className={cn(
+              "flex items-center justify-center h-9 w-9",
+              isBlocked && "pointer-events-none select-none grayscale",
+            )}
+          >
+            <UserButton afterSignOutUrl="/" />
+          </div>
+        </SignedIn>
+      </div>
+    </TooltipProvider>
   );
 }

@@ -1,11 +1,7 @@
-/**
- * SUPPORTED_LANGUAGES
- * ───────────────────
- * id        → Judge0 language id (sent to backend)
- * name      → display label in the select
- * label     → Monaco editor language identifier
- * starterKey → key used in problem.starterCode / problem.runnerCode in the DB
- */
+//id        → Judge0 language id (sent to backend)
+// name      → display label in the select
+// label     → Monaco editor language identifier
+// starterKey → key used in problem.starterCode / problem.runnerCode in the DB
 export const SUPPORTED_LANGUAGES = [
   { id: 63, name: "JavaScript", label: "javascript", starterKey: "javascript" },
   { id: 71, name: "Python 3", label: "python", starterKey: "python" },

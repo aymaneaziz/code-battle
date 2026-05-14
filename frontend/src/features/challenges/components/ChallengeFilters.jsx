@@ -25,7 +25,7 @@ const ChallengeFilters = ({ filters, setFilters }) => {
                   variant={filters.difficulty === diff ? "default" : "outline"}
                   size="sm"
                   onClick={() => setFilters({ ...filters, difficulty: diff })}
-                  className={`h-8 px-3 text-xs font-medium rounded-md transition-all ${
+                  className={`h-8 px-3 text-xs font-medium rounded-md transition-all cursor-pointer ${
                     filters.difficulty === diff
                       ? "bg-blue-600 hover:bg-blue-700 text-white"
                       : "text-slate-600 bg-transparent border-slate-200 hover:bg-slate-50"
@@ -49,7 +49,7 @@ const ChallengeFilters = ({ filters, setFilters }) => {
                   variant={filters.status === stat ? "default" : "outline"}
                   size="sm"
                   onClick={() => setFilters({ ...filters, status: stat })}
-                  className={`h-8 px-3 text-xs font-medium rounded-md transition-all ${
+                  className={`h-8 px-3 text-xs font-medium rounded-md transition-all cursor-pointer ${
                     filters.status === stat
                       ? "bg-blue-600 hover:bg-blue-700 text-white"
                       : "text-slate-600 bg-transparent border-slate-200 hover:bg-slate-50"

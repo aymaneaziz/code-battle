@@ -9,6 +9,7 @@ import Welcome from "./components/Welcome";
 import PlayerCard from "./components/PlayerCard";
 import ServerStats from "./components/ServerStats";
 import CodeArenaLogo from "../../assets/Code-Arena.svg";
+import { fetchHomeInfo } from "./services/homeApi";
 
 const Home = () => {
   const { user } = useUser();
@@ -20,20 +21,11 @@ const Home = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const token = await getToken();
-
         // Promise.all bach nrebho lweqt (parallel calls)
-        const [homeData, playerData] = await Promise.all([
-          api.get("/home/data"),
-          token
-            ? api.get("/home/player", {
-                headers: { Authorization: `Bearer ${token}` },
-              })
-            : null,
-        ]);
+        const result = await fetchHomeInfo(getToken);
 
         // Hna f Fetch, homeData hwa lobj lli fih currentSeason
-        setData({ home: homeData, player: playerData });
+        setData(result);
       } catch (err) {
         console.error("Erreur server:", err);
       } finally {
@@ -58,6 +50,7 @@ const Home = () => {
                 season={data.home.currentSeason}
                 week={data.home.currentWeek}
                 handleClick={setNav}
+                player={data.player}
               />
               <PlayerCard player={data.player} />
             </div>

@@ -1,5 +1,6 @@
 // Dependencies
 import express from "express";
+import http from "http";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import { PORT, VITE_FRONTEND_URL } from "./config/env.js";
@@ -22,6 +23,7 @@ import challengePageRouter from "./routes/challengesPage.route.js";
 import shopPageRouter from "./routes/shopPage.route.js";
 
 import compilerRouter from "./routes/compilerCode.route.js";
+import { initWebSocketServer } from "./websocket/wsServer.js";
 
 const app = express();
 
@@ -54,7 +56,12 @@ app.use("/api/execution", compilerRouter);
 app.use(errorClerk);
 app.use(errorMiddleware); // Global error handling middleware
 
-app.listen(PORT, async () => {
+// Create HTTP server and initialize WebSocket server on top of it
+const server = http.createServer(app);
+// Initialize WebSocket server (this will listen for WS connections on the same port as Express)
+initWebSocketServer(server);
+
+server.listen(PORT, async () => {
   console.log(`Server is running on port http://localhost:${PORT}`);
 
   await connectToDatabase(); // Connect to the database when the server starts

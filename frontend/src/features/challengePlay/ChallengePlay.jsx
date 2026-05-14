@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useLocation, useParams, Navigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useAuth } from "@clerk/clerk-react";
 import {
   fetchChallengeDetails,
@@ -18,7 +18,6 @@ import { estimateComplexity } from "./services/estimateComplexity";
 const ChallengePlay = () => {
   const { challengeId } = useParams();
   const { getToken } = useAuth();
-  const location = useLocation();
 
   const [challenge, setChallenge] = useState(null);
   const [code, setCode] = useState("");
@@ -34,8 +33,6 @@ const ChallengePlay = () => {
   // Derived code stats — updated on every code change
   const lineCount = code ? code.split("\n").length : 0;
   const complexity = estimateComplexity(code);
-
-  if (!location.state?.fromVault) return <Navigate to="/challenges" replace />;
 
   // ── Load challenge ──────────────────────────────────────────────────────────
   useEffect(() => {

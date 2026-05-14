@@ -4,9 +4,9 @@ import { Trophy, Zap, Target, Flame, Globe } from "lucide-react";
 
 const PlayerCard = ({ player }) => {
   // bla madir useState lprops, khdem bihom direct bach teviter re renders zaydine
-  const { playerData, rank } = player;
-  const stats = playerData?.stats || {};
-  console.log(player);
+  const { playerInfo, rank } = player;
+  const stats = playerInfo?.stats || {};
+
   const statItems = [
     {
       label: "Win Rate",
@@ -39,11 +39,11 @@ const PlayerCard = ({ player }) => {
         {/* Header: Avatar o Smya */}
         <div className="flex items-center gap-4">
           <div className="h-16 w-16 rounded-2xl bg-slate-100 flex items-center justify-center text-3xl shadow-inner border border-slate-200">
-            {playerData.selectedAvatar?.iconUrl || "👤"}
+            {playerInfo.selectedAvatar?.iconUrl || "👤"}
           </div>
           <div>
             <h1 className="text-lg font-bold text-slate-900 leading-tight">
-              {playerData.displayName || playerData.username}
+              {playerInfo.displayName || playerInfo.username}
             </h1>
             <div className="flex flex-wrap gap-3 mt-1">
               <span className="flex items-center gap-1 text-sm font-medium text-slate-600">

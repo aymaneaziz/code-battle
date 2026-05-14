@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import { SignIn, SignUp } from "@clerk/clerk-react";
 import "./App.css";
 
@@ -23,6 +23,13 @@ import { PlayerProfile } from "./features/playerProfile/PlayerProfile";
 import { SetupCompletedProtectedRoute } from "./features/playerSetup/components/SetupCompletedProtectedRoute";
 import { SetupNotCompletedProtectedRoute } from "./features/playerSetup/components/SetupNotCompletedProtectedRoute";
 import ChallengePlay from "./features/challengePlay/ChallengePlay";
+import MatchMaking from "./features/matchMaking/MatchMaking";
+import { Match } from "./features/match/Match";
+import { use } from "react";
+import { useWsConnection } from "./hooks/useWsConnection";
+import { MatchProtectedRoute } from "./features/matchMaking/components/MatchProtectedRoute";
+import { ChallengeProtectedRoute } from "./features/challengePlay/components/ChallengeProtectedRoute";
+import { MatchMakingProtectedRoute } from "./features/matchMaking/components/MatchMakingProtectedRoute";
 
 // Correction : On retire "as const" qui est purement TypeScript
 const CLERK_COMMON_PROPS = {
@@ -47,6 +54,8 @@ const SIGN_UP_PROPS = {
 function App() {
   // Sync user data with mongodb
   useUserSync();
+  // Connect to WebSocket server on app load
+  useWsConnection();
 
   return (
     <Routes>
@@ -55,8 +64,33 @@ function App() {
         <Route path="/" element={<Home />} />
         {/* Protected player routes */}
         <Route element={<PlayerProtectedRoute />}>
+          <Route
+            path="/challenges/:challengeId"
+            element={
+              <ChallengeProtectedRoute>
+                <ChallengePlay />
+              </ChallengeProtectedRoute>
+            }
+          />
           <Route path="/challenges" element={<Challenges />} />
-          <Route path="/challenges/:challengeId" element={<ChallengePlay />} />
+
+          <Route
+            path="/match/:matchId"
+            element={
+              <MatchProtectedRoute>
+                <Match />
+              </MatchProtectedRoute>
+            }
+          />
+          <Route
+            path="/matchmaking"
+            element={
+              <MatchMakingProtectedRoute>
+                <MatchMaking />
+              </MatchMakingProtectedRoute>
+            }
+          />
+
           <Route path="/missions" element={<Missions />} />
           <Route path="/guild" element={<Guild />} />
           <Route path="/shop" element={<Shop />} />
@@ -97,6 +131,8 @@ function App() {
         <Route path="/signin/*" element={<SignIn {...SIGN_IN_PROPS} />} />
         <Route path="/signup/*" element={<SignUp {...SIGN_UP_PROPS} />} />
       </Route>
+
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 }
