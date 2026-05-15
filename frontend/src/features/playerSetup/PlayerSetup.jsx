@@ -131,7 +131,7 @@ export const PlayerSetup = () => {
         description: "Tell us where you are coding from!",
       });
     }
-    if (formData.bio && formData.bio.length > 120) {
+    if (formData.bio && formData.bio.length > 40) {
       return toast.info("Bio too long", {
         description: `Your bio is ${formData.bio.length} characters. Please keep it under 120.`,
       });

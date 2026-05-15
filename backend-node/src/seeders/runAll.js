@@ -21,6 +21,7 @@ import { seedShopItems } from "./ShopData/shopItem.seeder.js";
 import { seedDailyDeals } from "./ShopData/dailyDeals.seeder.js";
 import { seedBundles } from "./ShopData/bundles.seeder.js";
 import { seedSeasonSpotlight } from "./ShopData/seasonSpotlight.seeder.js";
+import { seedLevel } from "./SystemData/level.seeder.js";
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -42,6 +43,7 @@ const runSeeders = async () => {
       seedBadges(),
       seedSystem(),
       seedRank(),
+      seedLevel(),
 
       // zid hna seed function
     ]);

@@ -3,7 +3,6 @@ import { Badge } from "@/components/ui/badge";
 import { Zap, Trophy, Coins, Gem } from "lucide-react";
 
 // ─── Difficulty badge ─────────────────────────────────────────────────────────
-
 const DIFFICULTY_STYLES = {
   Easy: "bg-green-100  text-green-700  border-green-200  hover:bg-green-100",
   Medium: "bg-yellow-100 text-yellow-700 border-yellow-200 hover:bg-yellow-100",
@@ -21,13 +20,6 @@ const DifficultyBadge = ({ difficulty }) => (
   </Badge>
 );
 
-// ─── Input display ────────────────────────────────────────────────────────────
-/**
- * Renders an input value cleanly:
- *  - Objects  → one "key = value" line per key
- *  - Arrays   → compact JSON
- *  - Primitives → plain string
- */
 const formatInputValue = (val) => {
   if (Array.isArray(val)) return JSON.stringify(val);
   if (val !== null && typeof val === "object") return JSON.stringify(val);

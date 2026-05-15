@@ -35,8 +35,10 @@ export function SurrenderButton({ onSurrender }) {
           </AlertDialogTitle>
           <AlertDialogDescription className="text-slate-500">
             Surrendering results in an immediate{" "}
-            <span className="text-red-600 font-bold">ELO loss</span>. Are you
-            sure you want to exit the arena?
+            <span className="text-red-600 font-bold">
+              ELO loss and and ends your current streak{" "}
+            </span>
+            . Are you sure you want to exit the arena?
           </AlertDialogDescription>
         </AlertDialogHeader>
 

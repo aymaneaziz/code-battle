@@ -9,7 +9,7 @@ import { AlertCircle } from "lucide-react";
 
 export function VsScreen({ matchData, onMatchStarted }) {
   const navigate = useNavigate();
-  const [countdown, setCountdown] = useState(10); // 10 second countdown before navigating to Match screen
+  const [countdown, setCountdown] = useState(3); // 10 second countdown before navigating to Match screen
 
   const [showWinModal, setShowWinModal] = useState(false);
 
@@ -50,6 +50,9 @@ export function VsScreen({ matchData, onMatchStarted }) {
               state: {
                 fromMatchmaking: true,
                 opponentId: matchData.opponent.userId,
+                problem: matchData.problem,
+                you: matchData.you,
+                opponent: matchData.opponent,
               },
               replace: true,
             });
@@ -98,7 +101,7 @@ export function VsScreen({ matchData, onMatchStarted }) {
                   <AlertCircle className="w-3 h-3" />
                   <span>No Forfeit Zone</span>
                 </div>
-                <p className="text-[11px] font-medium text-slate-500 text-center max-w-[140px] leading-tight">
+                <p className="text-[11px] font-medium text-slate-500 text-center max-w-35 leading-tight">
                   Leaving now means{" "}
                   <span className="text-red-600 font-bold">forfeit</span> –
                   opponent wins!

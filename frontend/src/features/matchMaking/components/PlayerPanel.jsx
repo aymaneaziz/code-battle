@@ -1,8 +1,10 @@
-import { Badge } from "lucide-react";
+import { Badge } from "@/components/ui/badge"; // Ensure correct import for UI Badge
 import { getRankConfig } from "../services/rankConfig";
 
 export const PlayerPanel = ({ player, label }) => {
-  const rank = getRankConfig(player?.rank?.label);
+  const config = getRankConfig(player?.rank?.label);
+
+  const rankIcon = player?.rank?.iconUrl || config.icon;
 
   return (
     <div className="flex flex-col items-center gap-4 flex-1">
@@ -10,9 +12,9 @@ export const PlayerPanel = ({ player, label }) => {
         {label}
       </p>
 
-      {/* Avatar — iconUrl is an emoji string from your Avatar model */}
+      {/* Avatar */}
       <div
-        className={`w-24 h-24 rounded-2xl border-4 ${rank.borderColor} bg-white flex items-center justify-center text-5xl shadow-md`}
+        className={`w-24 h-24 rounded-2xl border-4 ${config.borderColor} bg-white flex items-center justify-center text-5xl shadow-md transition-all`}
       >
         {player?.selectedAvatar?.iconUrl ?? "🧑‍💻"}
       </div>
@@ -22,14 +24,15 @@ export const PlayerPanel = ({ player, label }) => {
         {player?.displayName ?? "Unknown"}
       </p>
 
-      {/* Rank badge */}
+      {/* Rank badge using dynamic iconUrl */}
       <span
-        className={`text-xs font-bold px-3 py-1 rounded-full ${rank.bgColor} ${rank.color}`}
+        className={`text-xs font-bold px-3 py-1 rounded-full flex items-center gap-2 ${config.bgColor} ${config.color}`}
       >
-        {rank.icon} {rank.label}
+        <span className="text-sm">{rankIcon}</span>
+        {player?.rank?.label || config.label}
       </span>
 
-      {/* ELO — comes from stats.elo in the DB payload */}
+      {/* ELO */}
       <p className="text-slate-500 text-sm">
         ELO:{" "}
         <span className="font-bold text-slate-700">
@@ -57,14 +60,14 @@ export const PlayerPanel = ({ player, label }) => {
         </div>
       </div>
 
-      {/* Badges — shape from DB: { name, iconUrl, rarity } */}
+      {/* Badges */}
       {player?.badgesPlayer?.length > 0 && (
-        <div className="flex gap-1 flex-wrap justify-center">
+        <div className="flex gap-1 flex-wrap justify-center mt-2">
           {player.badgesPlayer.map((badge, i) => (
             <Badge
               key={i}
               variant="secondary"
-              className="text-xs gap-1"
+              className="text-[10px] gap-1 px-2 py-0"
               title={badge.rarity}
             >
               {badge.iconUrl} {badge.name}

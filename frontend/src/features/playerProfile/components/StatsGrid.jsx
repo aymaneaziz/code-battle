@@ -26,9 +26,9 @@ export function StatsGrid({ stats }) {
     },
     {
       label: "Global Rank",
-      value: `#${stats.rank || "---"}`,
+      value: `#${stats.globalRank || "---"}`,
       icon: <Globe className="h-5 w-5 text-indigo-500" />,
-      bg: "bg-indigo-50",
+      bg: "bg-indigo-50  ",
     },
     {
       label: "Win Rate",
@@ -70,9 +70,7 @@ export function StatsGrid({ stats }) {
           className="p-6 bg-white border-slate-200 shadow-sm flex flex-col items-center justify-center text-center gap-3 transition-all hover:shadow-md"
         >
           {/* Icon Container - Centered at top */}
-          <div
-            className={`p-3 rounded-2xl ${item.bg} flex items-center justify-center`}
-          >
+          <div className={`p-3 rounded-2xl } flex items-center justify-center`}>
             {item.icon}
           </div>
 

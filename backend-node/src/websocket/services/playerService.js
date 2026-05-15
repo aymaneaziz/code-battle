@@ -1,5 +1,6 @@
 import User from "../../models/user.model.js";
 import Rank from "../../models/SystemModels/rank.model.js";
+import Level from "../../models/SystemModels/level.model.js";
 
 export async function getPlayerProfile(userId) {
   const user = await User.findOne({ userId })
@@ -18,6 +19,12 @@ export async function getPlayerProfile(userId) {
   })
     .select("label iconUrl minElo maxElo rankId")
     .lean();
+  const xp = user.stats?.xp ?? 100;
+  const level = await Level.findOne({
+    minXp: { $lte: xp },
+    maxXp: { $gte: xp },
+  });
+  if (level) user.stats.level = level.levelNumber;
 
   return {
     userId: user.userId,
@@ -36,7 +43,7 @@ export async function getPlayerProfile(userId) {
       winRate: user.stats?.winRate,
       totalMatches: user.stats?.totalMatches,
       level: user.stats?.level,
-      bestStreak: user.stats?.bestStreak,
+      currentStreak: user.stats?.currentStreak,
     },
     rank: rank
       ? { label: rank.label, iconUrl: rank.iconUrl, rankId: rank.rankId }

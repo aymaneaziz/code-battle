@@ -22,14 +22,14 @@ export const RANK_CONFIG = {
   },
   Platinum: {
     label: "Platinum",
-    icon: "💎",
+    icon: "💠",
     color: "text-cyan-600",
     bgColor: "bg-cyan-50",
     borderColor: "border-cyan-400",
   },
   Diamond: {
     label: "Diamond",
-    icon: "💠",
+    icon: "💎",
     color: "text-blue-600",
     bgColor: "bg-blue-50",
     borderColor: "border-blue-400",

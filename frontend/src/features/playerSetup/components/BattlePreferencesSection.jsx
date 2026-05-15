@@ -63,16 +63,16 @@ const BattlePreferencesSection = ({
         {/* text area * */}
         <Textarea
           name="bio"
-          placeholder="Tell the arena who you are ... (max 120 chars)"
+          placeholder="Tell the arena who you are ... (max 40 chars)"
           className="bg-white border-gray-200 focus:border-red-500 focus:ring-red-500/10 text-gray-900 min-h-25 resize-none"
           value={formData.bio}
           onChange={onInputChange}
         />
       </div>
       <p
-        className={`text-xs text-right ${formData.bio.length > 120 ? "text-red-500" : "text-gray-400"}`}
+        className={`text-xs text-right ${formData.bio.length > 40 ? "text-red-500" : "text-gray-400"}`}
       >
-        {formData.bio.length} / 120
+        {formData.bio.length} / 40
       </p>
     </div>
   );

@@ -4,6 +4,8 @@ import "../../models/PlayerInfoModels/badge.model.js";
 import "../../models/PlayerSetupModels/avatar.model.js";
 import "../../models/PlayerSetupModels/language.model.js";
 import "../../models/PlayerSetupModels/codingExperience.model.js";
+import Rank from "../../models/SystemModels/rank.model.js";
+import Level from "../../models/SystemModels/level.model.js";
 
 const getProfilePlayer = async (req, res) => {
   try {
@@ -29,6 +31,18 @@ const getProfilePlayer = async (req, res) => {
       player.stats.winRate = Math.round((player.stats.wins / total) * 100);
     }
 
+    const currentRank = await Rank.findOne({
+      minElo: { $lte: player.stats.elo },
+      maxElo: { $gte: player.stats.elo },
+    });
+
+    // Level Logic
+    const currentLevel = await Level.findOne({
+      minXp: { $lte: player.stats.xp },
+      maxXp: { $gte: player.stats.xp },
+    });
+    if (currentLevel) player.stats.level = currentLevel.levelNumber;
+
     // Mise à jour de la dernière activité
     player.lastActive = new Date();
     player.status = "online"; // Kat-welli online melli katfetchi l'profile
@@ -36,6 +50,7 @@ const getProfilePlayer = async (req, res) => {
 
     // Hna kansifto ghir dakchi li htajiti bdebt f lfront
     const profileResponse = {
+      userId: player.userId,
       username: player.username, // Inclus car nécessaire pour l'identité
       displayName: player.displayName,
       bio: player.bio,
@@ -46,6 +61,8 @@ const getProfilePlayer = async (req, res) => {
       badgesPlayer: player.badgesPlayer,
       preferences: player.preferences,
       stats: player.stats,
+      level: currentLevel,
+      rank: currentRank,
       lastActive: player.lastActive,
       createdAt: player.createdAt,
     };

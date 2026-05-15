@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 export const statsSchema = new mongoose.Schema(
   {
     elo: { type: Number, default: 400 },
-    rank: { type: Number, default: 0 },
+    globalRank: { type: Number, default: 0 },
     wins: { type: Number, default: 0 },
     losses: { type: Number, default: 0 },
     draws: { type: Number, default: 0 },
@@ -14,7 +14,7 @@ export const statsSchema = new mongoose.Schema(
     xp: { type: Number, default: 0 },
     coins: { type: Number, default: 0 },
     gems: { type: Number, default: 0 },
-    level: { type: Number, default: 1 },
+    level: { type: Number, default: 0 },
     averageSolveTime: { type: Number, default: 0 },
     fastestSolveTime: { type: Number, default: 0 },
     hardestWin: { type: String, default: "None" },
@@ -22,5 +22,5 @@ export const statsSchema = new mongoose.Schema(
     itemsUsed: { type: Number, default: 0 },
     hintUsed: { type: Number, default: 0 },
   },
-  { _id: false }
+  { _id: false },
 );

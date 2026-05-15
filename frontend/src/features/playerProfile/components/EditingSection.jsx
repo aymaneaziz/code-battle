@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
 
 export const EditingSection = ({ formData, setFormData, unlockedAvatars }) => {
-  const MAX_BIO_LENGTH = 120; // Limite fixée
+  const MAX_BIO_LENGTH = 40; // Limite fixée
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;

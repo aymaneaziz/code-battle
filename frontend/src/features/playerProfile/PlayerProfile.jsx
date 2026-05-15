@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { Pencil, Save, X } from "lucide-react";
+import { Pencil, Save, Shield, X } from "lucide-react";
 
 import { ProfileHeader } from "./components/ProfileHeader";
 import { StatsGrid } from "./components/StatsGrid";
@@ -15,6 +15,7 @@ import { EditingSection } from "./components/EditingSection";
 import { AddFriendDialog } from "./components/AddFriendDialog";
 import { PreferredStack } from "./components/PreferredStack";
 
+import { fetchProfile, updateProfile } from "./services/profileApi";
 export const PlayerProfile = () => {
   const { user } = useUser();
   const { getToken } = useAuth();
@@ -31,29 +32,29 @@ export const PlayerProfile = () => {
     selectedAvatar: "",
   });
 
+  // Load Data
+  const loadProfile = async () => {
+    try {
+      const token = await getToken();
+      const data = await fetchProfile(token);
+
+      console.log(data);
+      setProfileData(data);
+      setFormData({
+        displayName: data.displayName || "",
+        location: data.location || "",
+        bio: data.bio || "",
+        selectedAvatar: data.selectedAvatar?._id || "",
+      });
+    } catch (err) {
+      toast.error("Failed to load profile");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    if (!user) return;
-    const fetchProfile = async () => {
-      try {
-        const token = await getToken();
-        const data = await api.get("/data/profile", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        console.log(data);
-        setProfileData(data);
-        setFormData({
-          displayName: data.displayName || "",
-          location: data.location || "",
-          bio: data.bio || "",
-          selectedAvatar: data.selectedAvatar?._id || "",
-        });
-      } catch (err) {
-        toast.error("Failed to load profile");
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchProfile();
+    if (user) loadProfile();
   }, [user, getToken]);
 
   const handleUpdate = async () => {
@@ -61,15 +62,11 @@ export const PlayerProfile = () => {
       setIsSubmitting(true);
       const token = await getToken();
 
-      await api.put("/data/profile", formData, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await updateProfile(formData, token);
 
-      const data = await api.get("/data/profile", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      // Refresh data after update
+      await loadProfile();
 
-      setProfileData(data);
       setIsEditing(false);
       toast.success("Profile updated!");
     } catch (err) {
@@ -84,7 +81,7 @@ export const PlayerProfile = () => {
 
   // XP Progress Calculation
   const currentXp = profileData.stats?.xp;
-  const xpNeeded = 500;
+  const xpNeeded = profileData.level.maxXp;
   const xpPercentage = (currentXp / xpNeeded) * 100;
 
   return (
@@ -135,6 +132,7 @@ export const PlayerProfile = () => {
         ) : (
           <ProfileHeader
             identity={{
+              userId: profileData.userId,
               username: profileData.username,
               displayName: profileData.displayName,
               bio: profileData.bio,
@@ -144,18 +142,24 @@ export const PlayerProfile = () => {
             }}
             rankInfo={{
               elo: profileData.stats?.elo,
+              rank: profileData.rank,
               level: profileData.stats?.level,
+              globalRank: profileData.stats?.globalRank,
             }}
           />
         )}
         {/* Barre d'XP  */}
         <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-2">
           <div className="flex justify-between text-[10px] font-bold uppercase tracking-tighter text-slate-800">
-            <span>LVL {profileData.stats?.level}</span>
+            {/* Level Badge */}
+            <div className="flex items-center gap-1 text-blue-600 font-bold text-[10px]  uppercase tracking-wider bg-blue-50 px-2 py-0.5 rounded-md border border-blue-100">
+              <Shield size={14} strokeWidth={2.5} /> LVL{" "}
+              {profileData.level?.levelNumber || 1}
+            </div>
             <span>
               {currentXp} / {xpNeeded} XP
             </span>
-            <span>LVL {profileData.stats?.level + 1}</span>
+            <span>LVL {profileData.level.levelNumber + 1}</span>
           </div>
           <Progress value={xpPercentage} className="h-2 bg-slate-100" />
         </div>

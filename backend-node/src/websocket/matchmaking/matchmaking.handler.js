@@ -1,6 +1,7 @@
 import { enqueue, dequeue, isQueued } from "./queue.js";
 import { findBestMatch, confirmMatch } from "./matchmaker.js";
 import { getPlayerProfile } from "../services/playerService.js";
+import { getMatchProblem } from "../services/matchProblemService.js";
 
 // Utility function to send JSON messages safely
 function send(ws, payload) {
@@ -9,6 +10,8 @@ function send(ws, payload) {
     ws.send(JSON.stringify(payload));
   }
 }
+
+export const activeMatches = new Map();
 
 export function handleJoinQueue(ws, data, clients) {
   const { userId, displayName, elo } = data;
@@ -69,10 +72,23 @@ async function attemptMatch() {
     return;
   }
 
+  // Store the mapping so we can find the opponent by the disconnected user's ID
+  activeMatches.set(player1.userId, {
+    opponentWs: player2.ws,
+    opponentId: player2.userId,
+    matchId,
+  });
+  activeMatches.set(player2.userId, {
+    opponentWs: player1.ws,
+    opponentId: player1.userId,
+    matchId,
+  });
+
   // Fetch full profiles from DB — Option B
-  const [profile1, profile2] = await Promise.all([
+  const [profile1, profile2, problem] = await Promise.all([
     getPlayerProfile(player1.userId),
     getPlayerProfile(player2.userId),
+    getMatchProblem(),
   ]);
 
   // Build the opponent object for each player.
@@ -85,17 +101,21 @@ async function attemptMatch() {
     stats: profile?.stats ?? null,
   });
 
-  send(player1.ws, {
+  const p1Payload = {
     type: "MATCH_FOUND",
     matchId,
     you: profile1,
     opponent: buildOpponent(profile2, player2),
-  });
-
-  send(player2.ws, {
+    problem,
+  };
+  const p2Payload = {
     type: "MATCH_FOUND",
     matchId,
     you: profile2,
     opponent: buildOpponent(profile1, player1),
-  });
+    problem,
+  };
+
+  send(player1.ws, p1Payload);
+  send(player2.ws, p2Payload);
 }

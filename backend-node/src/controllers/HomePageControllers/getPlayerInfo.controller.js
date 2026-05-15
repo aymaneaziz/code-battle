@@ -1,5 +1,6 @@
 import User from "../../models/user.model.js";
 import Rank from "../../models/SystemModels/rank.model.js";
+import Level from "../../models/SystemModels/level.model.js";
 
 const getPlayerInfo = async (req, res) => {
   try {
@@ -19,7 +20,13 @@ const getPlayerInfo = async (req, res) => {
       maxElo: { $gte: playerInfo.stats.elo },
     });
 
-    res.status(200).json({ playerInfo, rank });
+    const level = await Level.findOne({
+      minXp: { $lte: playerInfo.stats.xp },
+      maxXp: { $gte: playerInfo.stats.xp },
+    });
+    if (level) playerInfo.stats.level = playerInfo.levelNumber;
+
+    res.status(200).json({ playerInfo, rank, level });
   } catch (error) {
     // dima dir console.error bach tchof lmouchkil f terminal m9ad
     console.error(error);
