@@ -22,6 +22,8 @@ import { seedDailyDeals } from "./ShopData/dailyDeals.seeder.js";
 import { seedBundles } from "./ShopData/bundles.seeder.js";
 import { seedSeasonSpotlight } from "./ShopData/seasonSpotlight.seeder.js";
 import { seedLevel } from "./SystemData/level.seeder.js";
+import { seedMissions } from "./GameplayData/misson.seeder.js";
+import { seedMissionInstance } from "./GameplayData/missionInstance.model.js";
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -44,13 +46,18 @@ const runSeeders = async () => {
       seedSystem(),
       seedRank(),
       seedLevel(),
+      seedMissions(),
 
       // zid hna seed function
     ]);
     // Seed dependent data last (ex Challenges need Problems to exist)
     console.log("Seeding Phase2 ...");
     await sleep(1000);
-    await Promise.all([seedShopItems(), seedChallenges()]);
+    await Promise.all([
+      seedShopItems(),
+      seedChallenges(),
+      seedMissionInstance(),
+    ]);
 
     console.log("Seeding Phase3 ...");
     await sleep(1000);

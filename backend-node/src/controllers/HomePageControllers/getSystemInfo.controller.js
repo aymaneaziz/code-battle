@@ -5,8 +5,9 @@ const getSystemInfo = async (req, res) => {
     const info = await System.findOne({ _id: "SYSTEM_CONFIG" });
     res.status(200).json(info);
   } catch (error) {
+    console.error(error);
     res.status(500).json({
-      message: "Erreur serveur lors de la récupération des informations",
+      message: "Server error",
       error: error.message,
     });
   }

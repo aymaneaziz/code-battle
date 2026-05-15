@@ -1,7 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
-const Deals = ({ data, purchase, type }) => {
+const Deals = ({ data, purchase }) => {
   return (
     <Card className="h-full relative bg-white/80 backdrop-blur border border-slate-200 shadow-sm hover:shadow-md transition-all duration-300 rounded-2xl overflow-hidden p-6">
       <div className="absolute inset-0 bg-linear-to-br from-slate-100/40 to-transparent pointer-events-none" />
@@ -34,13 +34,13 @@ const Deals = ({ data, purchase, type }) => {
           );
 
           return (
-            <div
+            <Card
               key={item._id}
-              className="group relative flex flex-col items-center justify-center text-center gap-3 p-4 rounded-xl bg-white border border-slate-200 shadow-sm transition-all duration-300 hover:scale-[1.03] hover:shadow-lg"
+              className="group relative flex flex-col items-center justify-center text-center gap-3 p-4 bg-white border border-slate-200 shadow-sm transition-all duration-300 hover:scale-[1.03] hover:shadow-lg"
             >
               {/* Icon + Label */}
               <div className="flex flex-row justify-center items-center gap-2">
-                <div className="p-3 rounded-xl bg-slate-100 group-hover:scale-110 transition-transform duration-300">
+                <div className="p-3 bg-slate-100 group-hover:scale-110 transition-transform duration-300">
                   {ref?.iconUrl}
                 </div>
 
@@ -62,7 +62,7 @@ const Deals = ({ data, purchase, type }) => {
               </p>
 
               {/* prix */}
-              <div className="flex justify-center items-center gap-4 mt-2">
+              <div className="flex flex-wrap justify-center items-center gap-4 mt-2">
                 {/* coins */}
                 <div className="flex items-center gap-2 text-sm bg-yellow-100 px-4 py-2 rounded-full">
                   <span className="font-bold text-yellow-600 text-sm">
@@ -114,7 +114,7 @@ const Deals = ({ data, purchase, type }) => {
               >
                 Acheter
               </Button>
-            </div>
+            </Card>
           );
         })}
       </div>

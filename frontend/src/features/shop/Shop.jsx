@@ -1,15 +1,14 @@
 import { getToken } from "@clerk/react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Loading } from "@/components/common/Loading";
 import { toast } from "sonner";
 
 import getDailyDeals from "./services/getDailyDeals";
 import getSeasonSpotlights from "./services/getSeasonSpotlights";
 import getBundles from "./services/getBundles";
-import getSeasonEnd from "./services/getSeasonEndDate";
 import putPurchasedItems from "./services/putPurchasedItems";
-import updateSeasonTimer from "./services/updateSeasonTimer";
-import updateDailyTimer from "./services/updateDailyTimer";
+import updateSeasonTimer from "@/service/updateSeasonTimer";
+import updateDailyTimer from "@/service/updateDailyTimer";
 
 import Deals from "./components/Deals";
 import Bundles from "./components/Bundles";
@@ -18,7 +17,6 @@ import Purchasing from "./components/Purchasing";
 
 export const Shop = () => {
   const [data, setData] = useState({
-    seasonEndDate: null,
     dailyDeals: null,
     seasonSpotlights: null,
     bundles: null,
@@ -27,11 +25,6 @@ export const Shop = () => {
   const [selectedItem, setSelectedItem] = useState("");
   const [mode, setMode] = useState("");
   const [loading, setLoading] = useState(true);
-
-  // 🟢 DAILY TIMER (reset chaque jour à minuit)
-  const [dailyTimeLeft, setDailyTimeLeft] = useState("");
-  // 🔵 SEASON TIMER (expire à date fixe backend)
-  const [seasonTimeLeft, setSeasonTimeLeft] = useState("");
 
   const handlePurchase = (item) => {
     setSelectedItem(item);
@@ -48,55 +41,70 @@ export const Shop = () => {
       const token = await getToken();
       if (!token) return;
       await putPurchasedItems(token, item);
-      const [seasonEndDate, dailyDeals, seasonSpotlights, bundles] =
-        await Promise.all([
-          getSeasonEnd(token),
-          getDailyDeals(token),
-          getSeasonSpotlights(token),
-          getBundles(token),
-        ]);
+      const [dailyDeals, seasonSpotlights, bundles] = await Promise.all([
+        getDailyDeals(token),
+        getSeasonSpotlights(token),
+        getBundles(token),
+      ]);
 
       setData({
-        seasonEndDate,
         dailyDeals,
         seasonSpotlights,
         bundles,
       });
       toast.success("Purchase Succeeded!");
     } catch (error) {
-      console.log(error);
+      console.error(error);
       toast.error("Purchase failed");
     } finally {
       setMode(null);
     }
   };
 
+  // 🟢 DAILY TIMER
+  const [dailyTimeLeft, setDailyTimeLeft] = useState("");
+
+  // 🔵 SEASON TIMER
+  const [seasonTimeLeft, setSeasonTimeLeft] = useState("");
+
+  // refs for intervals
+  const dailyIntervalRef = useRef(null);
+  const seasonIntervalRef = useRef(null);
+
   // -------------------------------------------------------
   // ⏱ DAILY DEALS TIMER
   // -------------------------------------------------------
   useEffect(() => {
-    // premier lancement immédiat
+    // first execution immediately
     updateDailyTimer(setDailyTimeLeft);
 
-    // exécution chaque seconde
-    const interval = setInterval(() => {
+    // store interval id in ref
+    dailyIntervalRef.current = setInterval(() => {
       updateDailyTimer(setDailyTimeLeft);
     }, 1000);
 
-    // nettoyage du interval
-    return () => clearInterval(interval);
+    // cleanup
+    return () => {
+      clearInterval(dailyIntervalRef.current);
+    };
   }, []);
 
   // -------------------------------------------------------
-  // 🌍 SEASON TIMER (basé sur backend)
+  // 🌍 SEASON TIMER
   // -------------------------------------------------------
   useEffect(() => {
-    updateSeasonTimer(data, setSeasonTimeLeft);
-    const interval = setInterval(() => {
-      updateSeasonTimer(data, setSeasonTimeLeft);
-    }, 60000); // update chaque minute
-    return () => clearInterval(interval);
-  }, [data?.seasonEndDate?.seasonEndDate]);
+    updateSeasonTimer(setSeasonTimeLeft);
+
+    // store interval id in ref
+    seasonIntervalRef.current = setInterval(() => {
+      updateSeasonTimer(setSeasonTimeLeft);
+    }, 60000);
+
+    // cleanup
+    return () => {
+      clearInterval(seasonIntervalRef.current);
+    };
+  }, []);
 
   // -------------------------------------------------------
   // 📦 FETCH DATA
@@ -107,16 +115,13 @@ export const Shop = () => {
         const token = await getToken();
         if (!token) return;
 
-        const [seasonEndDate, dailyDeals, seasonSpotlights, bundles] =
-          await Promise.all([
-            getSeasonEnd(token),
-            getDailyDeals(token),
-            getSeasonSpotlights(token),
-            getBundles(token),
-          ]);
+        const [dailyDeals, seasonSpotlights, bundles] = await Promise.all([
+          getDailyDeals(token),
+          getSeasonSpotlights(token),
+          getBundles(token),
+        ]);
 
         setData({
-          seasonEndDate,
           dailyDeals,
           seasonSpotlights,
           bundles,
