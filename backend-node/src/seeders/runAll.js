@@ -23,7 +23,7 @@ import { seedBundles } from "./ShopData/bundles.seeder.js";
 import { seedSeasonSpotlight } from "./ShopData/seasonSpotlight.seeder.js";
 import { seedLevel } from "./SystemData/level.seeder.js";
 import { seedMissions } from "./GameplayData/misson.seeder.js";
-import { seedMissionInstance } from "./GameplayData/missionInstance.model.js";
+import { seedMissionInstance } from "./GameplayData/missionInstance.seeder.js";
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 

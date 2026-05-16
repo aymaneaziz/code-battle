@@ -10,6 +10,10 @@ export const putProgress = async (req, res) => {
     const clerkId = req.auth.userId;
     const user = await User.findOne({ clerkId });
 
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
     const dailyLoginMissions = (
       await MissionInstance.find().populate({
         path: "mission",
@@ -28,7 +32,7 @@ export const putProgress = async (req, res) => {
             userId: user._id,
             missionInstanceId: item._id,
             category: item.category,
-            progress: 1,
+            progress: 0,
             isCompleted: false,
             isClaimed: false,
           },
@@ -42,11 +46,16 @@ export const putProgress = async (req, res) => {
       // stop si déjà terminé
       if (track.isCompleted) continue;
 
+      console.log(
+        new Date().toDateString(),
+        track.lastUpdateDate?.toDateString()
+      );
+
       // déjà compté aujourd’hui
       if (
         type === "DAILY_LOGIN" &&
-        track.updatedAt &&
-        isSameMoroccoDay(track.updatedAt)
+        track.lastUpdateDate &&
+        track.lastUpdateDate.toDateString() === new Date().toDateString()
       ) {
         continue;
       }
@@ -59,6 +68,8 @@ export const putProgress = async (req, res) => {
         track.isCompleted = true;
         track.completedAt = new Date();
       }
+
+      track.lastUpdateDate = new Date();
 
       await track.save();
     }
@@ -74,16 +85,4 @@ export const putProgress = async (req, res) => {
       error: error.message,
     });
   }
-};
-
-const isSameMoroccoDay = (date) => {
-  const today = new Date().toLocaleDateString("en-CA", {
-    timeZone: "Africa/Casablanca",
-  });
-
-  const target = new Date(date).toLocaleDateString("en-CA", {
-    timeZone: "Africa/Casablanca",
-  });
-
-  return today === target;
 };

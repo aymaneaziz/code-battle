@@ -30,7 +30,7 @@ class GlobalApi {
 
       if (!response.ok) {
         throw new Error(
-          result?.message || `HTTP ${response.status}: ${response.statusText}`,
+          result?.message || `HTTP ${response.status}: ${response.statusText}`
         );
       }
 

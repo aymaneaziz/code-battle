@@ -3,17 +3,33 @@ import { Coins, Gem, Zap } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
 
-const Body = ({ missions }) => {
+const Body = ({ missions, onClaim, isLoading }) => {
   {
     /* EMPTY STATE */
   }
+
+  if (isLoading)
+    return (
+      <Card className="relative h-full flex items-center justify-center text-slate-500 font-semibold">
+        Loading missions...
+      </Card>
+    );
+
   if (!missions)
     return (
       <Card className="relative h-full flex items-center justify-center text-slate-500 font-semibold">
         No missions available
       </Card>
     );
+  const [loading, setLoading] = useState(false);
+
+  const handleClaim = async (missionInstanceId) => {
+    setLoading(true);
+    await onClaim({ missionInstanceId });
+    setLoading(false);
+  };
   return (
     <Card
       className={`h-full relative bg-white/80 backdrop-blur shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden 
@@ -106,7 +122,17 @@ const Body = ({ missions }) => {
                     Claimed
                   </Card>
                 ) : (
-                  item?.isCompleted && <Button>Claim</Button>
+                  item?.isCompleted && (
+                    <Button
+                      className={
+                        "px-5 py-2 bg-blue-700 text-white hover:cursor-pointer" +
+                        (loading ? " opacity-50 cursor-not-allowed" : "")
+                      }
+                      onClick={() => handleClaim(item._id)}
+                    >
+                      Claim
+                    </Button>
+                  )
                 )}
               </div>
             </div>

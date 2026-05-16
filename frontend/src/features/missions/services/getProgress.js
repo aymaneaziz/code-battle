@@ -1,5 +1,4 @@
 import api from "@/service/GlobalApi";
-import putMissionProgress from "@/service/putMissionProgress";
 
 const getProgress = async (token) => {
   try {
