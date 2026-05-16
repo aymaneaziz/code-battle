@@ -1,6 +1,6 @@
 import System from "../../models/SystemModels/system.model.js";
 
-const getSystemInfo = async (req, res) => {
+export const getSystemInfo = async (req, res) => {
   try {
     const info = await System.findOne({ _id: "SYSTEM_CONFIG" });
     res.status(200).json(info);
@@ -12,5 +12,3 @@ const getSystemInfo = async (req, res) => {
     });
   }
 };
-
-export { getSystemInfo };

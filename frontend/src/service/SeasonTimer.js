@@ -5,7 +5,7 @@ const updateSeasonTimer = async (setSeasonTimeLeft) => {
   try {
     const token = await getToken();
     if (!token) return;
-    const res = await api.get("/endDate/seasonEndDate", {
+    const res = await api.get("/system/seasonEndDate", {
       headers: {
         Authorization: `Bearer ${token}`,
       },

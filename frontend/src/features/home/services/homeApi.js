@@ -6,7 +6,7 @@ export const fetchHomeInfo = async (getToken) => {
 
   // Promise.all bach nrebho lweqt (parallel calls)
   const [homeInfo, playerInfo] = await Promise.all([
-    api.get("/home/data"),
+    api.get("/system/data"),
     token
       ? api.get("/home/player", {
           headers: { Authorization: `Bearer ${token}` },

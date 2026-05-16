@@ -18,13 +18,7 @@ const systemSchema = new mongoose.Schema(
     weeklyEndDate: { type: Date },
     seasonStartDate: { type: Date },
     seasonEndDate: { type: Date },
-    topPlayersThisWeek: [
-      {
-        userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-        rank: Number,
-        score: Number,
-      },
-    ],
+    lastLeatherboardUpdate: { type: Date },
   },
   { timestamps: true }
 );

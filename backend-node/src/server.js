@@ -22,8 +22,14 @@ import shopPageRouter from "./routes/shopPage.route.js";
 import homePageRouter from "./routes/homePage.route.js";
 import compilerRouter from "./routes/compilerCode.route.js";
 import missionRouter from "./routes/mission.route.js";
-import endDateRouter from "./routes/endDate.route.js";
+import systemInfoRouter from "./routes/systemInfo.route.js";
+
+// WebSocket Server
 import { initWebSocketServer } from "./websocket/wsServer.js";
+
+// Jobs
+import { initLeaderboardJob } from "./jobs/leaderboard.job.js";
+import leaderboardRouter from "./routes/leaderboard.route.js";
 
 const app = express();
 
@@ -38,6 +44,9 @@ app.use(
     credentials: true,
   })
 );
+
+// to get the system info (season, week, etc)------------------------------------------
+app.use("/api/system", systemInfoRouter);
 // Synch and add new User------------------------------------------
 app.use("/api/user", userRouter);
 // Setup player data------------------------------------------
@@ -53,8 +62,8 @@ app.use("/api/shop", shopPageRouter);
 app.use("/api/execution", compilerRouter);
 // To get The data we need for the mission-----------------------------------
 app.use("/api/mission", missionRouter);
-// To get the week/season end date
-app.use("/api/endDate", endDateRouter);
+// To get The data we need for the leatherboard-----------------------------------
+app.use("/api/leatherboard", leaderboardRouter);
 
 //dima ftali had lmiddelware dyal clerk
 app.use(errorClerk);
@@ -68,6 +77,7 @@ initWebSocketServer(server);
 server.listen(PORT, async () => {
   console.log(`Server is running on port http://localhost:${PORT}`);
   await connectToDatabase(); // Connect to the database when the server starts
+  await initLeaderboardJob(); // Start the leaderboard update job
 });
 
 export default app;

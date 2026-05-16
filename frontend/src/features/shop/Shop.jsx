@@ -7,8 +7,8 @@ import getDailyDeals from "./services/getDailyDeals";
 import getSeasonSpotlights from "./services/getSeasonSpotlights";
 import getBundles from "./services/getBundles";
 import putPurchasedItems from "./services/putPurchasedItems";
-import updateSeasonTimer from "@/service/updateSeasonTimer";
-import updateDailyTimer from "@/service/updateDailyTimer";
+import updateSeasonTimer from "@/service/SeasonTimer";
+import updateDailyTimer from "@/service/DailyTimer";
 
 import Deals from "./components/Deals";
 import Bundles from "./components/Bundles";
