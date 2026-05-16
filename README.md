@@ -31,29 +31,23 @@ npm install --save-dev nodemon  //always restart server whenever make any change
 
 ## 🧰 Stack & Outils (en cours)
 ---
+Stack MERN
+wsl (windows subsytem for linux ) / Docker
+WebSocket /frontend /backend
 
-### 📊 Chart.js ❌
 
-[https://www.chartjs.org/docs/latest/](https://www.chartjs.org/docs/latest/)
-Bibliothèque pour créer des graphiques interactifs et dynamiques (stats, performances, etc.).
 
----
 
-### 🧠 Monaco Editor ❌
+
+
+### 🧠 Monaco Editor ✅
 
 [https://microsoft.github.io/monaco-editor/](https://microsoft.github.io/monaco-editor/)
 Éditeur de code puissant utilisé dans VS Code, idéal pour l’édition en ligne.
 
 ---
 
-### ✨ Framer Motion ❌
-
-[https://www.framer.com/motion/](https://www.framer.com/motion/)
-Bibliothèque d’animations fluide pour React afin de créer des interfaces modernes et dynamiques.
-
----
-
-### ⚖️ Judge0 API ❌
+### ⚖️ Judge0 API ✅
 
 [https://judge0.com/](https://judge0.com/)
 API permettant l’exécution de code en plusieurs langages pour les challenges et battles.
@@ -101,4 +95,15 @@ Solution complète d’authentification (login, signup, OAuth) prête pour produ
 [https://lucide.dev/](https://lucide.dev/)
 Modern open-source icon library with customizable colors, perfect for clean and consistent UI design.
 
+### 📊 Chart.js ❌
 
+[https://www.chartjs.org/docs/latest/](https://www.chartjs.org/docs/latest/)
+Bibliothèque pour créer des graphiques interactifs et dynamiques (stats, performances, etc.).
+
+---
+### ✨ Framer Motion ❌
+
+[https://www.framer.com/motion/](https://www.framer.com/motion/)
+Bibliothèque d’animations fluide pour React afin de créer des interfaces modernes et dynamiques.
+
+---
