@@ -34,8 +34,8 @@ const MyProgressWidget = () => {
   return (
     <Card className="shadow-sm border-slate-200 bg-white">
       <CardHeader className="pb-3 border-b border-slate-100">
-        <CardTitle className="text-lg font-extrabold tracking-tight text-slate-900">
-          My Progress
+        <CardTitle className="text-xs font-bold uppercase text-slate-800 pl-2 tracking-widest">
+          <h3>My Progress</h3>
         </CardTitle>
       </CardHeader>
 

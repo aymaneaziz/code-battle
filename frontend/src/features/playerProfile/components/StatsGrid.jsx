@@ -14,7 +14,7 @@ export function StatsGrid({ stats }) {
   const items = [
     {
       label: "Arena Coins",
-      value: stats.coin || 0,
+      value: stats.coins || 0,
       icon: <Coins className="h-5 w-5 text-amber-500" />,
       bg: "bg-amber-50",
     },
@@ -32,7 +32,7 @@ export function StatsGrid({ stats }) {
     },
     {
       label: "Win Rate",
-      value: `${stats.winRate || 0}%`,
+      value: `${Math.round(stats.winRate * 100) || 0}%`,
       icon: <Target className="h-5 w-5 text-rose-500" />,
       bg: "bg-rose-50",
     },

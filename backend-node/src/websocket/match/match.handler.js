@@ -7,10 +7,9 @@ import {
   getOpponentId,
 } from "./match.state.js";
 import { resolveMatch } from "./match.resolver.js";
+import { LANGUAGE_KEY_MAP } from "../../controllers/CompilerControllers/languageKeyMap.js";
 
-// ── Helpers (same as executeCode controller) ─────────────────────────────────
-
-const LANGUAGE_KEY_MAP = { 71: "python", 70: "python", 63: "javascript" };
+// ── executeCode controller ─────────────────────────────────
 
 const getLanguageKey = (id) => LANGUAGE_KEY_MAP[Number(id)] ?? "javascript";
 const toBase64 = (s) => Buffer.from(String(s ?? "")).toString("base64");
@@ -79,7 +78,6 @@ function send(ws, payload) {
 }
 
 // ── SUBMIT_CODE ───────────────────────────────────────────────────────────────
-
 export async function handleSubmitCode(ws, data, clients) {
   const { matchId, userId, code, languageId } = data;
 
@@ -112,7 +110,7 @@ export async function handleSubmitCode(ws, data, clients) {
       return send(ws, { type: "ERROR", message: "Problem not found." });
 
     const langKey = getLanguageKey(languageId);
-    const runnerCode = problem.runnerCode?.[langKey];
+    const runnerCode = problem.runnerCode.get(langKey);
     if (!runnerCode)
       return send(ws, { type: "ERROR", message: `No runner for ${langKey}.` });
 
@@ -212,7 +210,6 @@ export async function handleSubmitCode(ws, data, clients) {
 }
 
 // ── TIME_EXPIRED ──────────────────────────────────────────────────────────────
-
 export async function handleTimeExpired(data, clients) {
   const { matchId } = data;
 

@@ -51,11 +51,11 @@ export function useMatchmaking(userId) {
       const uid = userIdRef.current;
       if (!uid) return;
 
-      // If we leave the page while still searching, notify server to remove from queue
-      if (statusRef.current === "searching" && uid) {
+      // handle all surrender/disconnect scenarios.
+      if (statusRef.current === "searching") {
         wsClient.send({ type: "LEAVE_QUEUE", userId: uid });
       } else if (statusRef.current === "found" && matchDataRef.current) {
-        // Left during VsScreen countdown — treat as surrender
+        // Left during VsScreen countdown — send SURRENDER
         const { matchId, opponent } = matchDataRef.current;
         wsClient.send({
           type: "SURRENDER",

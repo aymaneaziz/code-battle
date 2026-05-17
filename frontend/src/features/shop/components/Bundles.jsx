@@ -78,7 +78,7 @@ const Bundles = ({ data, purchase }) => {
 
               {/* Prices */}
               <div className="flex items-center gap-4">
-                <div className="flex items-center gap-1 text-sm font-bold text-yellow-600">
+                <div className="flex items-center gap-1 text-sm font-bold text-amber-600">
                   <span>💰</span>
                   <span>{coins}</span>
                 </div>

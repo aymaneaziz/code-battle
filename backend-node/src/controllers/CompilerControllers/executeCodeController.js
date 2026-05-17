@@ -1,12 +1,10 @@
 import { JUDGE0_API_URL } from "../../config/env.js";
 import Problem from "../../models/GameplayModels/problem.model.js";
-
+import Challenge from "../../models/GameplayModels/challenge.model.js";
+import UserProgress from "../../models/SystemModels/userProgress.model.js";
+import User from "../../models/user.model.js";
+import { LANGUAGE_KEY_MAP } from "./languageKeyMap.js";
 // ─── Helpers ────────────────────────────────────────────────────────────────
-const LANGUAGE_KEY_MAP = {
-  71: "python", // Python 3
-  70: "python", // Python 2
-  63: "javascript",
-};
 const getLanguageKey = (id) => LANGUAGE_KEY_MAP[Number(id)] ?? "javascript";
 
 // Base64 encoding/decoding for Judge0 API (which we use in base64 mode to support Unicode and avoid escaping issues)
@@ -81,6 +79,7 @@ const runOnJudge0 = async (fullCode, languageId, tc, cpuLimit) => {
 // ─── Controller ───────────────────────────────────────────────────────────────
 export const executeCode = async (req, res) => {
   try {
+    const clerkIdFromAuth = req.auth.userId;
     const {
       problemId,
       code,
@@ -103,7 +102,7 @@ export const executeCode = async (req, res) => {
       return res.status(404).json({ message: "Problem not found." });
 
     const langKey = getLanguageKey(languageId);
-    const runnerCode = problem.runnerCode?.[langKey];
+    const runnerCode = problem.runnerCode.get(langKey);
 
     if (!runnerCode) {
       return res.status(400).json({
@@ -112,7 +111,6 @@ export const executeCode = async (req, res) => {
     }
 
     const fullCode = `${code}\n${runnerCode}`;
-
     const cpuLimit = (problem.timeLimitMs / 1000).toFixed(1);
 
     // ── Determine which test cases to run ───────────────────────────────────────
@@ -139,7 +137,80 @@ export const executeCode = async (req, res) => {
       allCases.map((tc) => runOnJudge0(fullCode, languageId, tc, cpuLimit)),
     );
 
-    return res.status(200).json(results);
+    // Check if every test case passed successfully
+    const allPassed = results.every((result) => result.isPassed === true);
+
+    let rewardClaimed = false;
+    let rewardsDistributed = { xp: 0, coins: 0, gems: 0 };
+
+    if (isSubmit && allPassed) {
+      const challenge = await Challenge.findOne({ problemId: problem._id });
+      const user = await User.findOne({ clerkId: clerkIdFromAuth });
+
+      if (challenge && user) {
+        // Find or create a single user progress record
+        let userProgress = await UserProgress.findOne({ userId: user._id });
+        if (!userProgress) {
+          userProgress = new UserProgress({
+            userId: user._id,
+            solvedChallenges: [],
+            status: "unsolved",
+          });
+        }
+
+        // Check if this challenge is already marked as solved
+        const alreadySolved = userProgress.solvedChallenges.some(
+          (id) => id.toString() === challenge._id.toString(),
+        );
+
+        if (!alreadySolved) {
+          // Push to arrays and save state status
+          userProgress.solvedChallenges.push(challenge._id);
+          userProgress.status = "solved";
+          userProgress.completedAt = new Date();
+          await userProgress.save();
+
+          // Safely map rewards from the challenge schema
+          const xpGained = challenge.xp || challenge.reward?.xp || 0;
+          const coinsGained = challenge.reward?.coins || 0;
+          const gemsGained = challenge.reward?.gems || 0;
+
+          rewardsDistributed = {
+            xp: xpGained,
+            coins: coinsGained,
+            gems: gemsGained,
+          };
+
+          // Increment values within nested profile objects using dot notation counters
+          await User.findByIdAndUpdate(user._id, {
+            $inc: {
+              "stats.xp": xpGained,
+              "stats.coins": coinsGained,
+              "stats.gems": gemsGained,
+            },
+          });
+
+          // Update general challenge tracking
+          challenge.solvedCount += 1;
+          await challenge.save();
+
+          rewardClaimed = true;
+        } else {
+          rewardsDistributed = {
+            xp: challenge.xp || challenge.reward?.xp || 0,
+            coins: challenge.reward?.coins || 0,
+            gems: challenge.reward?.gems || 0,
+          };
+        }
+      }
+    }
+
+    return res.status(200).json({
+      results,
+      allPassed,
+      rewardClaimed,
+      rewards: rewardsDistributed,
+    });
   } catch (error) {
     console.error("Code Execution Error:", error);
     return res

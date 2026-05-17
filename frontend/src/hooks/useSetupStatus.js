@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useAuth, useUser } from "@clerk/clerk-react";
-import api from "../../../service/GlobalApi.js";
+import api from "../service/GlobalApi.js";
 
 export const useSetupStatus = () => {
   const { user, isLoaded } = useUser();

@@ -37,7 +37,7 @@ const Home = () => {
   }, [getToken]); // user tqder tzad hna ila kenti mhtajha
 
   if (nav === "findMatch") return <Navigate to="/matchMaking" />;
-  if (nav === "Practice") return <Navigate to="/Practice" />;
+  if (nav === "Practice") return <Navigate to="/challenges" />;
 
   if (loading || !data.home) return <Loading />;
   return (

@@ -64,7 +64,7 @@ const DailyChallengeWidget = () => {
   return (
     <Card className="shadow-sm border-slate-200 bg-white flex flex-col">
       <CardHeader className="flex flex-row items-center justify-between pb-2 border-b border-slate-100">
-        <CardTitle className="text-lg font-extrabold tracking-tight text-slate-900">
+        <CardTitle className="text-xs font-bold uppercase text-slate-800 pl-2 tracking-widest">
           Daily Challenge
         </CardTitle>
 
@@ -81,7 +81,7 @@ const DailyChallengeWidget = () => {
       </CardHeader>
       <CardContent>
         {/* title and description */}
-        <h3 className="text-md font-bold text-slate-800 mb-2">
+        <h3 className="text-md font-medium text-slate-800 mb-2">
           {daily.problemId.title}
         </h3>
         <p className="text-sm text-slate-500 leading-relaxed line-clamp-3">

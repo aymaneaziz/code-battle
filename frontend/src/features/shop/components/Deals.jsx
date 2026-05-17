@@ -25,12 +25,12 @@ const Deals = ({ data, purchase }) => {
 
           const discountedCoins = Math.max(
             Math.floor(originalCoins * (1 - coinDiscount / 100)),
-            0
+            0,
           );
 
           const discountedGems = Math.max(
             Math.floor(originalGems * (1 - gemDiscount / 100)),
-            0
+            0,
           );
 
           return (

@@ -1,5 +1,31 @@
+import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+const formatDuration = (ms) => {
+  if (!ms) return "—";
+  const totalSeconds = Math.floor(ms / 1000);
+  const m = Math.floor(totalSeconds / 60);
+  const s = totalSeconds % 60;
+  return `${m}m ${String(s).padStart(2, "0")}s`;
+};
+
+// ─── Difficulty badge ─────────────────────────────────────────────────────────
+const DIFFICULTY_STYLES = {
+  Easy: "bg-green-100  text-green-700  border-green-200  hover:bg-green-100",
+  Medium: "bg-yellow-100 text-yellow-700 border-yellow-200 hover:bg-yellow-100",
+  Hard: "bg-red-100    text-red-700    border-red-200    hover:bg-red-100",
+  Extreme:
+    "bg-purple-100 text-purple-700 border-purple-200 hover:bg-purple-100",
+};
+
+const DifficultyBadge = ({ difficulty }) => (
+  <Badge
+    variant="outline"
+    className={`font-semibold ${DIFFICULTY_STYLES[difficulty] ?? DIFFICULTY_STYLES.Easy}`}
+  >
+    {difficulty}
+  </Badge>
+);
 
 export function CombatStatsTable({ stats }) {
   // On organise les stats pour éviter les doublons et formater les labels
@@ -13,15 +39,19 @@ export function CombatStatsTable({ stats }) {
     { label: "Best Streak Ever", value: `x${stats.bestStreak || 0}` },
     {
       label: "Avg Solve Time",
-      value: stats.averageSolveTime ? `${stats.averageSolveTime}m` : "--:--",
+      value: stats.averageSolveTime
+        ? `${formatDuration(stats.averageSolveTime)}`
+        : "--:--",
     },
     {
       label: "Fastest Solve",
-      value: stats.fastestSolveTime ? `${stats.fastestSolveTime}s` : "--:--",
+      value: stats.fastestSolveTime
+        ? `${formatDuration(stats.fastestSolveTime)}`
+        : "--:--",
     },
     {
       label: "Hardest Win",
-      value: stats.hardestWin || "None",
+      value: <DifficultyBadge difficulty={stats.hardestWin} /> || "None",
       className:
         stats.hardestWin === "EXTREME" ? "text-orange-600 font-bold" : "",
     },
@@ -51,7 +81,7 @@ export function CombatStatsTable({ stats }) {
             <span
               className={cn(
                 "text-sm font-semibold text-slate-900",
-                item.className
+                item.className,
               )}
             >
               {item.value}

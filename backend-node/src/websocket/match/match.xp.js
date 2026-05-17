@@ -1,5 +1,4 @@
 // XP Calculation for a completed match.
-
 const BASE_XP = { Easy: 80, Medium: 160, Hard: 300, Extreme: 500 };
 
 const COMBO_MULTIPLIER = (combo) => {

@@ -54,7 +54,7 @@ const ChallengeList = ({ challenges = [], loading }) => {
     // Katsift w7d state ghir bach tgol bli m y9drch ymchi '/challenges/${id}'mn ghir chi blassa mn ghir hadi
   };
 
-  const displayData = showAll ? challenges : challenges.slice(0, 5);
+  const displayData = showAll ? challenges : challenges.slice(0, 8);
 
   return (
     <TooltipProvider>
@@ -181,7 +181,7 @@ const ChallengeList = ({ challenges = [], loading }) => {
           </TableBody>
         </Table>
 
-        {!loading && challenges.length > 5 && (
+        {!loading && challenges.length > 8 && (
           <div
             onClick={(e) => {
               e.stopPropagation();

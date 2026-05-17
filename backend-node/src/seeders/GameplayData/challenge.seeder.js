@@ -70,6 +70,33 @@ export const seedChallenges = async () => {
       solvedCount: 45,
       acceptanceRate: 12,
     },
+    {
+      challengeId: "ch_two_sum",
+      problemId: probMap["two-sum"],
+      xp: 50,
+      reward: { coins: 20 },
+      isDaily: false,
+      solvedCount: 15400,
+      acceptanceRate: 88,
+    },
+    {
+      challengeId: "ch_longest_substring",
+      problemId: probMap["longest-substring-no-repeat"],
+      xp: 200,
+      reward: { coins: 80, gems: 2 },
+      isDaily: false,
+      solvedCount: 3120,
+      acceptanceRate: 48,
+    },
+    {
+      challengeId: "ch_merge_intervals",
+      problemId: probMap["merge-intervals"],
+      xp: 220,
+      reward: { coins: 90, gems: 2 },
+      isDaily: false,
+      solvedCount: 2450,
+      acceptanceRate: 52,
+    },
   ];
 
   // Filter out any challenges where the problemId wasn't found (safety)

@@ -23,7 +23,7 @@ const PlayerCard = ({ player }) => {
   const statItems = [
     {
       label: "Win Rate",
-      value: `${stats.winRate || 0}%`,
+      value: `${Math.round(stats.winRate * 100) || 0}%`,
       icon: <Target className="h-5 w-5 text-rose-500" />,
       bg: "bg-rose-50",
     },
@@ -35,12 +35,12 @@ const PlayerCard = ({ player }) => {
     },
     {
       label: "Matches",
-      value: stats.prefectRuns || 0,
+      value: stats.totalMatches || 0,
       icon: <Trophy className="h-5 w-5 text-orange-500" />,
       bg: "bg-orange-50",
     },
     {
-      label: "Streak",
+      label: "Current Streak",
       value: `x${stats.currentStreak || 0}`,
       icon: <Flame className="h-5 w-5 text-red-500" />,
       bg: "bg-red-50",

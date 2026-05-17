@@ -15,7 +15,6 @@ export function ProfileHeader({ identity, rankInfo }) {
     : "Recently joined";
 
   const { rank, elo, level, globalRank } = rankInfo;
-  console.log(identity.userId);
 
   const displayId = identity.userId?.replace(/^user_/, "") || "";
 

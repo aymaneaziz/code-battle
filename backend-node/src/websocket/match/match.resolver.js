@@ -1,29 +1,38 @@
-/**
- * Match Resolver — determines winner, calculates ELO + XP, updates DB, notifies players.
- *
- * Called when:
- *   - A player's HP hits 0           → reason: "hp_zero"
- *   - A player passes all test cases → reason: "all_tests_passed"
- *   - Timer expires                  → reason: "time_expired" (compare testsPassed)
- *   - A player surrenders            → reason: "surrender"
- */
-
 import User from "../../models/user.model.js";
 import { calculateEloDelta } from "./match.elo.js";
 import { calculateXp } from "./match.xp.js";
 import { getMatch, markResolved, deleteMatch } from "./match.state.js";
+import MatchHistory from "../../models/GameplayModels/matchHistory.model.js";
 
 function send(ws, payload) {
   if (ws?.readyState === 1) ws.send(JSON.stringify(payload));
 }
 
-/**
- * @param {string} matchId
- * @param {string} winnerId     - userId of winner, or null for draw
- * @param {string} loserId      - userId of loser,  or null for draw
- * @param {string} reason       - "hp_zero" | "all_tests_passed" | "time_expired" | "surrender"
- * @param {Map}    clients      - WS clients map
- */
+// --- Rewards--------
+function randomInt(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function buildRewards(outcome) {
+  if (outcome === "win") {
+    return {
+      coinsEarned: randomInt(1, 10),
+      gemsEarned: randomInt(1, 5),
+    };
+  }
+  if (outcome === "draw") {
+    return {
+      coinsEarned: randomInt(1, 3),
+      gemsEarned: 0,
+    };
+  }
+  // loss
+  return { coinsEarned: 0, gemsEarned: 0 };
+}
+const DIFFICULTY_RANK = { Easy: 1, Medium: 2, Hard: 3, Extreme: 4 };
+
+// ha chno wa9e3 hna :  — determines winner, calculates ELO + XP, updates DB, notifies players.
+// ofo9ach kn3ytolha :  reason = "hp_zero" "all_tests_passed" "time_expired" "surrender"
 export async function resolveMatch(
   matchId,
   winnerId,
@@ -37,14 +46,13 @@ export async function resolveMatch(
   markResolved(matchId);
 
   const isDraw = winnerId === null;
-  const p1Id = match.player1Id;
-  const p2Id = match.player2Id;
+  const { player1Id, player2Id } = match;
 
   try {
     // ── Fetch current DB profiles ───────────────────────────────────────────
     const [p1User, p2User] = await Promise.all([
-      User.findOne({ userId: p1Id }),
-      User.findOne({ userId: p2Id }),
+      User.findOne({ userId: player1Id }),
+      User.findOne({ userId: player2Id }),
     ]);
 
     if (!p1User || !p2User) {
@@ -64,8 +72,8 @@ export async function resolveMatch(
       return userId === winnerId ? "win" : "loss";
     };
 
-    const outcome1 = getOutcome(p1Id);
-    const outcome2 = getOutcome(p2Id);
+    const outcome1 = getOutcome(player1Id);
+    const outcome2 = getOutcome(player2Id);
 
     // ── ELO ─────────────────────────────────────────────────────────────────
     const { delta1, delta2 } = calculateEloDelta(p1Elo, p2Elo, outcome1);
@@ -74,8 +82,8 @@ export async function resolveMatch(
     const totalTests = match.problem.testCases?.length ?? 0;
     // eslint-disable-next-line no-unused-vars
     const matchDuration = Date.now() - match.startedAt;
-    const halfTime = match.problem.timeLimitMs
-      ? match.problem.timeLimitMs / 2
+    const halfTime = match.problem.timeArenaS
+      ? (match.problem.timeArenaS * 1000) / 2
       : (45 * 60 * 1000) / 2;
 
     const buildXpParams = (userId, outcome, eloDelta, opponentElo, myElo) => {
@@ -90,26 +98,46 @@ export async function resolveMatch(
         maxCombo: ps.combo, // highest combo at end (resets on fail, so this is current run)
         hpZero: ps.hp <= 0,
         speedBonus: ps.finishedAt
-          ? match.problem.timeLimitMs - (ps.finishedAt - match.startedAt) >
+          ? match.problem.timeArenaS - (ps.finishedAt - match.startedAt) >
             halfTime
           : false,
         beatHigherRanked: outcome === "win" && myElo < opponentElo,
         winStreak:
           outcome === "win"
-            ? ((p1Id === userId ? p1Stats : p2Stats).currentStreak ?? 0)
+            ? ((player1Id === userId ? p1Stats : p2Stats).currentStreak ?? 0)
             : 0,
       };
     };
 
     const { total: xp1, breakdown: xpBreakdown1 } = calculateXp(
-      buildXpParams(p1Id, outcome1, delta1, p2Elo, p1Elo),
+      buildXpParams(player1Id, outcome1, delta1, p2Elo, p1Elo),
     );
     const { total: xp2, breakdown: xpBreakdown2 } = calculateXp(
-      buildXpParams(p2Id, outcome2, delta2, p1Elo, p2Elo),
+      buildXpParams(player2Id, outcome2, delta2, p1Elo, p2Elo),
     );
+    // ── Coins + Gems ─────────────────────────────────────────────────────────
+    const rewards1 = buildRewards(outcome1);
+    const rewards2 = buildRewards(outcome2);
+
+    const ply1 = match.players[player1Id];
+    const ply2 = match.players[player2Id];
+
+    // solveTimeMs = time from match start to when the player passed all tests
+    const solveTimeMs1 =
+      ply1.finishedAt != null ? ply1.finishedAt - match.startedAt : null;
+    const solveTimeMs2 =
+      ply2.finishedAt != null ? ply2.finishedAt - match.startedAt : null;
 
     // ── DB Update helper ─────────────────────────────────────────────────────
-    const updateUser = async (user, outcome, eloDelta, xpEarned) => {
+    const updateUser = async (
+      user,
+      outcome,
+      eloDelta,
+      xpEarned,
+      rewards,
+      solveTimeMs,
+      difficulty,
+    ) => {
       const s = user.stats;
       const isWin = outcome === "win";
       const isLoss = outcome === "loss";
@@ -117,6 +145,8 @@ export async function resolveMatch(
 
       s.elo = Math.max(0, (s.elo ?? 400) + eloDelta);
       s.xp = (s.xp ?? 0) + xpEarned;
+      s.coins = (s.coins ?? 0) + rewards.coinsEarned;
+      s.gems = (s.gems ?? 0) + rewards.gemsEarned;
       s.wins = (s.wins ?? 0) + (isWin ? 1 : 0);
       s.losses = (s.losses ?? 0) + (isLoss ? 1 : 0);
       s.draws = (s.draws ?? 0) + (isDraw ? 1 : 0);
@@ -133,24 +163,96 @@ export async function resolveMatch(
           ? Math.round((s.wins / s.totalMatches) * 100) / 100
           : 0;
 
+      // Here we only do a quick live update as a shortcut
+      if (solveTimeMs != null) {
+        if (!s.fastestSolveTime || solveTimeMs < s.fastestSolveTime) {
+          s.fastestSolveTime = solveTimeMs;
+        }
+        // rolling average — accurate recompute happens in profile controller
+        const prevTotal = s.totalMatches - 1;
+        const prevAvg = s.averageSolveTime ?? solveTimeMs;
+        s.averageSolveTime = Math.round(
+          (prevAvg * prevTotal + solveTimeMs) / s.totalMatches,
+        );
+      }
+
+      // ── hardestWin ────────────────────────────────────────────────────────
+      if (isWin) {
+        const currentRank = DIFFICULTY_RANK[difficulty] ?? 0;
+        const previousRank = DIFFICULTY_RANK[s.hardestWin] ?? 0;
+        if (currentRank > previousRank) s.hardestWin = difficulty;
+      }
+
       await user.save();
     };
 
     await Promise.all([
-      updateUser(p1User, outcome1, delta1, xp1),
-      updateUser(p2User, outcome2, delta2, xp2),
+      updateUser(
+        p1User,
+        outcome1,
+        delta1,
+        xp1,
+        rewards1,
+        solveTimeMs1,
+        match.problem.difficulty,
+      ),
+      updateUser(
+        p2User,
+        outcome2,
+        delta2,
+        xp2,
+        rewards2,
+        solveTimeMs2,
+        match.problem.difficulty,
+      ),
     ]);
 
-    console.log(
-      `[Resolver] Match ${matchId} resolved. Reason: ${reason}. Winner: ${winnerId ?? "draw"}`,
-    );
-    console.log(
-      `[Resolver] P1 (${p1Id}): ELO ${p1Elo}→${p1Elo + delta1}, XP +${xp1}`,
-    );
-    console.log(
-      `[Resolver] P2 (${p2Id}): ELO ${p2Elo}→${p2Elo + delta2}, XP +${xp2}`,
-    );
+    // ── Save MatchHistory ─────────────────────────────────────────────────────
+    const ps1 = match.players[player1Id];
+    const ps2 = match.players[player2Id];
 
+    await MatchHistory.create({
+      matchId,
+      problemId: String(match.problem._id ?? match.problem.problemId),
+      problemTitle: match.problem.title,
+      difficulty: match.problem.difficulty,
+      reason,
+      player1: {
+        userId: player1Id,
+        displayName: p1User.displayName,
+        outcome: outcome1,
+        eleBefore: p1Elo,
+        eloAfter: Math.max(0, p1Elo + delta1),
+        eloDelta: delta1,
+        xpEarned: xp1,
+        coinsEarned: rewards1.coinsEarned,
+        gemsEarned: rewards1.gemsEarned,
+        hpRemaining: ps1.hp,
+        testsPassed: ps1.testsPassed,
+        submissions: ps1.submissions,
+        solveTimeMs: solveTimeMs1,
+      },
+      player2: {
+        userId: player2Id,
+        displayName: p2User.displayName,
+        outcome: outcome2,
+        eloBefore: p2Elo,
+        eloAfter: Math.max(0, p2Elo + delta2),
+        eloDelta: delta2,
+        xpEarned: xp2,
+        coinsEarned: rewards2.coinsEarned,
+        gemsEarned: rewards2.gemsEarned,
+        hpRemaining: ps2.hp,
+        testsPassed: ps2.testsPassed,
+        submissions: ps2.submissions,
+        solveTimeMs: solveTimeMs2,
+      },
+      durationMs: Date.now() - match.startedAt,
+    });
+
+    console.log(
+      `[Resolver] ${matchId} resolved. Reason: ${reason}. Winner: ${winnerId ?? "draw"}`,
+    );
     // ── Notify players ───────────────────────────────────────────────────────
     const buildResult = (
       userId,
@@ -159,6 +261,7 @@ export async function resolveMatch(
       oldElo,
       xpEarned,
       xpBreakdown,
+      rewards,
     ) => ({
       type: "MATCH_RESULT",
       outcome, // "win" | "loss" | "draw"
@@ -168,14 +271,38 @@ export async function resolveMatch(
       newElo: Math.max(0, oldElo + eloDelta),
       xpEarned,
       xpBreakdown,
+      coinsEarned: rewards.coinsEarned,
+      gemsEarned: rewards.gemsEarned,
       matchId,
     });
 
-    const p1Ws = clients.get(p1Id);
-    const p2Ws = clients.get(p2Id);
+    const p1Ws = clients.get(player1Id);
+    const p2Ws = clients.get(player2Id);
 
-    send(p1Ws, buildResult(p1Id, outcome1, delta1, p1Elo, xp1, xpBreakdown1));
-    send(p2Ws, buildResult(p2Id, outcome2, delta2, p2Elo, xp2, xpBreakdown2));
+    send(
+      p1Ws,
+      buildResult(
+        player1Id,
+        outcome1,
+        delta1,
+        p1Elo,
+        xp1,
+        xpBreakdown1,
+        rewards1,
+      ),
+    );
+    send(
+      p2Ws,
+      buildResult(
+        player2Id,
+        outcome2,
+        delta2,
+        p2Elo,
+        xp2,
+        xpBreakdown2,
+        rewards2,
+      ),
+    );
   } catch (err) {
     console.error(`[Resolver] Error resolving match ${matchId}:`, err);
   } finally {

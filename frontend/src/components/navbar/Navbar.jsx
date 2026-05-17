@@ -63,9 +63,9 @@ export function Navbar() {
                   {stats.gems ?? 0}
                 </span>
               </div>
-              <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-yellow-500/10 border border-yellow-500/20 h-8">
-                <Coins className="w-3 h-3 text-yellow-500 shrink-0" />
-                <span className="text-yellow-300 text-xs font-bold tabular-nums leading-none">
+              <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-amber-500/10 border border-amber-500/20 h-8">
+                <Coins className="w-3 h-3 text-amber-500 shrink-0" />
+                <span className="text-amber-300 text-xs font-bold tabular-nums leading-none">
                   {stats.coins ?? 0}
                 </span>
               </div>
@@ -126,9 +126,9 @@ export function Navbar() {
                           {stats.gems ?? 0}
                         </span>
                       </div>
-                      <div className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-yellow-500/10 border border-yellow-500/20 flex-1 justify-center">
-                        <Coins className="w-3 h-3 text-yellow-500 shrink-0" />
-                        <span className="text-yellow-300 text-xs font-bold">
+                      <div className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-amber-500/10 border border-amber-500/20 flex-1 justify-center">
+                        <Coins className="w-3 h-3 text-amber-500 shrink-0" />
+                        <span className="text-amber-300 text-xs font-bold">
                           {stats.coins ?? 0}
                         </span>
                       </div>

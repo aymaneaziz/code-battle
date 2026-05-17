@@ -53,9 +53,15 @@ export function NavAuthButtons({ mobile = false, isBlocked = false }) {
         <SignedOut>
           <Link
             to={isBlocked ? "#" : "/signin"}
-            className="px-4 py-1.5 text-sm rounded-md bg-blue-600 text-white"
+            className="px-4 py-1.5 text-sm rounded-md bg-transparent text-gray-300 hover:text-white border border-gray-700 hover:bg-gray-800 transition-colors text-center font-medium"
           >
             Sign In
+          </Link>
+          <Link
+            to={isBlocked ? "#" : "/signup"}
+            className="px-4 py-1.5 text-sm rounded-md bg-blue-600 text-white font-medium hover:bg-blue-700 transition-colors text-center shadow-xs"
+          >
+            Sign Up
           </Link>
         </SignedOut>
 

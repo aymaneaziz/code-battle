@@ -2,6 +2,7 @@ import { enqueue, dequeue, isQueued } from "./queue.js";
 import { findBestMatch, confirmMatch } from "./matchmaker.js";
 import { getPlayerProfile } from "../services/playerService.js";
 import { getMatchProblem } from "../services/matchProblemService.js";
+import { createMatch } from "../match/match.state.js";
 
 // Utility function to send JSON messages safely
 function send(ws, payload) {
@@ -25,7 +26,7 @@ export function handleJoinQueue(ws, data, clients) {
   }
 
   // Add player to queue
-  enqueue(userId, { ws, displayName, elo });
+  enqueue(userId, { ws, userId, displayName, elo });
 
   send(ws, {
     type: "QUEUED",
@@ -91,6 +92,13 @@ async function attemptMatch() {
     getMatchProblem(),
   ]);
 
+  // ── Create in-memory match state ─────────────────────────────────────────
+  createMatch({
+    matchId,
+    player1Id: player1.userId,
+    player2Id: player2.userId,
+    problem,
+  });
   // Build the opponent object for each player.
   const buildOpponent = (profile, fallback) => ({
     userId: fallback.userId, // Daroriya l surrender

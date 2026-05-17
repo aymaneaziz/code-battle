@@ -1,51 +1,50 @@
 import { useEffect, useRef, useState } from "react";
-import { useBlocker, useNavigate } from "react-router-dom";
-
+import { useNavigate } from "react-router-dom";
 import { Card } from "@/components/ui/card";
-import { PlayerPanel } from "./PlayerPanel";
-import { WinModal } from "@/features/match/components/winModal";
-import wsClient from "@/service/wsClient";
 import { AlertCircle } from "lucide-react";
+import { PlayerPanel } from "./PlayerPanel";
+import { MatchResultModal } from "@/features/match/components/MatchResultModal";
+import wsClient from "@/service/wsClient";
 
 export function VsScreen({ matchData, onMatchStarted }) {
   const navigate = useNavigate();
-  const [countdown, setCountdown] = useState(3); // 10 second countdown before navigating to Match screen
+  const [countdown, setCountdown] = useState(10);
+  const [matchResult, setMatchResult] = useState(null); // set if match ends during countdown
 
-  const [showWinModal, setShowWinModal] = useState(false);
-
-  const showWinModalRef = useRef(false);
+  const matchResultRef = useRef(null);
   const intervalRef = useRef(null);
 
-  // Listen for opponent surrendering during the countdown
+  // Listen for MATCH_RESULT (covers: opponent surrendered during countdown)
   useEffect(() => {
-    const handleOpponentSurrendered = () => {
-      // Stop the countdown timer
+    const onMatchResult = (data) => {
+      // Stop countdown
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
         intervalRef.current = null;
       }
-      // Mark as normal exit so useMatchmaking cleanup does nothing
+      // Tell useMatchmaking cleanup: do nothing (match is over)
       onMatchStarted();
-      showWinModalRef.current = true;
-      setShowWinModal(true);
+      matchResultRef.current = data;
+      setMatchResult(data);
     };
 
-    wsClient.on("OPPONENT_SURRENDERED", handleOpponentSurrendered);
-    return () =>
-      wsClient.off("OPPONENT_SURRENDERED", handleOpponentSurrendered);
+    wsClient.on("MATCH_RESULT", onMatchResult);
+    return () => wsClient.off("MATCH_RESULT", onMatchResult);
   }, [onMatchStarted]);
 
-  // Countdown timer to navigate to Match screen after 8 seconds
+  // Countdown → navigate to match
   useEffect(() => {
     if (!matchData) return;
+
     intervalRef.current = setInterval(() => {
       setCountdown((prev) => {
         if (prev <= 1) {
           clearInterval(intervalRef.current);
           intervalRef.current = null;
 
-          if (!showWinModalRef.current) {
-            onMatchStarted();
+          // Don't navigate if match already ended (e.g. opponent left)
+          if (!matchResultRef.current) {
+            onMatchStarted(); // set isCancellingRef = true before unmount
             navigate(`/match/${matchData.matchId}`, {
               state: {
                 fromMatchmaking: true,
@@ -61,6 +60,7 @@ export function VsScreen({ matchData, onMatchStarted }) {
         return prev - 1;
       });
     }, 1000);
+
     return () => {
       clearInterval(intervalRef.current);
       intervalRef.current = null;
@@ -71,8 +71,10 @@ export function VsScreen({ matchData, onMatchStarted }) {
 
   return (
     <>
-      <WinModal
-        open={showWinModal}
+      {/* Shown if opponent leaves during countdown */}
+      <MatchResultModal
+        open={!!matchResult}
+        result={matchResult}
         onClose={() => navigate("/", { replace: true })}
       />
 
@@ -95,7 +97,6 @@ export function VsScreen({ matchData, onMatchStarted }) {
                 </span>
               </div>
 
-              {/* Fixed and Styled Warning Section */}
               <div className="flex flex-col items-center gap-1">
                 <div className="flex items-center gap-1.5 text-[10px] font-bold text-red-500 uppercase tracking-tight bg-red-50 px-3 py-1 rounded-full border border-red-100 animate-pulse">
                   <AlertCircle className="w-3 h-3" />

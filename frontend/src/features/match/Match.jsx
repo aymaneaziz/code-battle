@@ -1,59 +1,87 @@
 import { useEffect, useRef, useState } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { ShieldAlert, Swords } from "lucide-react";
-import { useUserId } from "@/hooks/useUserId";
-import wsClient from "@/service/wsClient";
-import { SurrenderButton } from "./components/SurrenderButton";
-import { WinModal } from "./components/winModal";
-import { estimateComplexity } from "../challengePlay/services/estimateComplexity";
 import { toast } from "sonner";
+import { useAuth } from "@clerk/clerk-react";
+
+import wsClient from "@/service/wsClient";
 import { SUPPORTED_LANGUAGES } from "../challengePlay/services/languages";
-import { runChallengeCode } from "../challengePlay/services/challengeApi";
-import { getToken } from "@clerk/react";
+import { estimateComplexity } from "../challengePlay/services/estimateComplexity";
+
+import { MatchHeader } from "./components/MatchHeader";
+import { MatchResultModal } from "./components/MatchResultModal";
+import { SurrenderButton } from "./components/SurrenderButton";
 import PlayerCardMatch from "./components/PlayerCardMatch";
 import HeaderPanel from "../challengePlay/components/HeaderPanel";
 import EditorPanel from "../challengePlay/components/EditorPanel";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import ProblemPanelMatch from "./components/ProblemPanelMatch";
 import TestCasesPanel from "../challengePlay/components/TestCasesPanel";
 import ExecutionPanel from "../challengePlay/components/ExecutionPanel";
-import ProblemPanelMatch from "./components/ProblemPanelMatch";
+
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useMatchTimer } from "@/hooks/useMatchTimer";
+import { useMatchState } from "@/hooks/useMatchState";
+import { Flame } from "lucide-react";
 
 export const Match = () => {
   const { matchId } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
-  const { opponentId, opponent, you, problem } = location.state || {};
-  const userId = you?.userId || useUserId();
-  console.log("me", you);
-  console.log("problem", problem);
 
-  // ── Editor & Challenge State ──────────────────────────────────────
+  // ── Data from navigation state (set by VsScreen) ─────────────────────────
+  const { opponentId, opponent, you, problem } = location.state ?? {};
+  const userId = you?.userId;
+
+  // ── Editor state ──────────────────────────────────────────────────────────
   const [code, setCode] = useState("");
   const [testCases, setTestCases] = useState([]);
   const [languageId, setLanguageId] = useState(null);
   const [availableLanguages, setAvailableLanguages] = useState([]);
   const [theme, setTheme] = useState("vs-dark");
   const [fontSize, setFontSize] = useState(14);
-  const [loading, setLoading] = useState(false);
-  const [results, setResults] = useState(null);
   const [activeRightTab, setActiveRightTab] = useState("problem");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const [showWinModal, setShowWinModal] = useState(false);
-  //  Refs to track if the match has already ended, to prevent double-sending SURRENDER
+  // ── Surrender refs ────────────────────────────────────────────────────────
   const hasSurrenderedRef = useRef(false);
   const matchEndedRef = useRef(false);
 
-  // Derived code stats
+  // ── Live match state ──────────────────────────────────────────────
+  const { myHp, opponentHp, myCombo, submitResults, matchResult } =
+    useMatchState(userId, opponentId);
+
+  // ── Timer ─────────────────────────────────────────────────────────────────────
+  const matchDurationMs = problem?.timeArenaS * 1000 ?? 45 * 60 * 1000;
+  const { minutes, seconds } = useMatchTimer(
+    matchDurationMs,
+    matchId,
+    userId,
+    !!userId && !!matchId,
+  );
+
+  // ── Editor stats ─────────────────────────────────────────────────────────
   const lineCount = code ? code.split("\n").length : 0;
   const complexity = estimateComplexity(code);
 
-  // ── Initialize Problem Data ───────────────────────────────────────
+  // ── When submit results arrive  ───────────────────────────
+  useEffect(() => {
+    if (submitResults) {
+      setActiveRightTab("execution");
+      setIsSubmitting(false);
+    }
+  }, [submitResults]);
+
+  // ──  When match ends  ─────────────────────────────
+  useEffect(() => {
+    if (matchResult) {
+      matchEndedRef.current = true;
+    }
+  }, [matchResult]);
+
+  // ── Problem init ───────────────────────────────────────────────
   useEffect(() => {
     if (!problem) {
       navigate("/");
-      toast.error("No problem data found for this match. Returning to home.");
+      toast.error("No problem data. Returning to home.");
       return;
     }
     setTestCases((problem.testCases ?? []).filter((tc) => !tc.isHidden));
@@ -63,42 +91,28 @@ export const Match = () => {
       starterKeys.includes(l.starterKey),
     );
     setAvailableLanguages(langs);
-
-    if (langs.length > 0) {
-      setLanguageId(langs[0].id);
-    }
+    if (langs.length > 0) setLanguageId(langs[0].id);
   }, [problem, navigate]);
 
-  // Sync Starter Code when Language Changes
+  // ── Starter code sync  ─────────────────────────────────
   useEffect(() => {
     if (!problem || languageId === null) return;
     const lang = SUPPORTED_LANGUAGES.find((l) => l.id === languageId);
     const dbKey = lang?.starterKey ?? "javascript";
     const starter = problem.starterCode?.[dbKey];
-
-    if (starter) {
-      setCode(starter);
-    } else {
-      setCode(
-        `// No starter code for ${lang?.name}.\n// Write your solution here.\n`,
-      );
-    }
+    setCode(
+      starter
+        ? starter
+        : `// No starter code for ${lang?.name}.\n// Write your solution here.\n`,
+    );
   }, [languageId, problem]);
 
-  // ── Handle Match Events & Navigation Blocking ─────────────────────────────
+  // ── Navigation blocking  ───────────────────────────────────
   useEffect(() => {
     if (!userId || !opponentId) return;
 
-    // Push a fake history entry so back button can be intercepted
     window.history.pushState(null, null, window.location.pathname);
 
-    // Listen for Opponent surrendering
-    const handleOpponentSurrendered = () => {
-      matchEndedRef.current = true;
-      setShowWinModal(true);
-    };
-
-    // Prevent accidental Tab Close / Refresh
     const handleBeforeUnload = (e) => {
       if (!matchEndedRef.current && !hasSurrenderedRef.current) {
         e.preventDefault();
@@ -106,98 +120,79 @@ export const Match = () => {
       }
     };
 
-    // Prevent Back Button
     const handlePopState = () => {
       if (matchEndedRef.current) return;
-
       const confirmed = window.confirm(
         "Leaving now counts as a surrender. Proceed?",
       );
       if (confirmed) {
-        handleSurrender();
+        doSurrender();
       } else {
         window.history.pushState(null, null, window.location.pathname);
       }
     };
 
-    wsClient.on("OPPONENT_SURRENDERED", handleOpponentSurrendered);
     window.addEventListener("beforeunload", handleBeforeUnload);
     window.addEventListener("popstate", handlePopState);
 
-    // This runs if the user navigates away via React Router (links, URL change)
     return () => {
-      wsClient.off("OPPONENT_SURRENDERED", handleOpponentSurrendered);
       window.removeEventListener("beforeunload", handleBeforeUnload);
       window.removeEventListener("popstate", handlePopState);
     };
   }, [matchId, userId, opponentId]);
 
-  const handleSurrender = () => {
-    hasSurrenderedRef.current = true; // Block cleanup from double-sending
+  // ── Handlers ──────────────────────────────────────────────────────────────
+  const doSurrender = () => {
+    hasSurrenderedRef.current = true;
     wsClient.send({ type: "SURRENDER", matchId, userId, opponentId });
+  };
+
+  //Send code via WebSocket instead of REST to track Hp etc..
+  const handleRun = (isSubmit = false) => {
+    if (!code || languageId === null) return;
+    setIsSubmitting(true);
+
+    wsClient.send({
+      type: "SUBMIT_CODE",
+      matchId,
+      userId,
+      code,
+      languageId,
+      isSubmit,
+    });
+  };
+
+  const handleResultModalClose = () => {
     navigate("/", { replace: true });
   };
 
-  const handleWinModalClose = () => {
-    setShowWinModal(false);
-    navigate("/", { replace: true });
-  };
-
-  const handleRun = async (isSubmit = false) => {
-    setLoading(true);
-    try {
-      const token = await getToken();
-      // Separate seed cases from user-added custom cases
-      const customCases = testCases.filter((tc) => tc.isCustom);
-
-      // run this in backend to analyse
-      const res = await runChallengeCode(
-        {
-          problemId: problem._id,
-          code,
-          languageId,
-          isSubmit,
-          customCases,
-        },
-        token,
-      );
-      setResults(res);
-      setActiveRightTab("execution");
-    } catch (err) {
-      console.error("Execution error:", err);
-      alert("Error executing code: " + err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
   if (!problem) return null;
+
   return (
     <>
-      {/* Victory popup for the player whose opponent surrendered */}
-      <WinModal open={showWinModal} onClose={handleWinModalClose} />
+      {/* Match result modal — handles win, loss, draw */}
+      <MatchResultModal
+        open={!!matchResult}
+        result={matchResult}
+        onClose={handleResultModalClose}
+      />
 
       <div className="h-screen w-full bg-slate-50 flex flex-col overflow-hidden">
-        {/* ── TOP ARENA HEADER  ── */}
-        <div className="flex-none h-32 w-full flex items-center justify-between p-4 gap-4 border-b border-slate-200">
-          <PlayerCardMatch user={you} />
-
-          <div className="flex flex-col items-center justify-center shrink-0 w-48 text-center gap-2">
-            <h2 className="text-3xl font-black text-slate-800 italic flex items-center gap-2">
-              <Swords className="text-indigo-500" /> VS
-            </h2>
-            <div className="bg-white border border-slate-200 px-6 py-2 rounded-xl shadow-sm">
-              <span className="text-xl font-mono font-bold text-slate-900">
-                12:47
-              </span>
-            </div>
-          </div>
-
-          <PlayerCardMatch user={opponent} isOpponent />
-        </div>
+        {/* ── TOP ARENA HEADER ── */}
+        <MatchHeader
+          you={you}
+          opponent={opponent}
+          myHp={myHp}
+          opponentHp={opponentHp}
+          myCombo={myCombo}
+          minutes={minutes}
+          seconds={seconds}
+          problem={problem}
+        />
 
         {/* ── BOTTOM BATTLE AREA ── */}
         <div className="flex-1 flex flex-col lg:flex-row p-4 gap-4 min-h-0">
-          {/* Left Side: Editor */}
+          {/* ── Left: Editor ─────────────────────────────────────────────── */}
           <div className="flex-2 flex flex-col bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden min-h-0">
             <HeaderPanel
               languageId={languageId}
@@ -219,7 +214,7 @@ export const Match = () => {
             />
           </div>
 
-          {/* Right Side: Problem & Tests & Execution */}
+          {/* ── Right: Problem / Test Cases / Results ─────────────────────── */}
           <div className="flex-1 flex flex-col gap-4 min-h-0">
             <div className="flex-1 bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden flex flex-col">
               <Tabs
@@ -248,7 +243,6 @@ export const Match = () => {
                   </TabsTrigger>
                 </TabsList>
 
-                {/* Problem Tab */}
                 <TabsContent
                   value="problem"
                   className="flex-1 m-0 p-0 outline-none overflow-y-auto data-[state=inactive]:hidden"
@@ -258,7 +252,6 @@ export const Match = () => {
                   </div>
                 </TabsContent>
 
-                {/* Test Cases Tab */}
                 <TabsContent
                   value="testcases"
                   className="flex-1 m-0 p-0 outline-none overflow-y-auto data-[state=inactive]:hidden"
@@ -268,39 +261,39 @@ export const Match = () => {
                     setTestCases={setTestCases}
                     onRun={() => handleRun(false)}
                     onSubmit={() => handleRun(true)}
-                    loading={loading}
+                    loading={isSubmitting}
                   />
                 </TabsContent>
 
-                {/* Execution Tab */}
                 <TabsContent
                   value="execution"
                   className="flex-1 m-0 p-0 outline-none overflow-y-auto data-[state=inactive]:hidden"
                 >
                   <ExecutionPanel
-                    results={results}
+                    results={submitResults}
                     onRun={() => handleRun(false)}
                     onSubmit={() => handleRun(true)}
-                    loading={loading}
+                    loading={isSubmitting}
                   />
                 </TabsContent>
               </Tabs>
             </div>
 
-            {/* Bottom Actions / Surrender */}
-            <div className="shrink-0 flex items-center justify-between bg-linear-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-2xl p-4 shadow-md">
+            {/* ── Bottom: Streak + Surrender ─────────────────────────────── */}
+            <div className="shrink-0 flex items-center justify-between bg-linear-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-2xl p-4 shadow-sm">
               <div className="flex items-center gap-3">
-                <span className="text-2xl">🔥</span>
+                <Flame className="h-6 w-6 text-orange-500 fill-orange-500" />
                 <div className="flex flex-col">
                   <span className="text-xs font-bold text-amber-600 uppercase tracking-wide">
-                    Streak
+                    Your current streak
                   </span>
                   <span className="text-xl font-black text-orange-600">
-                    x{you.stats.currentStreak}
+                    ×{you?.stats?.currentStreak ?? 0}
                   </span>
                 </div>
               </div>
-              <SurrenderButton onSurrender={handleSurrender} />
+
+              <SurrenderButton onSurrender={doSurrender} />
             </div>
           </div>
         </div>

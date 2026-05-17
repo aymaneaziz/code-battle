@@ -14,6 +14,7 @@ import ProblemPanel from "./components/ProblemPanel";
 import ExecutionPanel from "./components/ExecutionPanel";
 import { SUPPORTED_LANGUAGES } from "./services/languages";
 import { estimateComplexity } from "./services/estimateComplexity";
+import RewardModal from "./components/RewardModal";
 
 const ChallengePlay = () => {
   const { challengeId } = useParams();
@@ -29,6 +30,13 @@ const ChallengePlay = () => {
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState(null);
   const [activeConsoleTab, setActiveConsoleTab] = useState("testcases");
+
+  const [isRewardModalOpen, setIsRewardModalOpen] = useState(false);
+  const [claimedRewards, setClaimedRewards] = useState({
+    xp: 0,
+    coins: 0,
+    gems: 0,
+  });
 
   // Derived code stats — updated on every code change
   const lineCount = code ? code.split("\n").length : 0;
@@ -96,8 +104,18 @@ const ChallengePlay = () => {
         },
         token,
       );
-      setResults(res);
+      setResults(res.results);
       setActiveConsoleTab("execution");
+
+      // Handle successful submissions
+      if (isSubmit && res.allPassed) {
+        setClaimedRewards({
+          xp: res.rewards?.xp || challenge.xp || challenge.reward?.xp || 0,
+          coins: res.rewards?.coins || challenge.reward?.coins || 0,
+          gems: res.rewards?.gems || challenge.reward?.gems || 0,
+        });
+        setIsRewardModalOpen(true);
+      }
     } catch (err) {
       console.error("Execution error:", err);
       alert("Error executing code: " + err.message);
@@ -192,6 +210,11 @@ const ChallengePlay = () => {
       <div className="w-full lg:w-112.5 flex-none p-4 lg:p-6 lg:pl-3 lg:overflow-y-auto bg-white lg:bg-transparent min-h-100 border-t lg:border-t-0 border-slate-200">
         <ProblemPanel challenge={challenge} />
       </div>
+      <RewardModal
+        isOpen={isRewardModalOpen}
+        onClose={() => setIsRewardModalOpen(false)}
+        rewards={claimedRewards}
+      />
     </div>
   );
 };

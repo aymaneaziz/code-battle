@@ -11,3 +11,8 @@ export const updateProfile = async (formData, token) => {
     headers: { Authorization: `Bearer ${token}` },
   });
 };
+
+export const fetchMatchHistory = async (token) =>
+  api.get("/data/profile/match-history", {
+    headers: { Authorization: `Bearer ${token}` },
+  });

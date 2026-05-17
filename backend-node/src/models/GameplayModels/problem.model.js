@@ -13,6 +13,7 @@ const problemSchema = new mongoose.Schema(
     slug: { type: String, required: true, unique: true },
     description: { type: String, required: true },
     timeLimitMs: { type: Number, default: 1000 },
+    timeArenaS: { type: Number, default: 900 }, // 15 min
     tags: { type: [String], required: true },
     returnType: { type: String, required: true },
     functionName: { type: String, required: true },
@@ -43,18 +44,18 @@ const problemSchema = new mongoose.Schema(
 
     // Shown in the editor — clean function signature only
     starterCode: {
-      python: { type: String, required: true },
-      javascript: { type: String, required: true },
+      type: Map,
+      of: String,
+      required: true,
+      default: () => new Map(),
     },
 
-    /**
-     * Appended server-side to the user's code before sending to Judge0.
-     * NEVER sent to the frontend (excluded via .select() in the challenge query).
-     * Handles: reading stdin → calling the function → printing the result.
-     */
+    // Hidden harness code wrapped around user code during execution
     runnerCode: {
-      python: { type: String, required: true },
-      javascript: { type: String, required: true },
+      type: Map,
+      of: String,
+      required: true,
+      default: () => new Map(),
     },
 
     constraints: { type: mongoose.Schema.Types.Mixed },

@@ -4,13 +4,16 @@ import {
   handleLeaveQueue,
   activeMatches,
 } from "../matchmaking/matchmaking.handler.js";
+import { handleSubmitCode, handleTimeExpired } from "../match/match.handler.js";
+import { resolveMatch } from "../match/match.resolver.js";
+import { getMatch } from "../match/match.state.js";
 
 function send(ws, payload) {
   if (ws && ws.readyState === 1) {
     ws.send(JSON.stringify(payload));
   }
 }
-// Handles new WebSocket connections and sets up message routing and cleanup.
+
 export function handleConnection(ws, clients) {
   let connectedUserId = null; // luserId li mconnecta bih, bash n3rfou f message handler w f disconnect
 
@@ -49,14 +52,12 @@ export function handleConnection(ws, clients) {
 
       case "SURRENDER": {
         const { matchId, userId, opponentId } = data;
-        const opponentWs = clients.get(opponentId);
 
-        if (opponentWs) {
-          send(opponentWs, {
-            type: "OPPONENT_SURRENDERED",
-            matchId: matchId,
-            message: "Your opponent has surrendered.",
-          });
+        const match = getMatch(matchId);
+        if (match && !match.resolved) {
+          resolveMatch(matchId, opponentId, userId, "surrender", clients).catch(
+            (err) => console.error("[WS] SURRENDER resolve error:", err),
+          );
         }
 
         if (activeMatches) {
@@ -66,6 +67,18 @@ export function handleConnection(ws, clients) {
         console.log(`[Match] User ${userId} surrendered in ${matchId}`);
         break;
       }
+      case "SUBMIT_CODE":
+        handleSubmitCode(ws, data, clients).catch((err) =>
+          console.error("[WS] SUBMIT_CODE error:", err),
+        );
+        break;
+
+      case "TIME_EXPIRED":
+        handleTimeExpired(data, clients).catch((err) =>
+          console.error("[WS] TIME_EXPIRED error:", err),
+        );
+        break;
+
       default:
         send(ws, {
           type: "ERROR",
@@ -76,33 +89,28 @@ export function handleConnection(ws, clients) {
 
   // ── Cleanup on Disconnect ────────────────────────────────────────
   ws.on("close", () => {
-    if (connectedUserId) {
-      console.log(`[WS] Client disconnected: ${connectedUserId}`);
-      clients.delete(connectedUserId);
-      dequeue(connectedUserId);
+    if (!connectedUserId) return;
 
-      if (activeMatches && activeMatches.has(connectedUserId)) {
-        const match = activeMatches.get(connectedUserId);
+    console.log(`[WS] Client disconnected: ${connectedUserId}`);
+    clients.delete(connectedUserId);
+    dequeue(connectedUserId);
 
-        console.log(
-          `[Protection] User ${connectedUserId} dropped. Notifying opponent: ${match.opponentId}`,
-        );
+    if (activeMatches?.has(connectedUserId)) {
+      const { matchId, opponentId } = activeMatches.get(connectedUserId);
 
-        // Notify the opponent that the connection was lost
-        const opponentWs = clients.get(match.opponentId);
-        if (opponentWs) {
-          send(opponentWs, {
-            type: "OPPONENT_SURRENDERED",
-            matchId: match.matchId,
-            message: "Opponent lost connection.",
-            wasDisconnect: true,
-          });
-        }
-
-        // Clean up the match tracking
-        activeMatches.delete(connectedUserId);
-        activeMatches.delete(match.opponentId);
+      const match = getMatch(matchId);
+      if (match && !match.resolved) {
+        resolveMatch(
+          matchId,
+          opponentId,
+          connectedUserId,
+          "surrender",
+          clients,
+        ).catch((err) => console.error("[WS] Disconnect resolve error:", err));
       }
+
+      activeMatches.delete(connectedUserId);
+      activeMatches.delete(opponentId);
     }
   });
 

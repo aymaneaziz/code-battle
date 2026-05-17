@@ -6,52 +6,57 @@ import "../../models/PlayerSetupModels/language.model.js";
 import "../../models/PlayerSetupModels/codingExperience.model.js";
 import Rank from "../../models/SystemModels/rank.model.js";
 import Level from "../../models/SystemModels/level.model.js";
+import { recomputeSolveStats } from "./Utils/recomputeSolveStats.js";
 
 const getProfilePlayer = async (req, res) => {
   try {
     const clerkId = req.auth.userId;
 
-    // Recherche de l'utilisateur avec "populate" pour transformer les IDs en objets complets
     const player = await User.findOne({ clerkId })
-      .populate("selectedAvatar") // Tjib les détails de l'avatar porté
-      .populate("preferences.language") // Tjib les noms/icons des langages
-      .populate("preferences.codingExperience") // Tjib les détails d'expérience
+      .populate("selectedAvatar")
+      .populate("preferences.language")
+      .populate("preferences.codingExperience")
       .populate("preferences.battlePreference")
       .populate("unlockedAvatars")
       .populate("badgesPlayer.badge");
 
-    if (!player) {
-      return res.status(404).json({ message: "Player not found " });
-    }
+    if (!player) return res.status(404).json({ message: "Player not found" });
 
-    // Logic pour vérifier le winRate avant d'envoyer
+    // Fix winRate
     const total = player.stats.wins + player.stats.losses;
     if (total > 0 && player.stats.totalMatches !== total) {
       player.stats.totalMatches = total;
       player.stats.winRate = Math.round((player.stats.wins / total) * 100);
     }
 
-    const currentRank = await Rank.findOne({
-      minElo: { $lte: player.stats.elo },
-      maxElo: { $gte: player.stats.elo },
-    });
+    // Rank + Level
+    const [currentRank, currentLevel] = await Promise.all([
+      Rank.findOne({
+        minElo: { $lte: player.stats.elo },
+        maxElo: { $gte: player.stats.elo },
+      }),
+      Level.findOne({
+        minXp: { $lte: player.stats.xp },
+        maxXp: { $gte: player.stats.xp },
+      }),
+    ]);
 
-    // Level Logic
-    const currentLevel = await Level.findOne({
-      minXp: { $lte: player.stats.xp },
-      maxXp: { $gte: player.stats.xp },
-    });
     if (currentLevel) player.stats.level = currentLevel.levelNumber;
 
-    // Mise à jour de la dernière activité
+    // Recompute solve stats accurately from match history
+    const solveStats = await recomputeSolveStats(player.userId);
+    player.stats.fastestSolveTime = solveStats.fastestSolveTime;
+    player.stats.averageSolveTime = solveStats.averageSolveTime;
+    player.stats.hardestWin = solveStats.hardestWin;
+
     player.lastActive = new Date();
-    player.status = "online"; // Kat-welli online melli katfetchi l'profile
+    player.status = "online";
+    player.markModified("stats");
     await player.save();
 
-    // Hna kansifto ghir dakchi li htajiti bdebt f lfront
-    const profileResponse = {
+    res.status(200).json({
       userId: player.userId,
-      username: player.username, // Inclus car nécessaire pour l'identité
+      username: player.username,
       displayName: player.displayName,
       bio: player.bio,
       location: player.location,
@@ -65,16 +70,10 @@ const getProfilePlayer = async (req, res) => {
       rank: currentRank,
       lastActive: player.lastActive,
       createdAt: player.createdAt,
-    };
-
-    res.status(200).json(profileResponse);
-  } catch (error) {
-    console.error("Error in getProfilePLayer:", error);
-    res.status(500).json({
-      message: "Erreur serveur lors de la récupération du profil",
-      error: error.message,
     });
+  } catch (error) {
+    console.error("Error in getProfilePlayer:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };
-
 export { getProfilePlayer };

@@ -5,7 +5,7 @@ const NAV_ITEMS = [
   { to: "/", label: "Home" },
   { to: "/challenges", label: "Challenges" },
   { to: "/missions", label: "Missions" },
-  { to: "/guild", label: "Guild" },
+  /*{ to: "/guild", label: "Guild" },*/
   { to: "/shop", label: "Shop" },
   { to: "/leaderboard", label: "Leaderboard" },
 ];
