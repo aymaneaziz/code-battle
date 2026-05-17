@@ -7,6 +7,8 @@ import {
   AlertDialogFooter,
   AlertDialogAction,
 } from "@/components/ui/alert-dialog";
+import putMissionProgress from "@/service/putMissionProgress";
+import { useAuth } from "@clerk/clerk-react";
 import {
   Trophy,
   Skull,
@@ -19,6 +21,7 @@ import {
   Coins,
   Gem,
 } from "lucide-react";
+import { useEffect } from "react";
 
 // ── Reason label ──────────────────────────────────────────────────────────────
 const REASON_LABEL = {
@@ -79,7 +82,11 @@ const EloBadge = ({ delta, oldElo, newElo }) => {
   return (
     <div
       className={`flex items-center gap-2 px-4 py-2 rounded-xl border font-bold text-sm
-      ${positive ? "bg-green-50 border-green-200 text-green-700" : "bg-red-50 border-red-200 text-red-700"}`}
+      ${
+        positive
+          ? "bg-green-50 border-green-200 text-green-700"
+          : "bg-red-50 border-red-200 text-red-700"
+      }`}
     >
       <Icon size={16} />
       <span>
@@ -137,6 +144,29 @@ export function MatchResultModal({ open, result, onClose }) {
 
   const bonusEntries = Object.entries(xpBreakdown?.bonuses ?? {});
   const penaltyEntries = Object.entries(xpBreakdown?.penalties ?? {});
+  const { getToken } = useAuth();
+
+  useEffect(() => {
+    const hasPlayedMatch = async () => {
+      try {
+        const token = await getToken();
+        if (!token) {
+          console.warn("No auth token available for mission progress update.");
+          return;
+        }
+
+        console.log("Updating mission progress for PLAY_MATCH...");
+        await putMissionProgress(token, "PLAY_MATCH");
+        if (outcome === "win") await putMissionProgress(token, "WIN_MATCH");
+      } catch (error) {
+        console.error(
+          "Failed to update mission progress for PLAY_MATCH:",
+          error
+        );
+      }
+    };
+    hasPlayedMatch();
+  }, []);
 
   return (
     <AlertDialog open={open}>

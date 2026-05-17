@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import { useAuth, useUser } from "@clerk/clerk-react";
 
 import api from "../service/GlobalApi";
+import putMissionProgress from "@/service/putMissionProgress";
 
 export function useUserSync() {
   const { user, isLoaded, isSignedIn } = useUser();
@@ -22,10 +23,11 @@ export function useUserSync() {
             email: user.primaryEmailAddress?.emailAddress,
             username: user.username ?? user.firstName,
           },
-          { headers: { Authorization: `Bearer ${token}` } },
+          { headers: { Authorization: `Bearer ${token}` } }
         );
 
         synced.current = true;
+        await putMissionProgress(token, "DAILY_LOGIN");
       } catch (err) {
         console.error("User sync failed:", err);
       }

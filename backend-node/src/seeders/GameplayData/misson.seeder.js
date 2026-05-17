@@ -12,14 +12,6 @@ const missions = [
 
   {
     missionId: "mission_2",
-    mission: "First Victory",
-    description: "Win 1 match",
-    type: "WIN_MATCH",
-    iconUrl: "🏆",
-  },
-
-  {
-    missionId: "mission_3",
     mission: "Winning Streak",
     description: "Win multiple matches",
     type: "WIN_MATCH",
@@ -27,15 +19,7 @@ const missions = [
   },
 
   {
-    missionId: "mission_4",
-    mission: "Casual Player",
-    description: "Play matches",
-    type: "PLAY_MATCH",
-    iconUrl: "🎮",
-  },
-
-  {
-    missionId: "mission_5",
+    missionId: "mission_3",
     mission: "Collector",
     description: "Buy an item from the shop",
     type: "BUY_ITEM",
@@ -43,7 +27,7 @@ const missions = [
   },
 
   {
-    missionId: "mission_6",
+    missionId: "mission_4",
     mission: "Power User",
     description: "Use a power up",
     type: "USE_POWERUP",
@@ -51,15 +35,7 @@ const missions = [
   },
 
   {
-    missionId: "mission_7",
-    mission: "Competitive Spirit",
-    description: "Win ranked matches",
-    type: "WIN_MATCH",
-    iconUrl: "🥇",
-  },
-
-  {
-    missionId: "mission_8",
+    missionId: "mission_5",
     mission: "Regular Gamer",
     description: "Play several matches",
     type: "PLAY_MATCH",
