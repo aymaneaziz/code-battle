@@ -71,9 +71,7 @@ const Home = () => {
           <section className="space-y-4">
             <div className="flex items-center gap-2">
               <h2 className="text-sm font-bold text-slate-500 uppercase tracking-widest">
-                {data.player
-                  ? "Featured Challenges"
-                  : "Top 10 players on the server"}
+                {data.player ? "AI Assistant" : "Top 10 players on the server"}
               </h2>
               <div className="h-px flex-1 bg-slate-200"></div>
             </div>
