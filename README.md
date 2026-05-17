@@ -71,6 +71,7 @@ Propulsé par une architecture de WebSockets bidirectionnels à faible latence (
 ---
 ### 🤖 API Grok AI ✅
 Modèle utilisé : llama-3.1-8b-instant via l'API Grok (free tier: 14,400 requests/day ).
+https://console.groq.com/home
 Feedback IA :
 o qualité du code
 o optimisation
