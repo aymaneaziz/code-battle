@@ -4,14 +4,18 @@ import ChallengeFilters from "./components/ChallengeFilters.jsx";
 import ChallengeList from "./components/ChallengeList.jsx";
 import DailyChallengeWidget from "./components/DailyChallengeWidget.jsx";
 import MyProgressWidget from "./components/MyProgressWidget.jsx";
-import { fetchChallenges } from "./services/challengeApi";
+import { fetchChallenges, fetchRandomChallenge } from "./services/challengeApi";
 import { Button } from "@/components/ui/button";
 import { Dices } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const Challenges = () => {
   const { getToken } = useAuth();
 
   const [challenges, setChallenges] = useState([]);
+  const [challengeRnd, setChallengeRnd] = useState();
+  const navigate = useNavigate();
+
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState({
     difficulty: "All",
@@ -25,8 +29,15 @@ const Challenges = () => {
       try {
         const token = await getToken();
         const data = await fetchChallenges(filters, token);
-
         setChallenges(data);
+
+        // Fetch random challenge
+        const resData = await fetchRandomChallenge(token);
+
+        // Since your class returns 'result' directly:
+        if (resData && resData.challengeId) {
+          setChallengeRnd(resData.challengeId);
+        }
       } catch (error) {
         console.error("Error loading challenges");
       } finally {
@@ -47,6 +58,11 @@ const Challenges = () => {
         <Button
           variant="outline"
           className="gap-2 font-semibold shadow-sm cursor-pointer"
+          onClick={() =>
+            navigate(`/challenges/${challengeRnd}`, {
+              state: { fromVault: true },
+            })
+          }
         >
           <Dices className="w-4 h-4" />
           Random Challenge

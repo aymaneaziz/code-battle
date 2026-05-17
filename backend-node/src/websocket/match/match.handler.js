@@ -16,6 +16,9 @@ const toBase64 = (s) => Buffer.from(String(s ?? "")).toString("base64");
 const fromBase64 = (s) =>
   Buffer.from(String(s ?? ""), "base64").toString("utf-8");
 
+// Helper to remove ALL whitespaces for space-insensitive string matching
+const normalizeString = (str) => String(str ?? "").replace(/\s+/g, "");
+
 const serializeInput = (input) => {
   if (input === null || input === undefined) return "";
   if (typeof input !== "object") return String(input);
@@ -34,6 +37,7 @@ const serializeExpected = (output) => {
 };
 
 const runOnJudge0 = async (fullCode, languageId, tc, cpuLimit) => {
+  const expectedOutput = serializeExpected(tc.output);
   const res = await fetch(
     `${JUDGE0_API_URL}/submissions?base64_encoded=true&wait=true`,
     {
@@ -43,7 +47,7 @@ const runOnJudge0 = async (fullCode, languageId, tc, cpuLimit) => {
         language_id: Number(languageId),
         source_code: toBase64(fullCode),
         stdin: toBase64(serializeInput(tc.input)),
-        expected_output: toBase64(serializeExpected(tc.output)),
+        expected_output: toBase64(expectedOutput),
         cpu_time_limit: cpuLimit,
       }),
     },
@@ -51,18 +55,36 @@ const runOnJudge0 = async (fullCode, languageId, tc, cpuLimit) => {
 
   if (!res.ok) throw new Error(`Judge0 [${res.status}]: ${await res.text()}`);
   const data = await res.json();
+  const stdoutStr = data.stdout ? fromBase64(data.stdout).trim() : null;
+  const stderrStr = data.stderr ? fromBase64(data.stderr).trim() : null;
 
+  // Normalize output strings to safely catch loose space issues
+  const normalizedStdout = normalizeString(stdoutStr);
+  const normalizedExpected = normalizeString(expectedOutput);
+
+  let isPassed = data.status?.id === 3;
+  let customStatusDescription = data.status?.description ?? "Unknown";
+
+  // Fallback: If Wrong Answer (4) but stripped content patterns match exactly, override to success
+  if (
+    data.status?.id === 4 &&
+    normalizedStdout === normalizedExpected &&
+    normalizedStdout !== ""
+  ) {
+    isPassed = true;
+    customStatusDescription = "Accepted";
+  }
   return {
     testCaseId: tc.testCaseId,
-    status: data.status?.description ?? "Unknown",
-    statusId: data.status?.id,
-    isPassed: data.status?.id === 3,
-    stdout: data.stdout ? fromBase64(data.stdout).trim() : null,
-    stderr: data.stderr ? fromBase64(data.stderr).trim() : null,
+    status: customStatusDescription,
+    statusId: isPassed ? 3 : data.status?.id,
+    isPassed: isPassed,
+    stdout: stdoutStr,
+    stderr: stderrStr,
     compile_output: data.compile_output
       ? fromBase64(data.compile_output).trim()
       : null,
-    expectedOutput: serializeExpected(tc.output),
+    expectedOutput: expectedOutput,
     time: data.time,
     memory: data.memory,
     isHidden: tc.isHidden ?? false,

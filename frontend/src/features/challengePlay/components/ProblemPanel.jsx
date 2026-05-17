@@ -1,6 +1,6 @@
 import React from "react";
 import { Badge } from "@/components/ui/badge";
-import { Zap, Trophy, Coins, Gem } from "lucide-react";
+import { Zap, Coins, Gem, CheckCircle2 } from "lucide-react";
 
 // ─── Difficulty badge ─────────────────────────────────────────────────────────
 const DIFFICULTY_STYLES = {
@@ -59,46 +59,74 @@ const formatConstraint = (val) => {
   return String(val);
 };
 
+const RewardBadge = ({ icon: Icon, value, label, activeClass, claimed }) => {
+  if (!value) return null;
+
+  if (claimed) {
+    return (
+      <Badge className="flex items-center gap-1 px-2 py-1 bg-slate-100 text-slate-400 rounded-full border border-slate-200 line-through opacity-60">
+        <Icon size={10} className="text-slate-300" />
+        <span className="text-[10px] font-bold uppercase">{label}</span>
+      </Badge>
+    );
+  }
+
+  return (
+    <Badge
+      className={`flex items-center gap-1 px-2 py-1 rounded-full border ${activeClass}`}
+    >
+      <Icon size={10} />
+      <span className="text-[10px] font-bold uppercase">{label}</span>
+    </Badge>
+  );
+};
 // ─── ProblemPanel ─────────────────────────────────────────────────────────────
 
-const ProblemPanel = ({ challenge }) => {
+const ProblemPanel = ({ challenge, rewardClaimed = false }) => {
   const { problemId, xp, reward } = challenge;
 
   return (
     <div className="bg-white rounded-xl border border-slate-200 shadow-sm h-full flex flex-col overflow-hidden">
       <div className="p-6 overflow-y-auto space-y-8">
         {/* ── Title + badges ──────────────────────────────────────────────── */}
+        {/* Title + badges */}
         <div>
           <h1 className="text-2xl font-extrabold text-slate-900 mb-3 leading-tight">
             {problemId.title}
           </h1>
-          <div className="flex flex-wrap gap-2">
+
+          <div className="flex flex-wrap gap-2 items-center">
             <DifficultyBadge difficulty={problemId.difficulty} />
 
-            {xp > 0 && (
-              <Badge className="flex items-center gap-1 px-2 py-1 bg-green-50 text-green-600 rounded-full border border-green-600">
-                <Zap size={10} className="fill-green-600" />
-                <span className="text-[10px] font-bold uppercase">
-                  +{xp} XP
-                </span>
+            {/* Claimed indicator */}
+            {rewardClaimed && (
+              <Badge className="flex items-center gap-1 px-2 py-1 bg-green-50 text-green-600 rounded-full border border-green-200">
+                <CheckCircle2 size={10} />
+                <span className="text-[10px] font-bold uppercase">Claimed</span>
               </Badge>
             )}
-            {reward?.coins > 0 && (
-              <Badge className="flex items-center gap-1.5 px-2 py-1 bg-amber-50 text-amber-600 rounded-full border border-amber-600">
-                <Coins size={10} className="fill-amber-600" />
-                <span className="text-[10px] font-bold uppercase">
-                  +{reward.coins} Coins
-                </span>
-              </Badge>
-            )}
-            {reward?.gems > 0 && (
-              <Badge className="flex items-center gap-1.5 px-2 py-1 bg-indigo-50 text-indigo-600 rounded-full border border-indigo-600">
-                <Gem size={10} className="fill-indigo-600" />
-                <span className="text-[10px] font-bold uppercase">
-                  +{reward.gems} Gems
-                </span>
-              </Badge>
-            )}
+
+            <RewardBadge
+              icon={Zap}
+              value={xp}
+              label={`+${xp} XP`}
+              activeClass="bg-green-50 text-green-600 border-green-600"
+              claimed={rewardClaimed}
+            />
+            <RewardBadge
+              icon={Coins}
+              value={reward?.coins}
+              label={`+${reward?.coins} Coins`}
+              activeClass="bg-amber-50 text-amber-600 border-amber-600"
+              claimed={rewardClaimed}
+            />
+            <RewardBadge
+              icon={Gem}
+              value={reward?.gems}
+              label={`+${reward?.gems} Gems`}
+              activeClass="bg-indigo-50 text-indigo-600 border-indigo-600"
+              claimed={rewardClaimed}
+            />
           </div>
         </div>
 

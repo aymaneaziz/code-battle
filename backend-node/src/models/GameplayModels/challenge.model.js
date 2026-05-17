@@ -14,6 +14,7 @@ const challengeSchema = new mongoose.Schema(
 
     reward: { type: Object, required: true },
     solvedCount: { type: Number, default: 0 },
+    totalSubmissions: { type: Number, default: 0 },
     acceptanceRate: { type: Number, default: 0 },
 
     // hadi ghir bach n9dro nrdoha daily ila bghina

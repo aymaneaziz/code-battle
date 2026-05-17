@@ -57,3 +57,19 @@ export const fetchUserProgress = async (token) => {
     throw error;
   }
 };
+
+// Njibu random challenge
+export const fetchRandomChallenge = async (token) => {
+  try {
+    const res = await api.get("/challenges/random", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return res;
+  } catch (error) {
+    console.error("Failed to fetch random challenge API:", error);
+    throw error;
+  }
+};

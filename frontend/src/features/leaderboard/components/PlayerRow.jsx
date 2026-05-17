@@ -47,7 +47,7 @@ const PlayerRow = ({ player }) => {
 
       {/* Battles */}
       <TableCell className="py-4 text-slate-500 w-1/12">
-        {user?.stats?.battles ?? 0}
+        {user?.stats?.totalMatches ?? 0}
       </TableCell>
     </TableRow>
   );

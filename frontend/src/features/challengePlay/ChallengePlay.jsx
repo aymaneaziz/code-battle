@@ -31,12 +31,15 @@ const ChallengePlay = () => {
   const [results, setResults] = useState(null);
   const [activeConsoleTab, setActiveConsoleTab] = useState("testcases");
 
-  const [isRewardModalOpen, setIsRewardModalOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [isNewlyClaimed, setIsNewlyClaimed] = useState(false);
   const [claimedRewards, setClaimedRewards] = useState({
     xp: 0,
     coins: 0,
     gems: 0,
   });
+
+  const [rewardAlreadyClaimed, setRewardAlreadyClaimed] = useState(false);
 
   // Derived code stats — updated on every code change
   const lineCount = code ? code.split("\n").length : 0;
@@ -49,14 +52,17 @@ const ChallengePlay = () => {
         const token = await getToken();
         const data = await fetchChallengeDetails(challengeId, token);
         setChallenge(data);
+
+        setRewardAlreadyClaimed(data.rewardClaimed ?? false);
         setTestCases(
           (data.problemId?.testCases ?? []).filter((tc) => !tc.isHidden),
         );
-
+        console.log(data);
         const starterKeys = Object.keys(data.problemId?.starterCode ?? {});
         const langs = SUPPORTED_LANGUAGES.filter((l) =>
           starterKeys.includes(l.starterKey),
         );
+
         setAvailableLanguages(langs);
         if (langs.length > 0) setLanguageId(langs[0].id);
       } catch (err) {
@@ -107,14 +113,19 @@ const ChallengePlay = () => {
       setResults(res.results);
       setActiveConsoleTab("execution");
 
-      // Handle successful submissions
       if (isSubmit && res.allPassed) {
-        setClaimedRewards({
-          xp: res.rewards?.xp || challenge.xp || challenge.reward?.xp || 0,
-          coins: res.rewards?.coins || challenge.reward?.coins || 0,
-          gems: res.rewards?.gems || challenge.reward?.gems || 0,
-        });
-        setIsRewardModalOpen(true);
+        if (res.rewardClaimed) {
+          // First time solving
+          setClaimedRewards(res.rewards);
+          setIsNewlyClaimed(true);
+          setRewardAlreadyClaimed(true); // grey the badges immediately
+          setModalOpen(true);
+        } else if (res.alreadyClaimed) {
+          // Solved again after claiming
+          setClaimedRewards({ xp: 0, coins: 0, gems: 0 });
+          setIsNewlyClaimed(false);
+          setModalOpen(true);
+        }
       }
     } catch (err) {
       console.error("Execution error:", err);
@@ -208,12 +219,16 @@ const ChallengePlay = () => {
 
       {/* ── Right: Problem description ──────────────────────────────────────── */}
       <div className="w-full lg:w-112.5 flex-none p-4 lg:p-6 lg:pl-3 lg:overflow-y-auto bg-white lg:bg-transparent min-h-100 border-t lg:border-t-0 border-slate-200">
-        <ProblemPanel challenge={challenge} />
+        <ProblemPanel
+          challenge={challenge}
+          rewardClaimed={rewardAlreadyClaimed}
+        />
       </div>
       <RewardModal
-        isOpen={isRewardModalOpen}
-        onClose={() => setIsRewardModalOpen(false)}
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
         rewards={claimedRewards}
+        isNewlyClaimed={isNewlyClaimed}
       />
     </div>
   );

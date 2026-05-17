@@ -1,7 +1,7 @@
 import { getQueue, dequeue } from "./queue.js";
 
 // hada limit dyal ELO li kayn f matchmaking, ila kan difference kbir 3lih bin player1 w player2, ma kaytmatchiwch
-const ELO_THRESHOLD = 2000;
+const ELO_THRESHOLD = 1000;
 
 // logic dyal matchmaking
 export function findBestMatch() {

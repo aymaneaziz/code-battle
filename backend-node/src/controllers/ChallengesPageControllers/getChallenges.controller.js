@@ -10,15 +10,18 @@ export const getChallenges = async (req, res, next) => {
 
     // Njibu luser mn Bd bach nchofo chno hell (solved)
     const user = await User.findOne({ clerkId: clerkIdFromAuth }).select("_id");
-    let solvedChallengeIds = new Set();
 
+    const progressMap = new Map();
     if (user) {
-      const userProgress = await UserProgress.findOne({ userId: user._id });
-      if (userProgress?.solvedChallenges) {
-        // Kandirohom f Set bach lrecherche ikoun khfif o omptimizer
-        userProgress.solvedChallenges.forEach((id) =>
-          solvedChallengeIds.add(id.toString()),
-        );
+      const userProgress = await UserProgress.findOne({ userId: user._id })
+        .select("challengeProgress")
+        .lean();
+
+      for (const entry of userProgress?.challengeProgress ?? []) {
+        progressMap.set(entry.challengeId.toString(), {
+          solved: entry.solved,
+          rewardClaimed: entry.rewardClaimed,
+        });
       }
     }
 
@@ -41,15 +44,16 @@ export const getChallenges = async (req, res, next) => {
     const formattedChallenges = challenges
       .filter((ch) => ch.problemId !== null) // Nhaydo li mal9awch fihom match
       .map((ch) => {
-        const isSolved = solvedChallengeIds.has(ch._id.toString());
+        const prog = progressMap.get(ch._id.toString()) ?? {};
         return {
           id: ch.challengeId,
           title: ch.problemId.title,
           difficulty: ch.problemId.difficulty,
           xp: ch.xp,
           solves: ch.solvedCount,
-          winRate: `${ch.acceptanceRate}%`,
-          status: isSolved ? "solved" : "unsolved",
+          winRate: `${ch.acceptanceRate ?? 0}%`,
+          status: prog.solved ? "solved" : "unsolved",
+          rewardClaimed: prog.rewardClaimed ?? false,
           reward: ch.reward,
         };
       });

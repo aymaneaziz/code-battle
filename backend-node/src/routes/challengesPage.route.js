@@ -5,6 +5,7 @@ import { getChallenges } from "../controllers/ChallengesPageControllers/getChall
 import { getDailyChallenge } from "../controllers/ChallengesPageControllers/getDailyChallenge.controller.js";
 import { getUserProgress } from "../controllers/ChallengesPageControllers/getUserProgress.controller.js";
 import getChallengeById from "../controllers/ChallengesPageControllers/getChallengeById.controller.js";
+import { getRandomChallenge } from "../controllers/ChallengesPageControllers/getRandomChallenge.controller.js";
 
 const challengesPageRouter = Router();
 
@@ -17,6 +18,8 @@ challengesPageRouter.get("/", protect, getChallenges);
 // GET /api/challenges/progress -> get progress stats for the widget
 challengesPageRouter.get("/progress", protect, getUserProgress);
 
+// GET /api/challenges/random -> get random challenge
+challengesPageRouter.get("/random", protect, getRandomChallenge);
 // GET /api/challenges/:id -> get challenge by Id
 challengesPageRouter.get("/:challengeId", protect, getChallengeById);
 

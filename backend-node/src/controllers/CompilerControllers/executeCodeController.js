@@ -4,13 +4,17 @@ import Challenge from "../../models/GameplayModels/challenge.model.js";
 import UserProgress from "../../models/SystemModels/userProgress.model.js";
 import User from "../../models/user.model.js";
 import { LANGUAGE_KEY_MAP } from "./languageKeyMap.js";
+
 // ─── Helpers ────────────────────────────────────────────────────────────────
 const getLanguageKey = (id) => LANGUAGE_KEY_MAP[Number(id)] ?? "javascript";
 
-// Base64 encoding/decoding for Judge0 API (which we use in base64 mode to support Unicode and avoid escaping issues)
+// Base64 encoding/decoding for Judge0 API
 const toBase64 = (s) => Buffer.from(String(s ?? "")).toString("base64");
 const fromBase64 = (s) =>
   Buffer.from(String(s ?? ""), "base64").toString("utf-8");
+
+// Helper to remove ALL whitespaces for a safe, relaxed string comparison
+const normalizeString = (str) => String(str ?? "").replace(/\s+/g, "");
 
 // Serialize various input types to a string format suitable for stdin
 const serializeInputToStdin = (input) => {
@@ -24,6 +28,7 @@ const serializeInputToStdin = (input) => {
     )
     .join("\n");
 };
+
 // Serialize expected output for Judge0 comparison
 const serializeExpectedOutput = (output) => {
   if (output === null || output === undefined) return "";
@@ -58,12 +63,32 @@ const runOnJudge0 = async (fullCode, languageId, tc, cpuLimit) => {
 
   const result = await response.json();
 
+  const stdoutStr = result.stdout ? fromBase64(result.stdout).trim() : null;
+  const stderrStr = result.stderr ? fromBase64(result.stderr).trim() : null;
+
+  // Normalize both outputs by stripping spaces before verifying status
+  const normalizedStdout = normalizeString(stdoutStr);
+  const normalizedExpected = normalizeString(expectedOutput);
+
+  let isPassed = result.status?.id === 3;
+  let customStatusDescription = result.status?.description ?? "Unknown Error";
+
+  // If Judge0 claims it's a Wrong Answer (id: 4) but normalizations match, override to Success!
+  if (
+    result.status?.id === 4 &&
+    normalizedStdout === normalizedExpected &&
+    normalizedStdout !== ""
+  ) {
+    isPassed = true;
+    customStatusDescription = "Accepted";
+  }
+
   return {
     testCaseId: tc.testCaseId,
-    status: result.status?.description ?? "Unknown Error",
-    statusId: result.status?.id,
-    stdout: result.stdout ? fromBase64(result.stdout).trim() : null,
-    stderr: result.stderr ? fromBase64(result.stderr).trim() : null,
+    status: customStatusDescription,
+    statusId: isPassed ? 3 : result.status?.id,
+    stdout: stdoutStr,
+    stderr: stderrStr,
     compile_output: result.compile_output
       ? fromBase64(result.compile_output).trim()
       : null,
@@ -72,8 +97,19 @@ const runOnJudge0 = async (fullCode, languageId, tc, cpuLimit) => {
     memory: result.memory,
     isHidden: tc.isHidden ?? false,
     isCustom: tc.isCustom ?? false,
-    isPassed: result.status?.id === 3,
+    isPassed: isPassed,
   };
+};
+
+// ─── acceptanceRate ────────────────────────────────────────────────────
+const updateAcceptanceRate = (challenge) => {
+  if (!challenge.totalSubmissions || challenge.totalSubmissions === 0) {
+    challenge.acceptanceRate = 0;
+    return;
+  }
+  challenge.acceptanceRate = Math.round(
+    (challenge.solvedCount / challenge.totalSubmissions) * 100,
+  );
 };
 
 // ─── Controller ───────────────────────────────────────────────────────────────
@@ -118,7 +154,6 @@ export const executeCode = async (req, res) => {
       ? problem.testCases
       : problem.testCases.filter((tc) => !tc.isHidden);
 
-    // Combine seed and custom cases, ensuring custom cases have unique IDs and are marked as such
     const allCases = [
       ...seedCases,
       ...customCases.map((tc, i) => ({
@@ -141,67 +176,81 @@ export const executeCode = async (req, res) => {
     const allPassed = results.every((result) => result.isPassed === true);
 
     let rewardClaimed = false;
+    let alreadyClaimed = false;
     let rewardsDistributed = { xp: 0, coins: 0, gems: 0 };
 
-    if (isSubmit && allPassed) {
-      const challenge = await Challenge.findOne({ problemId: problem._id });
-      const user = await User.findOne({ clerkId: clerkIdFromAuth });
+    if (isSubmit) {
+      const [challenge, user] = await Promise.all([
+        Challenge.findOne({ problemId: problem._id }),
+        User.findOne({ clerkId: clerkIdFromAuth }),
+      ]);
 
       if (challenge && user) {
-        // Find or create a single user progress record
+        challenge.totalSubmissions = (challenge.totalSubmissions ?? 0) + 1;
+
         let userProgress = await UserProgress.findOne({ userId: user._id });
         if (!userProgress) {
           userProgress = new UserProgress({
             userId: user._id,
-            solvedChallenges: [],
-            status: "unsolved",
+            challengeProgress: [],
           });
         }
 
-        // Check if this challenge is already marked as solved
-        const alreadySolved = userProgress.solvedChallenges.some(
-          (id) => id.toString() === challenge._id.toString(),
+        let entry = userProgress.challengeProgress.find(
+          (e) => e.challengeId.toString() === challenge._id.toString(),
         );
 
-        if (!alreadySolved) {
-          // Push to arrays and save state status
-          userProgress.solvedChallenges.push(challenge._id);
-          userProgress.status = "solved";
-          userProgress.completedAt = new Date();
-          await userProgress.save();
-
-          // Safely map rewards from the challenge schema
-          const xpGained = challenge.xp || challenge.reward?.xp || 0;
-          const coinsGained = challenge.reward?.coins || 0;
-          const gemsGained = challenge.reward?.gems || 0;
-
-          rewardsDistributed = {
-            xp: xpGained,
-            coins: coinsGained,
-            gems: gemsGained,
-          };
-
-          // Increment values within nested profile objects using dot notation counters
-          await User.findByIdAndUpdate(user._id, {
-            $inc: {
-              "stats.xp": xpGained,
-              "stats.coins": coinsGained,
-              "stats.gems": gemsGained,
-            },
+        if (!entry) {
+          userProgress.challengeProgress.push({
+            challengeId: challenge._id,
+            solved: false,
+            rewardClaimed: false,
           });
-
-          // Update general challenge tracking
-          challenge.solvedCount += 1;
-          await challenge.save();
-
-          rewardClaimed = true;
-        } else {
-          rewardsDistributed = {
-            xp: challenge.xp || challenge.reward?.xp || 0,
-            coins: challenge.reward?.coins || 0,
-            gems: challenge.reward?.gems || 0,
-          };
+          entry = userProgress.challengeProgress.at(-1);
         }
+
+        if (allPassed) {
+          if (!entry.solved) {
+            entry.solved = true;
+            entry.solvedAt = new Date();
+            challenge.solvedCount = (challenge.solvedCount ?? 0) + 1;
+          }
+
+          if (!entry.rewardClaimed) {
+            entry.rewardClaimed = true;
+            entry.rewardClaimedAt = new Date();
+
+            const xpGained = challenge.xp ?? challenge.reward?.xp ?? 0;
+            const coinsGained = challenge.reward?.coins ?? 0;
+            const gemsGained = challenge.reward?.gems ?? 0;
+
+            rewardsDistributed = {
+              xp: xpGained,
+              coins: coinsGained,
+              gems: gemsGained,
+            };
+
+            await User.findByIdAndUpdate(user._id, {
+              $inc: {
+                "stats.xp": xpGained,
+                "stats.coins": coinsGained,
+                "stats.gems": gemsGained,
+              },
+            });
+
+            rewardClaimed = true;
+          } else {
+            rewardsDistributed = {
+              xp: challenge.xp ?? challenge.reward?.xp ?? 0,
+              coins: challenge.reward?.coins ?? 0,
+              gems: challenge.reward?.gems ?? 0,
+            };
+            alreadyClaimed = true;
+          }
+        }
+
+        updateAcceptanceRate(challenge);
+        await Promise.all([challenge.save(), userProgress.save()]);
       }
     }
 
@@ -209,6 +258,7 @@ export const executeCode = async (req, res) => {
       results,
       allPassed,
       rewardClaimed,
+      alreadyClaimed,
       rewards: rewardsDistributed,
     });
   } catch (error) {

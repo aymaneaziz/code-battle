@@ -14,11 +14,15 @@ export const getUserProgress = async (req, res) => {
 
     // Get all challenges and populate problems
     const allChallenges = await Challenge.find().populate("problemId");
-    const userProgress = await UserProgress.findOne({ userId: user._id });
+    const userProgress = await UserProgress.findOne({ userId: user._id })
+      .select("challengeProgress")
+      .lean();
 
     // Create a Set for faster lookup
     const solvedIds = new Set(
-      userProgress?.solvedChallenges?.map((id) => id.toString()) || [],
+      (userProgress?.challengeProgress ?? [])
+        .filter((e) => e.solved)
+        .map((e) => e.challengeId.toString()),
     );
 
     const difficulties = ["Easy", "Medium", "Hard", "Extreme"];
@@ -26,18 +30,15 @@ export const getUserProgress = async (req, res) => {
     // Kandiro boucle bach nhsbo chhal mn wahda hel f koulla niveau
     const stats = difficulties.map((diff) => {
       // Njibu ga3 les challenges dyal had ldifficulty
-      const challengesInDiff = allChallenges.filter(
-        (c) => c.problemId && c.problemId.difficulty === diff,
+      const inDiff = allChallenges.filter(
+        (c) => c.problemId?.difficulty === diff,
       );
       // Nhsbo chhal mn wahda hel fihom
-      const solvedInDiff = challengesInDiff.filter((c) =>
-        solvedIds.has(c._id.toString()),
-      );
-
+      const solved = inDiff.filter((c) => solvedIds.has(c._id.toString()));
       return {
-        label: diff.charAt(0) + diff.slice(1).toLowerCase(),
-        solved: solvedInDiff.length,
-        total: challengesInDiff.length,
+        label: diff,
+        solved: solved.length,
+        total: inDiff.length,
       };
     });
 
