@@ -55,7 +55,7 @@ export const Match = () => {
     matchDurationMs,
     matchId,
     userId,
-    !!userId && !!matchId,
+    !!userId && !!matchId
   );
 
   // ── Editor stats ─────────────────────────────────────────────────────────
@@ -88,7 +88,7 @@ export const Match = () => {
 
     const starterKeys = Object.keys(problem.starterCode ?? {});
     const langs = SUPPORTED_LANGUAGES.filter((l) =>
-      starterKeys.includes(l.starterKey),
+      starterKeys.includes(l.starterKey)
     );
     setAvailableLanguages(langs);
     if (langs.length > 0) setLanguageId(langs[0].id);
@@ -103,7 +103,7 @@ export const Match = () => {
     setCode(
       starter
         ? starter
-        : `// No starter code for ${lang?.name}.\n// Write your solution here.\n`,
+        : `// No starter code for ${lang?.name}.\n// Write your solution here.\n`
     );
   }, [languageId, problem]);
 
@@ -123,7 +123,7 @@ export const Match = () => {
     const handlePopState = () => {
       if (matchEndedRef.current) return;
       const confirmed = window.confirm(
-        "Leaving now counts as a surrender. Proceed?",
+        "Leaving now counts as a surrender. Proceed?"
       );
       if (confirmed) {
         doSurrender();
