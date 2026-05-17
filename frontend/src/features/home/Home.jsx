@@ -70,20 +70,30 @@ const Home = () => {
             <ServerStats stats={data.home} />
           </section>
           {/* ── AI Battle Coach / Global Rank ── */}
-          <section className="space-y-4">
-            <div className="flex items-center gap-2">
-              <h2 className="text-sm font-bold text-slate-500 uppercase tracking-widest">
-                AI Battle Coach
-              </h2>
-              <div className="h-px flex-1 bg-slate-200"></div>
-            </div>
+          <section>
             {data.player ? (
               // Shown when the player has a profile — last match AI analysis
-              <AiFeedback />
+              <div className="space-y-4">
+                <div className="flex items-center gap-2">
+                  <h2 className="text-sm font-bold text-slate-500 uppercase tracking-widest">
+                    AI Battle Coach
+                  </h2>
+                  <div className="h-px flex-1 bg-slate-200"></div>
+                </div>
+                <AiFeedback />
+              </div>
             ) : (
-              <Card className="w-full p-6 shadow-md">
-                <GlobalRank data={data.globalRank} />
-              </Card>
+              <div className="space-y-4">
+                <div className="flex items-center gap-2">
+                  <h2 className="text-sm font-bold text-slate-500 uppercase tracking-widest">
+                    Global Rank
+                  </h2>
+                  <div className="h-px flex-1 bg-slate-200"></div>
+                </div>
+                <Card className="w-full p-6 shadow-md">
+                  <GlobalRank data={data.globalRank} />
+                </Card>
+              </div>
             )}
           </section>
         </main>

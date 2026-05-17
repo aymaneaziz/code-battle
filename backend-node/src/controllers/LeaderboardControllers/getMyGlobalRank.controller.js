@@ -7,16 +7,28 @@ export const getMyGlobalRank = async (req, res) => {
     const clerkId = req.auth.userId;
     const user = await User.findOne({ clerkId }).populate("selectedAvatar");
 
-    const userRank = await Leaderboard.findOne({ userId: user._id });
-
-    if (!userRank) {
-      return res.status(404).json({ message: "User not found in leaderboard" });
+    if (!user) {
+      return res.status(404).json({ message: "User not found in system" });
     }
 
+    // Find the user's current tier based on their Elo
     const currentTier = await Rank.findOne({
       minElo: { $lte: user.stats.elo },
       maxElo: { $gte: user.stats.elo },
     });
+
+    const userRank = await Leaderboard.findOne({ userId: user._id });
+
+    // Handle the case where the user is valid but not tracked on the leaderboard yet
+    if (!userRank) {
+      return res.status(200).json({
+        currentTier,
+        user,
+        currentGlobalRank: null, // "Unranked" or "-" on the frontend
+        bestRank: null,
+        bestElo: user.stats.elo,
+      });
+    }
 
     res.status(200).json({
       currentTier,
