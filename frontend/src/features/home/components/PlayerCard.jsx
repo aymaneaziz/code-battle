@@ -62,7 +62,7 @@ const PlayerCard = ({ player }) => {
               <span
                 className={cn(
                   "relative inline-flex rounded-full h-4 w-4 border-2 border-white shadow-sm",
-                  isOnline ? "bg-green-500 animate-pulse" : "bg-slate-300",
+                  isOnline ? "bg-green-500 animate-pulse" : "bg-slate-300"
                 )}
               />
             </span>
@@ -83,7 +83,7 @@ const PlayerCard = ({ player }) => {
                 {stats?.elo || 1} ELO
               </div>
               {/* Global Rank */}
-              <span className="flex items-center gap-1 text-[12px] font-bold text-indigo-600  bg-indigo-50 px-2 py-0.5 rounded-md border border-indigo-300">
+              <span className="flex items-center gap-1 text-[12px] font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-md border border-indigo-300">
                 <Globe className="h-3.5 w-3.5" />
                 Rank #{stats.globalRank || "---"}
               </span>

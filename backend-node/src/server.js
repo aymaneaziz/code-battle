@@ -62,8 +62,8 @@ app.use("/api/shop", shopPageRouter);
 app.use("/api/execution", compilerRouter);
 // To get The data we need for the mission-----------------------------------
 app.use("/api/mission", missionRouter);
-// To get The data we need for the leatherboard-----------------------------------
-app.use("/api/leatherboard", leaderboardRouter);
+// To get The data we need for the leaderboard-----------------------------------
+app.use("/api/leaderboard", leaderboardRouter);
 
 //dima ftali had lmiddelware dyal clerk
 app.use(errorClerk);

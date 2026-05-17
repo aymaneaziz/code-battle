@@ -2,7 +2,7 @@ import api from "@/service/GlobalApi";
 
 const getGlobalRank = async (token) => {
   try {
-    return await api.get("/leatherboard/myrank", {
+    return await api.get("/leaderboard/myrank", {
       headers: {
         Authorization: `Bearer ${token}`,
       },

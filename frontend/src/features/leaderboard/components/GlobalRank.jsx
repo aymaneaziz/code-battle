@@ -7,7 +7,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Separator } from "@/components/ui/separator";
 
 import PlayerRow from "./PlayerRow";
 
@@ -47,7 +46,7 @@ const GlobalRank = ({ data }) => {
         {/* BODY */}
         <TableBody>
           {data?.map((player) => (
-            <PlayerRow key={player._id} player={player} />
+            <PlayerRow key={player?.user?._id} player={player} />
           ))}
         </TableBody>
       </Table>

@@ -71,7 +71,9 @@ export const Leaderboard = () => {
         <GlobalRank data={globalRank} />
       </Card>
       <Card className="w-full p-6 flex shadow-md">
-        <p className="text-blue-600 font-medium">Your Position</p>
+        <p className="text-blue-600 font-medium bg-blue-50/80 rounded-xl p-2">
+          Your Position
+        </p>
         <Table className="w-full">
           <TableBody>
             <PlayerRow player={myRank} />

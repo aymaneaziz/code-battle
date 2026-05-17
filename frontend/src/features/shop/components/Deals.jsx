@@ -1,5 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Coins, Gem } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 const Deals = ({ data, purchase }) => {
   return (
@@ -36,84 +38,84 @@ const Deals = ({ data, purchase }) => {
           return (
             <Card
               key={item._id}
-              className="group relative flex flex-col items-center justify-center text-center gap-3 p-4 bg-white border border-slate-200 shadow-sm transition-all duration-300 hover:scale-[1.03] hover:shadow-lg"
+              className="bg-white min-h-40 p-4 flex flex-col justify-between shadow-md"
             >
-              {/* Icon + Label */}
-              <div className="flex flex-row justify-center items-center gap-2">
-                <div className="p-3 bg-slate-100 group-hover:scale-110 transition-transform duration-300">
-                  {ref?.iconUrl}
+              <div className="flex items-start justify-between">
+                <div className="flex flex-row items-center gap-4">
+                  <Card className="w-10 h-10 border border-indigo-300 bg-indigo-50 flex items-center justify-center text-xl font-bold">
+                    {ref?.iconUrl}
+                  </Card>
+                  <p>{ref?.label ?? ref?.name}</p>
                 </div>
 
-                {/* infos */}
-                <div className="text-left">
-                  <p className="text-xl font-extrabold text-slate-900">
-                    {ref?.label ?? ref?.name}
-                  </p>
-
-                  <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1">
-                    {ref?.type}
-                  </p>
-                </div>
+                <Card className="px-3 py-1 border text-indigo-600  bg-indigo-50 text-sm font-medium border-indigo-300">
+                  {ref?.type}
+                </Card>
               </div>
 
               {/* description */}
-              <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
-                {ref?.description}
-              </p>
+              <div className="flex flex-col">
+                <p className="text-sm text-zinc-600 leading-relaxed">
+                  {ref?.description}
+                </p>
 
-              {/* prix */}
-              <div className="flex flex-wrap justify-center items-center gap-4 mt-2">
-                {/* coins */}
-                <div className="flex items-center gap-2 text-sm bg-yellow-100 px-4 py-2 rounded-full">
-                  <span className="font-bold text-yellow-600 text-sm">
-                    💰 {discountedCoins}
-                  </span>
-
-                  {coinDiscount > 0 && (
-                    <>
-                      <span className="line-through text-slate-400 text-xs">
-                        {originalCoins}
-                      </span>
-
-                      <span className="text-[10px] font-bold bg-red-100 text-red-500 px-2 py-0.5 rounded-full">
-                        -{coinDiscount}%
-                      </span>
-                    </>
-                  )}
-                </div>
-
-                {/* gems */}
-                <div className="flex items-center gap-2 text-sm bg-cyan-100 px-4 py-2 rounded-full">
-                  <span className="font-bold text-cyan-600 text-sm">
-                    💎 {discountedGems}
-                  </span>
-
-                  {gemDiscount > 0 && (
-                    <>
-                      <span className="line-through text-slate-400 text-xs">
-                        {originalGems}
-                      </span>
-
-                      <span className="text-[10px] font-bold bg-red-100 text-red-500 px-2 py-0.5 rounded-full">
-                        -{gemDiscount}%
-                      </span>
-                    </>
-                  )}
-                </div>
+                {/* Purchase limit */}
+                <p className="text-[10px] text-slate-500">
+                  Limit: {item?.purchaseLimit}
+                </p>
               </div>
 
-              {/* Purchase limit */}
-              <p className="text-[10px] text-slate-500">
-                Limit: {item?.purchaseLimit}
-              </p>
+              {/* prix */}
+              <div className="flex justify-between items-center">
+                <div className="flex gap-2">
+                  {/* coins */}
+                  <Badge className="flex items-center gap-1 px-1 py-1 bg-amber-50 text-amber-600 rounded-full border border-amber-600">
+                    <Coins size={10} className="fill-amber-600" />
+                    <span className="text-[10px] font-bold uppercase">
+                      {discountedCoins}
+                    </span>
+                    {coinDiscount > 0 && (
+                      <>
+                        <span className="line-through text-slate-400 text-xs">
+                          {originalCoins}
+                        </span>
 
-              {/* Buy button */}
-              <Button
-                className="mt-2 w-full bg-slate-900 text-white text-xs font-bold py-2 rounded-lg hover:bg-slate-800 cursor-pointer transition-all"
-                onClick={() => purchase(item)}
-              >
-                Acheter
-              </Button>
+                        <span className="text-[10px] font-bold bg-red-100 text-red-500 px-2 py-0.5 rounded-full">
+                          -{coinDiscount}%
+                        </span>
+                      </>
+                    )}
+                  </Badge>
+
+                  {/* gems */}
+                  <Badge className="flex items-center gap-1 px-1 py-1 bg-indigo-50 text-indigo-600 rounded-full border border-indigo-600">
+                    <Gem size={10} className="fill-indigo-600" />
+                    <span className="text-[10px] font-bold uppercase">
+                      {discountedGems}
+                    </span>
+                    {gemDiscount > 0 && (
+                      <>
+                        <span className="line-through text-slate-400 text-xs">
+                          {originalGems}
+                        </span>
+
+                        <span className="text-[10px] font-bold bg-red-100 text-red-500 px-2 py-0.5 rounded-full">
+                          -{gemDiscount}%
+                        </span>
+                      </>
+                    )}
+                  </Badge>
+                </div>
+                <div>
+                  {/* Buy button */}
+                  <Button
+                    className="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white hover:cursor-pointer"
+                    onClick={() => purchase(item)}
+                  >
+                    Acheter
+                  </Button>
+                </div>
+              </div>
             </Card>
           );
         })}

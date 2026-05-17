@@ -1,9 +1,9 @@
 import { getToken } from "@clerk/react";
 import { useEffect, useState, useRef } from "react";
 import { Loading } from "@/components/common/Loading";
-import { Card } from "@/components/ui/card";
-import updateSeasonTimer from "@/service/SeasonTimer";
-import updateDailyTimer from "@/service/DailyTimer";
+import seasonTimer from "@/service/seasonTimer";
+import dailyTimer from "@/service/dailyTimer";
+import { toast } from "sonner";
 
 import getMission from "./services/getMission";
 import getProgress from "./services/getProgress";
@@ -11,6 +11,7 @@ import Header from "./components/Header";
 import Body from "./components/Body";
 import putClaimRewards from "./services/putClaimRewards";
 import putMissionProgress from "@/service/putMissionProgress";
+import weeklyTimer from "@/service/weeklyTimer";
 
 export const Missions = () => {
   const [missions, setMissions] = useState([]);
@@ -22,26 +23,26 @@ export const Missions = () => {
     selectedCategory: "DAILY",
   });
 
-  // 🟢 DAILY TIMER
+  // TIMERES
   const [dailyTimeLeft, setDailyTimeLeft] = useState("");
-
-  // 🔵 SEASON TIMER
+  const [weeklyTimeLeft, setWeeklyTimeLeft] = useState("");
   const [seasonTimeLeft, setSeasonTimeLeft] = useState("");
 
   // refs for intervals
   const dailyIntervalRef = useRef(null);
+  const weeklyIntervalRef = useRef(null);
   const seasonIntervalRef = useRef(null);
 
   // -------------------------------------------------------
-  // ⏱ DAILY DEALS TIMER
+  // ⏱ DAILY TIMER
   // -------------------------------------------------------
   useEffect(() => {
     // first execution immediately
-    updateDailyTimer(setDailyTimeLeft);
+    dailyTimer(setDailyTimeLeft);
 
     // store interval id in ref
     dailyIntervalRef.current = setInterval(() => {
-      updateDailyTimer(setDailyTimeLeft);
+      dailyTimer(setDailyTimeLeft);
     }, 1000);
 
     // cleanup
@@ -51,14 +52,32 @@ export const Missions = () => {
   }, []);
 
   // -------------------------------------------------------
+  // ⏱ WEEKLY TIMER
+  // -------------------------------------------------------
+  useEffect(() => {
+    // first execution immediately
+    weeklyTimer(setWeeklyTimeLeft);
+
+    // store interval id in ref
+    weeklyIntervalRef.current = setInterval(() => {
+      weeklyTimer(setWeeklyTimeLeft);
+    }, 60000);
+
+    // cleanup
+    return () => {
+      clearInterval(weeklyIntervalRef.current);
+    };
+  }, []);
+
+  // -------------------------------------------------------
   // 🌍 SEASON TIMER
   // -------------------------------------------------------
   useEffect(() => {
-    updateSeasonTimer(setSeasonTimeLeft);
+    seasonTimer(setSeasonTimeLeft);
 
     // store interval id in ref
     seasonIntervalRef.current = setInterval(() => {
-      updateSeasonTimer(setSeasonTimeLeft);
+      seasonTimer(setSeasonTimeLeft);
     }, 60000);
 
     // cleanup
@@ -115,8 +134,11 @@ export const Missions = () => {
 
       setMissions(missionsRes);
       setHeader((prev) => ({ ...prev, stats: progressRes }));
+
+      toast.success("Reward claimed successfully!");
     } catch (error) {
       console.error(error);
+      toast.error("Failed to claim reward. Please try again.");
     }
   };
 
@@ -133,6 +155,7 @@ export const Missions = () => {
         {/* ⏱ timer basé sur minuit */}
         <span className="text-sm font-extrabold text-red-500">
           {missionCategory === "DAILY" && dailyTimeLeft}
+          {missionCategory === "WEEKLY" && weeklyTimeLeft}
           {missionCategory === "SEASONAL" && seasonTimeLeft}
         </span>
         <div className="h-px flex-1 bg-slate-200"></div>

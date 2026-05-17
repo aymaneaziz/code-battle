@@ -50,20 +50,19 @@ const Body = ({ missions, onClaim, isLoading }) => {
             {/* Top */}
             <div className="flex items-start justify-between">
               <div className="flex flex-row items-center gap-4">
-                <Card className="w-10 h-10 border-2 border-black flex items-center justify-center text-xl font-bold">
+                <Card className="w-10 h-10 border border-indigo-300 bg-indigo-50 flex items-center justify-center text-xl font-bold">
                   {mission.iconUrl}
                 </Card>
                 <p>{mission.mission}</p>
               </div>
-
-              <Card className="px-3 py-1 border-2 border-black text-sm font-medium bg-zinc-100">
+              <Card className="px-3 py-1 border text-indigo-600  bg-indigo-50 text-sm font-medium border-indigo-300">
                 {mission.type}
               </Card>
             </div>
 
             {/* Content */}
             <div className="flex flex-col">
-              <h2 className="text-xl font-bold">{mission.title}</h2>
+              <h2 className="text-xl font-bold">{mission.mission}</h2>
 
               <p className="text-sm text-zinc-600 leading-relaxed">
                 {mission.description}
@@ -118,14 +117,14 @@ const Body = ({ missions, onClaim, isLoading }) => {
               </div>
               <div>
                 {item?.isClaimed ? (
-                  <Card className="px-3 py-1 border-2 border-black text-sm font-medium bg-zinc-100">
+                  <Card className="px-3 py-1 border text-indigo-600  bg-indigo-50 text-sm font-medium border-indigo-300">
                     Claimed
                   </Card>
                 ) : (
                   item?.isCompleted && (
                     <Button
                       className={
-                        "px-5 py-2 bg-blue-700 text-white hover:cursor-pointer" +
+                        "px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white hover:cursor-pointer" +
                         (loading ? " opacity-50 cursor-not-allowed" : "")
                       }
                       onClick={() => handleClaim(item._id)}

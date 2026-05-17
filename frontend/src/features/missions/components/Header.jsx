@@ -42,7 +42,7 @@ const Header = ({ data, onClick }) => {
         <Button
           className={`px-5 py-2 hover:cursor-pointer ${
             data.selectedCategory === "DAILY"
-              ? "bg-blue-700 text-white"
+              ? "bg-blue-600 hover:bg-blue-700 text-white"
               : "bg-white text-black border border-slate-200"
           }`}
           onClick={() => onClick("DAILY")}
@@ -53,7 +53,7 @@ const Header = ({ data, onClick }) => {
         <Button
           className={`px-5 py-2 hover:cursor-pointer ${
             data.selectedCategory === "WEEKLY"
-              ? "bg-blue-700 text-white"
+              ? "bg-blue-600 hover:bg-blue-700 text-white"
               : "bg-white text-black border border-slate-200"
           }`}
           onClick={() => onClick("WEEKLY")}
@@ -64,7 +64,7 @@ const Header = ({ data, onClick }) => {
         <Button
           className={`px-5 py-2 hover:cursor-pointer ${
             data.selectedCategory === "SEASONAL"
-              ? "bg-blue-700 text-white"
+              ? "bg-blue-600 hover:bg-blue-700 text-white"
               : "bg-white text-black border border-slate-200"
           }`}
           onClick={() => onClick("SEASONAL")}

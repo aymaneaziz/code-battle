@@ -1,5 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Coins, Gem } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 const Bundles = ({ data, purchase }) => {
   return (
@@ -24,85 +26,97 @@ const Bundles = ({ data, purchase }) => {
             : new Date(end).toLocaleDateString();
 
           return (
-            <div
+            <Card
               key={item._id}
-              className="group relative flex flex-col justify-between gap-4 p-4 rounded-xl bg-white border border-slate-200 shadow-sm transition-all duration-300 hover:scale-[1.03] hover:shadow-lg"
+              className="bg-white min-h-40 p-4 flex flex-col justify-between shadow-md"
             >
-              {/* EXPIRATION (top-right) */}
-              <div className="absolute top-2 right-2 text-[10px] font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded-full">
-                {expiration === "Permanent" ? "Permanent" : expiration}
-              </div>
-
               {/* Header */}
-              <div className="flex items-center gap-3">
-                <div className="p-3 rounded-xl bg-slate-100 text-2xl group-hover:scale-110 transition-transform duration-300">
-                  {item?.iconUrl}
+              <div className="flex items-start justify-between">
+                <div className="flex flex-row items-center gap-4">
+                  <Card className="w-10 h-10 border border-indigo-300 bg-indigo-50 flex items-center justify-center text-xl font-bold">
+                    {item?.iconUrl}
+                  </Card>
+                  <p>{item?.name}</p>
                 </div>
 
-                <div>
-                  <p className="text-lg font-extrabold text-slate-900">
-                    {item?.name}
-                  </p>
-
-                  <p className="text-[11px] text-slate-500">
-                    {item?.description}
-                  </p>
-                </div>
+                <Card className="px-3 py-1 border text-indigo-600  bg-indigo-50 text-sm font-medium border-indigo-300">
+                  {expiration === "Permanent" ? "Permanent" : expiration}
+                </Card>
               </div>
 
-              {/* Bundle items */}
-              <div className="flex flex-wrap gap-2">
-                {(item?.items || []).map((bundleItem) => {
-                  const ref = bundleItem?.refId;
+              {/* description */}
+              <div className="flex flex-col">
+                <p className="text-sm text-zinc-600 leading-relaxed">
+                  {item?.description}
+                </p>
 
-                  if (!ref) return null;
-
-                  return (
-                    <div
-                      key={bundleItem._id}
-                      className="flex flex-col items-center gap-1 px-2 py-1 rounded-lg bg-slate-100 text-xs font-semibold text-slate-700"
-                    >
-                      <div className="flex items-center">
-                        <span>{ref?.refId?.iconUrl}</span>
-                        <span>x{bundleItem?.quantity}</span>
-                      </div>
-
-                      {/* type */}
-                      <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500">
-                        {ref?.refType}
-                      </span>
-                    </div>
-                  );
-                })}
-              </div>
-
-              {/* Prices */}
-              <div className="flex items-center gap-4">
-                <div className="flex items-center gap-1 text-sm font-bold text-amber-600">
-                  <span>💰</span>
-                  <span>{coins}</span>
-                </div>
-
-                <div className="flex items-center gap-1 text-sm font-bold text-cyan-600">
-                  <span>💎</span>
-                  <span>{gems}</span>
-                </div>
-              </div>
-
-              {/* Footer */}
-              <div className="flex flex-col gap-2">
+                {/* Purchase limit */}
                 <p className="text-[10px] text-slate-500">
                   Limit: {item?.purchaseLimit}
                 </p>
-
-                <Button
-                  className="w-full bg-slate-900 text-white text-xs font-bold py-2 rounded-lg hover:bg-slate-800 cursor-pointer transition-all"
-                  onClick={() => purchase(item)}
-                >
-                  Acheter
-                </Button>
               </div>
-            </div>
+
+              {/* Bundle items */}
+              <div className="flex flex-col flex-wrap gap-2">
+                <p className="text-xs font-bold uppercase tracking-widest text-slate-500">
+                  This pack contains
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {(item?.items || []).map((bundleItem) => {
+                    const ref = bundleItem?.refId;
+
+                    if (!ref) return null;
+
+                    return (
+                      <Badge
+                        key={bundleItem._id}
+                        className="flex items-center gap-1 px-1 py-1 bg-slate-100 text-slate-700 rounded-full"
+                      >
+                        <div className="flex items-center">
+                          <span>{ref?.refId?.iconUrl}</span>
+                          <span>x{bundleItem?.quantity}</span>
+                        </div>
+
+                        {/* type */}
+                        <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500">
+                          {ref?.refType}
+                        </span>
+                      </Badge>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* prix */}
+              <div className="flex justify-between items-center">
+                <div className="flex gap-2">
+                  {/* coins */}
+                  <Badge className="flex items-center gap-1 px-1 py-1 bg-amber-50 text-amber-600 rounded-full border border-amber-600">
+                    <Coins size={10} className="fill-amber-600" />
+                    <span className="text-[10px] font-bold uppercase">
+                      {coins}
+                    </span>
+                  </Badge>
+
+                  {/* gems */}
+                  <Badge className="flex items-center gap-1 px-1 py-1 bg-indigo-50 text-indigo-600 rounded-full border border-indigo-600">
+                    <Gem size={10} className="fill-indigo-600" />
+                    <span className="text-[10px] font-bold uppercase">
+                      {gems}
+                    </span>
+                  </Badge>
+                </div>
+                <div>
+                  {/* Buy button */}
+                  <Button
+                    className="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white hover:cursor-pointer"
+                    onClick={() => purchase(item)}
+                  >
+                    Acheter
+                  </Button>
+                </div>
+              </div>
+            </Card>
           );
         })}
       </div>

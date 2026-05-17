@@ -5,10 +5,13 @@ import { getMyGlobalRank } from "../controllers/LeaderboardControllers/getMyGlob
 
 const leaderboardRouter = Router();
 
-// GET api/leatherboard/data
+// GET api/leaderboard/data
 leaderboardRouter.get("/data", getGlobalRank);
 
-// GET api/leatherboard/myrank
+// GET api/leaderboard/data/:limit
+leaderboardRouter.get("/data/:limit", getGlobalRank);
+
+// GET api/leaderboard/myrank
 leaderboardRouter.get("/myrank", protect, getMyGlobalRank);
 
 export default leaderboardRouter;

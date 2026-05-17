@@ -1,32 +1,35 @@
 import api from "@/service/GlobalApi";
 import { getToken } from "@clerk/react";
 
-const seasonTimer = async (setSeasonTimeLeft) => {
+const weeklyTimer = async (setWeeklyTimeLeft) => {
   try {
     const token = await getToken();
     if (!token) return;
-    const res = await api.get("/system/seasonEndDate", {
+    const res = await api.get("/system/weeklyEndDate", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
-    const seasonEndDate = res.seasonEndDate;
+    const weeklyEndDate = res.weeklyEndDate;
     const now = new Date();
-    const end = seasonEndDate ? new Date(seasonEndDate) : null;
+    const end = weeklyEndDate ? new Date(weeklyEndDate) : null;
 
     if (!end) return;
     const diff = end - now;
     if (diff <= 0) {
-      setSeasonTimeLeft("Season Ended");
+      setWeeklyTimeLeft("Week Ended");
       return;
     }
 
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
     const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-    setSeasonTimeLeft(`${days}d ${hours}h`);
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+
+    setWeeklyTimeLeft(`${days}d ${hours}h ${minutes}m`);
   } catch (error) {
-    console.error("Failed to Season End Date API:", error);
+    console.error("Failed to Weekly End Date API:", error);
     throw error;
   }
 };
-export default seasonTimer;
+
+export default weeklyTimer;

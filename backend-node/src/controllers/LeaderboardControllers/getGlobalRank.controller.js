@@ -3,6 +3,7 @@ import Rank from "../../models/SystemModels/rank.model.js";
 
 export const getGlobalRank = async (req, res) => {
   try {
+    const limit = parseInt(req.params.limit) || 100; // Default to 100 if no limit is provided
     const leaderboard = await Leaderboard.find()
       .populate("userId")
       .populate({
@@ -12,7 +13,7 @@ export const getGlobalRank = async (req, res) => {
         },
       })
       .sort({ currentGlobalRank: 1 })
-      .limit(100);
+      .limit(limit);
 
     const result = await leaderboard.map(async (entry) => {
       const player = entry.userId;

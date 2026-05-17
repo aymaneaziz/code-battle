@@ -35,6 +35,20 @@ export const seedMissionInstance = async () => {
       ],
     },
 
+    {
+      missionInstanceId: "missionInstance_7",
+      mission: missionMap.BUY_ITEM,
+      category: "DAILY",
+      target: 2,
+      startTime: now,
+      endTime: new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000),
+      rewardPrices: [
+        { rewardType: "Coins", amount: 10 },
+        { rewardType: "Gems", amount: 2 },
+        { rewardType: "Xp", amount: 100 },
+      ],
+    },
+
     // WEEKLY
     {
       missionInstanceId: "missionInstance_3",
@@ -59,12 +73,22 @@ export const seedMissionInstance = async () => {
       ],
     },
 
+    {
+      missionInstanceId: "missionInstance_6",
+      mission: missionMap.DAILY_LOGIN,
+      category: "WEEKLY",
+      target: 7,
+      startTime: now,
+      endTime: new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000),
+      rewardPrices: [{ rewardType: "Coins", amount: 50 }],
+    },
+
     // SEASONAL
     {
       missionInstanceId: "missionInstance_5",
       mission: missionMap.WIN_MATCH,
       category: "SEASONAL",
-      target: 100,
+      target: 200,
       startTime: now,
       endTime: new Date(now.getTime() + 150 * 24 * 60 * 60 * 1000),
       rewardPrices: [
@@ -74,13 +98,17 @@ export const seedMissionInstance = async () => {
     },
 
     {
-      missionInstanceId: "missionInstance_6",
-      mission: missionMap.DAILY_LOGIN,
-      category: "WEEKLY",
-      target: 7,
+      missionInstanceId: "missionInstance_8",
+      mission: missionMap.BUY_ITEM,
+      category: "SEASONAL",
+      target: 200,
       startTime: now,
       endTime: new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000),
-      rewardPrices: [{ rewardType: "Coins", amount: 50 }],
+      rewardPrices: [
+        { rewardType: "Coins", amount: 1000 },
+        { rewardType: "Gems", amount: 30 },
+        { rewardType: "Xp", amount: 1200 },
+      ],
     },
   ];
 

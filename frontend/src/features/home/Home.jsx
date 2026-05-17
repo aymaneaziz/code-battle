@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import { useUser, useAuth } from "@clerk/clerk-react";
-import api from "../../service/GlobalApi";
 import { Loading } from "@/components/common/Loading";
+import { fetchHomeInfo } from "./services/homeApi";
+import { Card } from "@/components/ui/card";
 
 import Standard from "./components/Standard";
 import Welcome from "./components/Welcome";
 import PlayerCard from "./components/PlayerCard";
 import ServerStats from "./components/ServerStats";
-import CodeArenaLogo from "../../assets/Code-Arena.svg";
-import { fetchHomeInfo } from "./services/homeApi";
+import GlobalRank from "../leaderboard/components/GlobalRank";
 
 const Home = () => {
   const { user } = useUser();
@@ -71,10 +71,18 @@ const Home = () => {
           <section className="space-y-4">
             <div className="flex items-center gap-2">
               <h2 className="text-sm font-bold text-slate-500 uppercase tracking-widest">
-                Featured Challenges
+                {data.player
+                  ? "Featured Challenges"
+                  : "Top 10 players on the server"}
               </h2>
               <div className="h-px flex-1 bg-slate-200"></div>
             </div>
+
+            {!data.player && (
+              <Card className="w-full p-6 flex shadow-md">
+                <GlobalRank data={data.globalRank} />
+              </Card>
+            )}
           </section>
         </main>
       </div>

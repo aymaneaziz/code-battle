@@ -7,13 +7,14 @@ import getDailyDeals from "./services/getDailyDeals";
 import getSeasonSpotlights from "./services/getSeasonSpotlights";
 import getBundles from "./services/getBundles";
 import putPurchasedItems from "./services/putPurchasedItems";
-import updateSeasonTimer from "@/service/SeasonTimer";
-import updateDailyTimer from "@/service/DailyTimer";
+import seasonTimer from "@/service/seasonTimer";
+import dailyTimer from "@/service/dailyTimer";
 
 import Deals from "./components/Deals";
 import Bundles from "./components/Bundles";
 import Confirm from "./components/Confirm";
 import Purchasing from "./components/Purchasing";
+import putMissionProgress from "@/service/putMissionProgress";
 
 export const Shop = () => {
   const [data, setData] = useState({
@@ -52,6 +53,8 @@ export const Shop = () => {
         seasonSpotlights,
         bundles,
       });
+
+      await putMissionProgress(token, "BUY_ITEM");
       toast.success("Purchase Succeeded!");
     } catch (error) {
       console.error(error);
@@ -76,11 +79,11 @@ export const Shop = () => {
   // -------------------------------------------------------
   useEffect(() => {
     // first execution immediately
-    updateDailyTimer(setDailyTimeLeft);
+    dailyTimer(setDailyTimeLeft);
 
     // store interval id in ref
     dailyIntervalRef.current = setInterval(() => {
-      updateDailyTimer(setDailyTimeLeft);
+      dailyTimer(setDailyTimeLeft);
     }, 1000);
 
     // cleanup
@@ -93,11 +96,11 @@ export const Shop = () => {
   // 🌍 SEASON TIMER
   // -------------------------------------------------------
   useEffect(() => {
-    updateSeasonTimer(setSeasonTimeLeft);
+    seasonTimer(setSeasonTimeLeft);
 
     // store interval id in ref
     seasonIntervalRef.current = setInterval(() => {
-      updateSeasonTimer(setSeasonTimeLeft);
+      seasonTimer(setSeasonTimeLeft);
     }, 60000);
 
     // cleanup
@@ -139,8 +142,8 @@ export const Shop = () => {
   if (loading) return <Loading />;
 
   return (
-    <div className="text-slate-900 min-h-screen p-4 md:p-8 bg-slate-50">
-      <div className="flex flex-col mx-auto space-y-8">
+    <div className="min-h-screen bg-slate-50/50 text-slate-900 p-2 md:p-4 font-sans flex flex-col gap-6">
+      <div className="flex flex-col space-y-8">
         <main className="space-y-10">
           {/* ------------------------------------------------ */}
           {/* 🟢 DAILY DEALS */}

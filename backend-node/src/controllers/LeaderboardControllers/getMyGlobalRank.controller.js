@@ -5,14 +5,9 @@ import Rank from "../../models/SystemModels/rank.model.js";
 export const getMyGlobalRank = async (req, res) => {
   try {
     const clerkId = req.auth.userId;
-    const user = await User.findOne({ clerkId });
+    const user = await User.findOne({ clerkId }).populate("selectedAvatar");
 
-    const userRank = await Leaderboard.findOne({ userId: user._id }).populate({
-      path: "userId",
-      populate: {
-        path: "selectedAvatar",
-      },
-    });
+    const userRank = await Leaderboard.findOne({ userId: user._id });
 
     if (!userRank) {
       return res.status(404).json({ message: "User not found in leaderboard" });
