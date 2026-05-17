@@ -19,7 +19,6 @@ export function useMatchTimer(
         if (prev <= 1000) {
           clearInterval(interval);
 
-          // Only one player needs to send this — server deduplicates
           if (!sentExpiredRef.current) {
             sentExpiredRef.current = true;
             wsClient.send({ type: "TIME_EXPIRED", matchId, userId });

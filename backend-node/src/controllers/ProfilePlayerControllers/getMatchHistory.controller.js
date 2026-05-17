@@ -17,7 +17,6 @@ export const getMatchHistory = async (req, res) => {
       .limit(20)
       .lean();
 
-    // Shape each entry so the front always deals with "me" and "opponent"
     const shaped = histories.map((h) => {
       const isP1 = h.player1.userId === userId;
       const me = isP1 ? h.player1 : h.player2;
@@ -44,6 +43,7 @@ export const getMatchHistory = async (req, res) => {
         testsPassed: me.testsPassed,
         submissions: me.submissions,
         solveTimeMs: me.solveTimeMs,
+        solvedCode: me.solvedCode,
 
         // Opponent side
         opponent: {

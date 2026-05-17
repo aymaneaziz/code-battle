@@ -10,6 +10,7 @@ import Welcome from "./components/Welcome";
 import PlayerCard from "./components/PlayerCard";
 import ServerStats from "./components/ServerStats";
 import GlobalRank from "../leaderboard/components/GlobalRank";
+import { AiFeedback } from "./components/AiFeedback";
 
 const Home = () => {
   const { user } = useUser();
@@ -68,16 +69,19 @@ const Home = () => {
             </div>
             <ServerStats stats={data.home} />
           </section>
+          {/* ── AI Battle Coach / Global Rank ── */}
           <section className="space-y-4">
             <div className="flex items-center gap-2">
               <h2 className="text-sm font-bold text-slate-500 uppercase tracking-widest">
-                {data.player ? "AI Assistant" : "Top 10 players on the server"}
+                AI Battle Coach
               </h2>
               <div className="h-px flex-1 bg-slate-200"></div>
             </div>
-
-            {!data.player && (
-              <Card className="w-full p-6 flex shadow-md">
+            {data.player ? (
+              // Shown when the player has a profile — last match AI analysis
+              <AiFeedback />
+            ) : (
+              <Card className="w-full p-6 shadow-md">
                 <GlobalRank data={data.globalRank} />
               </Card>
             )}

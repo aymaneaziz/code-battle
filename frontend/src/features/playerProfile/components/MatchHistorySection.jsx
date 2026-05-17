@@ -165,6 +165,7 @@ export function MatchHistorySection() {
     getToken().then(async (token) => {
       try {
         const data = await fetchMatchHistory(token);
+        console.log("Match history ", data);
         if (!cancelled) setHistory(data ?? []);
       } catch {
         // silently fail — history is non-critical

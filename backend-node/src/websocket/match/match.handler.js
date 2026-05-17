@@ -10,8 +10,8 @@ import { resolveMatch } from "./match.resolver.js";
 import { LANGUAGE_KEY_MAP } from "../../controllers/CompilerControllers/languageKeyMap.js";
 
 // ── executeCode controller ─────────────────────────────────
-
 const getLanguageKey = (id) => LANGUAGE_KEY_MAP[Number(id)] ?? "javascript";
+// Base64 encoding/decoding for Judge0 API
 const toBase64 = (s) => Buffer.from(String(s ?? "")).toString("base64");
 const fromBase64 = (s) =>
   Buffer.from(String(s ?? ""), "base64").toString("utf-8");
@@ -222,6 +222,7 @@ export async function handleSubmitCode(ws, data, clients) {
       opponentId,
       "all_tests_passed",
       clients,
+      { winnerId: userId, winnerCode: code },
     );
   }
 

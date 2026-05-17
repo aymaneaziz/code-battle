@@ -6,7 +6,7 @@ const badges = [
     badgeId: "badge_001",
     name: "First Steps",
     description: "Complete your first challenge.",
-    iconUrl: "🚀",
+    iconUrl: "🌱",
     rarity: "Common",
   },
   {
@@ -46,7 +46,7 @@ const badges = [
   },
   {
     badgeId: "badge_007",
-    name: "Ice Breake*",
+    name: "Ice Breake",
     description: "Join your first team challenge.",
     iconUrl: "❄️",
     rarity: "Common",

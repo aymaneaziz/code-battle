@@ -21,3 +21,8 @@ export const fetchHomeInfo = async (getToken) => {
     globalRank: globalRank,
   };
 };
+
+export const fetchMatchHistory = async (token) =>
+  api.get("/data/profile/match-history", {
+    headers: { Authorization: `Bearer ${token}` },
+  });

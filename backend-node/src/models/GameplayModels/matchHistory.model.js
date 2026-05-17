@@ -39,6 +39,7 @@ const matchHistorySchema = new mongoose.Schema(
       testsPassed: { type: Number },
       submissions: { type: Number },
       solveTimeMs: { type: Number },
+      solvedCode: { type: String, default: null },
     },
 
     // Player 2 result
@@ -55,8 +56,8 @@ const matchHistorySchema = new mongoose.Schema(
       hpRemaining: { type: Number },
       testsPassed: { type: Number },
       submissions: { type: Number },
-
       solveTimeMs: { type: Number },
+      solvedCode: { type: String, default: null },
     },
 
     durationMs: { type: Number }, // match duration in ms

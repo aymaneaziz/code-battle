@@ -39,6 +39,7 @@ export async function resolveMatch(
   loserId,
   reason,
   clients,
+  extra = {},
 ) {
   const match = getMatch(matchId);
   if (!match || match.resolved) return; // already resolved — guard against race conditions
@@ -95,7 +96,7 @@ export async function resolveMatch(
         totalTests,
         submissions: ps.submissions,
         failedSubs: ps.failedSubs,
-        maxCombo: ps.combo, // highest combo at end (resets on fail, so this is current run)
+        maxCombo: ps.combo, // highest combo at end
         hpZero: ps.hp <= 0,
         speedBonus: ps.finishedAt
           ? match.problem.timeArenaS - (ps.finishedAt - match.startedAt) >
@@ -168,7 +169,7 @@ export async function resolveMatch(
         if (!s.fastestSolveTime || solveTimeMs < s.fastestSolveTime) {
           s.fastestSolveTime = solveTimeMs;
         }
-        // rolling average — accurate recompute happens in profile controller
+
         const prevTotal = s.totalMatches - 1;
         const prevAvg = s.averageSolveTime ?? solveTimeMs;
         s.averageSolveTime = Math.round(
@@ -231,6 +232,7 @@ export async function resolveMatch(
         testsPassed: ps1.testsPassed,
         submissions: ps1.submissions,
         solveTimeMs: solveTimeMs1,
+        solvedCode: extra.winnerId === player1Id ? extra.winnerCode : null,
       },
       player2: {
         userId: player2Id,
@@ -246,6 +248,7 @@ export async function resolveMatch(
         testsPassed: ps2.testsPassed,
         submissions: ps2.submissions,
         solveTimeMs: solveTimeMs2,
+        solvedCode: extra.winnerId === player2Id ? extra.winnerCode : null,
       },
       durationMs: Date.now() - match.startedAt,
     });

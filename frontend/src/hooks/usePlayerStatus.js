@@ -8,7 +8,7 @@ export const usePlayerStatus = (userId) => {
     if (!userId) return;
     wsClient.ensureConnected(userId);
 
-    // Initial check: if socket is already open, player is online
+    //  if socket is already open, player is online
     setIsOnline(wsClient.ws?.readyState === WebSocket.OPEN);
     // Helper to sync state
     const updateStatus = () => {
