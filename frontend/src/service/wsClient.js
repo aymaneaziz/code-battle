@@ -8,7 +8,7 @@ class WebSocketClient {
     this.userId = null;
     // Reconnect logic
     this._reconnectTimer = null;
-    // Intentional close flag to prevent auto-reconnect when we call disconnect()
+    /// bach nfr9o bin disconnect normal d user o ila w93 crash connection
     this._intentionalClose = false;
   }
 
