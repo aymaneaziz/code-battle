@@ -59,7 +59,7 @@ Gestion d'environnements isolés via WSL et configuration d'une couche d'orchest
 ### 🌐 WebSockets  ✅
 
 [https://socket.io/](https://socket.io/)
-Propulsé par une architecture de WebSockets bidirectionnels à faible latence (`socket.io`) pour une communication instantanée entre le frontend et le backend. Permet de synchroniser instantanément les minuteurs de match, de mettre à jour les scores en direct et de partager le flux de code en direct entre les joueurs.
+Propulsé par une architecture de WebSockets bidirectionnels à faible latence  pour une communication instantanée entre le frontend et le backend. Permet de synchroniser instantanément les minuteurs de match, de mettre à jour les scores en direct et de partager le flux de code en direct entre les joueurs.
 
 ---
 
@@ -70,8 +70,9 @@ Propulsé par une architecture de WebSockets bidirectionnels à faible latence (
 
 ---
 ### 🤖 API Grok AI ✅
-Modèle utilisé : llama-3.1-8b-instant via l'API Grok (free tier: 14,400 requests/day ).
+Modèle utilisé : llama-3.1-8b-instant via l'API Grok (free tier: 14,400 requests/day ).<br/>
 https://console.groq.com/home
+<br/>
 Feedback IA :
 o qualité du code
 o optimisation
