@@ -23,7 +23,7 @@ const putProfilePlayer = async (req, res) => {
     }
 
     // update
-    user.displayName = displayName || user.displayName;
+    user.displayName = displayName ?? user.displayName;
     user.location = location || user.location;
     user.bio = bio || user.bio;
 

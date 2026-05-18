@@ -21,17 +21,17 @@ export const putPurchasedItems = async (req, res) => {
     const discountCoins = data?.discountPercentage?.coins || 0;
     const discountGems = data?.discountPercentage?.gems || 0;
 
-    const priceCoins = item?.price?.coins || 0;
-    const priceGems = item?.price?.gems || 0;
+    const priceCoins = item?.price?.coins || data?.price?.coins || 0;
+    const priceGems = item?.price?.gems || data?.price?.gems || 0;
 
     const finalPriceCoins = Math.max(
       0,
-      priceCoins - (discountCoins * priceCoins) / 100
+      priceCoins - (discountCoins * priceCoins) / 100,
     );
 
     const finalPriceGems = Math.max(
       0,
-      priceGems - (discountGems * priceGems) / 100
+      priceGems - (discountGems * priceGems) / 100,
     );
 
     // vérifier si le joueur possède assez d'argent
@@ -75,7 +75,7 @@ export const putPurchasedItems = async (req, res) => {
           "purchasedItems.$.quantity": 1,
         },
       },
-      { returnDocument: "after" }
+      { returnDocument: "after" },
     );
 
     if (!updated) {
@@ -93,7 +93,7 @@ export const putPurchasedItems = async (req, res) => {
         {
           upsert: true,
           returnDocument: "after",
-        }
+        },
       );
     }
     await user.save();
