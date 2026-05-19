@@ -1,6 +1,6 @@
 # ⚔️ Code Battle Arena
 
-## Base Ecosystem
+## 🏗️ Base Ecosystem
 
 - **Design:** [Code Arena Design PDF](https://github.com/user-attachments/files/27923855/AI-Powered.Code.Battle.Platform.pdf)
 - **Built in:** 3 weeks 
@@ -30,7 +30,7 @@ npm run dev        # Start the backend
 
 ## Stack & Tools
 
-- **Tech Stack:** MERN (MongoDB, Express, React, Node.js)
+### Tech Stack: MERN (MongoDB, Express, React, Node.js)
 
 ### ⚙️ Judge0 & 🐳 Docker (Sandbox) — Code Execution Engine
 
