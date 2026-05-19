@@ -32,24 +32,11 @@ npm run dev        # Start the backend
 
 - **Tech Stack:** MERN (MongoDB, Express, React, Node.js)
 
-### ⚙️ Judge0 API — Code Execution Engine
+### ⚙️ Judge0 & 🐳 Docker (Sandbox) — Code Execution Engine
 
-[https://judge0.com](https://judge0.com)
+[https://judge0.com](https://judge0.com) · [https://www.docker.com](https://www.docker.com)
 
-REST API for multi-language code execution, used to power coding challenges and battles.
-
-**References:**
-- [Building a Code Editor with Monaco Editor and Judge0 API](https://medium.com/@adwait.purao/building-a-code-editor-with-monaco-editor-and-judge-0-api-b8288c0d13ae)
-- [How to Self-Host Judge0 Locally](https://denishoti.medium.com/how-to-self-host-judge0-api-on-your-pc-locally-all-you-need-to-know-ad8a2b64fd1)
-- [Video Tutorial](https://www.youtube.com/watch?v=QOmc3u1Aev8)
-
----
-
-### 🐳 Docker & Sandbox
-
-[https://www.docker.com](https://www.docker.com)
-
-Judge0 is self-hosted locally using Docker containers via WSL, fully isolating user code execution from the host operating system. The setup uses Docker Compose to manage multi-container orchestration, including volumes and environment variables, ensuring user scripts run securely within the Judge0 sandbox.
+REST API for multi-language code execution (Support for 60+ languages), used to power coding challenges and battles. Judge0 is self-hosted locally using Docker containers via WSL, fully isolating user code execution from the host operating system. Docker Compose manages multi-container orchestration, including volumes and environment variables, ensuring user scripts run securely within the sandbox.
 
 ---
 
