@@ -30,7 +30,7 @@ npm run dev        # Start the backend
 
 ## Stack & Tools
 
-### Tech Stack: MERN (MongoDB, Express, React, Node.js)
+### 🌱 Tech Stack: MERN (MongoDB, Express, React, Node.js)
 
 ### ⚙️ Judge0 & 🐳 Docker (Sandbox) — Code Execution Engine
 
