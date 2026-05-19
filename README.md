@@ -1,128 +1,151 @@
-# 🚀  Code Battle Arena
+# ⚔️ Code Battle Arena
 
-## 🧰 Écosystème de Base
+## Base Ecosystem
 
-* 📐 **Conception :** [PDF de Conception de Code Arena](https://github.com/user-attachments/files/27923855/AI-Powered.Code.Battle.Platform.pdf)
-* 🥞 **Stack Technique :** MERN (MongoDB, Express, React, Node.js)
-
+- **Design:** [Code Arena Design PDF](https://github.com/user-attachments/files/27923855/AI-Powered.Code.Battle.Platform.pdf)
+- **Built in:** 3 weeks 
 ---
 
-## 🤖 Frontend — React note (cmd)
+## Frontend — React
 
 ```bash
 cd frontend
 npm install
-npm run dev //to start front
-
+npm run dev        # Start the frontend
 ```
 
 ---
 
-## ⚙️ Backend — Node note (cmd)
+## Backend — Node.js
 
 ```bash
 cd backend-node
 npm install
-npm run db:seed //to send the seeders
-npm run dev //to start backend
+npm run db:seed    # Run database seeders
+npm run dev        # Start the backend
 
-
----------------------------------------------------------------------------------
-//special
-npm install --save-dev nodemon  //always restart server whenever make any changes
 ```
 
-## 🧰 Stack & Outils (en cours)
----
-### ⚖️ Judge0 API ✅( Docker Hosted)
-
-[https://judge0.com/](https://judge0.com/)
-o  API permettant l’exécution de code en plusieurs langages pour les challenges et battles.
-
-o Building a Code Editor with Monaco Editor and Judge 0 API
-https://medium.com/@adwait.purao/building-a-code-editor-with-monaco-editor-and-judge-0-api-b8288c0d13ae
-
-o How to self-host Judge0 API on your PC locally | All you need to know
-https://denishoti.medium.com/how-to-self-host-judge0-api-on-your-pc-locally-all-you-need-to-know-ad8a2b64fd1
-
-https://www.youtube.com/watch?v=QOmc3u1Aev8&list=WL
-
 ---
 
-### 🐳 Docker & SandBox  ✅
+## Stack & Tools
 
-[https://www.docker.com/](https://www.docker.com/)
-**Judge0** a été hébergée localement à l'aide de conteneurs Docker (via WSL) afin d'isoler complètement l'exécution du code utilisateur du système d'exploitation hôte. 
+- **Tech Stack:** MERN (MongoDB, Express, React, Node.js)
 
-Gestion d'environnements isolés via WSL et configuration d'une couche d'orchestration multi-conteneurs avec **Docker Compose**, gérant les volumes et les variables d'environnement pour exécuter de manière sécurisée les scripts utilisateur dans le bac à sable (sandbox) de Judge0.
+### ⚙️ Judge0 API — Code Execution Engine
 
-### 🌐 WebSockets  ✅
+[https://judge0.com](https://judge0.com)
 
-[https://socket.io/](https://socket.io/)
-Propulsé par une architecture de WebSockets bidirectionnels à faible latence  pour une communication instantanée entre le frontend et le backend. Permet de synchroniser instantanément les minuteurs de match, de mettre à jour les scores en direct et de partager le flux de code en direct entre les joueurs.
+REST API for multi-language code execution, used to power coding challenges and battles.
+
+**References:**
+- [Building a Code Editor with Monaco Editor and Judge0 API](https://medium.com/@adwait.purao/building-a-code-editor-with-monaco-editor-and-judge-0-api-b8288c0d13ae)
+- [How to Self-Host Judge0 Locally](https://denishoti.medium.com/how-to-self-host-judge0-api-on-your-pc-locally-all-you-need-to-know-ad8a2b64fd1)
+- [Video Tutorial](https://www.youtube.com/watch?v=QOmc3u1Aev8)
 
 ---
 
-### 🧠 Monaco Editor ✅
+### 🐳 Docker & Sandbox
 
-[https://microsoft.github.io/monaco-editor/](https://microsoft.github.io/monaco-editor/)
-Éditeur de code puissant utilisé dans VS Code, idéal pour l’édition en ligne.
+[https://www.docker.com](https://www.docker.com)
 
----
-### 🤖 API Grok AI ✅
-Modèle utilisé : llama-3.1-8b-instant via l'API Grok (free tier: 14,400 requests/day ).<br/>
-https://console.groq.com/home
-<br/>
-Feedback IA :
-o qualité du code
-o optimisation
-o suggestions d’amélioration
-
-
-### ⚛️ React Router ✅
-
-[https://reactrouter.com/home](https://reactrouter.com/home)
-o Gestion des routes côté frontend pour créer une navigation fluide et dynamique dans l’application.
+Judge0 is self-hosted locally using Docker containers via WSL, fully isolating user code execution from the host operating system. The setup uses Docker Compose to manage multi-container orchestration, including volumes and environment variables, ensuring user scripts run securely within the Judge0 sandbox.
 
 ---
 
-### 🎨 shadcn/ui ✅
+### 🌐 WebSockets
 
-[https://ui.shadcn.com/](https://ui.shadcn.com/)
-o Bibliothèque de composants UI modernes, accessibles et personnalisables pour React.
+[https://socket.io](https://socket.io)
 
----
-
-### 💨 Tailwind CSS ✅
-
-[https://tailwindcss.com/](https://tailwindcss.com/)
-o Framework CSS utility-first pour construire rapidement des interfaces modernes et responsives.
+Bidirectional, low-latency WebSocket architecture enabling real-time communication between the frontend and backend — used to synchronize match timers, update live scores, and stream code between players.
 
 ---
 
-### 🔐 Clerk Authentication ✅
+### 🖊️ Monaco Editor
+
+[https://microsoft.github.io/monaco-editor](https://microsoft.github.io/monaco-editor)
+
+The same editor powering VS Code, integrated here for a rich in-browser code editing experience.
+
+---
+
+### 🤖 Groq AI API
+
+[https://console.groq.com](https://console.groq.com)
+
+Model: `llama-3.1-8b-instant` via Groq API (free tier: 14,400 requests/day).
+
+Used to provide AI-powered feedback on:
+- Code quality
+- Performance optimization
+- Improvement suggestions
+
+---
+
+### 🔀 React Router
+
+[https://reactrouter.com](https://reactrouter.com)
+
+Client-side routing for seamless, dynamic navigation throughout the application.
+
+---
+
+### 🎨 shadcn/ui
+
+[https://ui.shadcn.com](https://ui.shadcn.com)
+
+A collection of accessible, customizable, and modern UI components for React.
+
+---
+
+### 💨 Tailwind CSS
+
+[https://tailwindcss.com](https://tailwindcss.com)
+
+Utility-first CSS framework for building responsive, modern interfaces rapidly.
+
+---
+
+### 🔐 Clerk Authentication
 
 [https://clerk.com/docs](https://clerk.com/docs)
-o Solution complète d’authentification (login, signup, OAuth) prête pour production.
+
+Full-featured authentication solution covering sign-up, login, and OAuth — production-ready out of the box.
 
 ---
 
-### 🎯 Lucide Icons ✅
+### ✳️ Lucide Icons
 
-[https://lucide.dev/](https://lucide.dev/)
-o Modern open-source icon library with customizable colors, perfect for clean and consistent UI design.
+[https://lucide.dev](https://lucide.dev)
 
-### 📐 Clean Architecture ✅
-
-### 📊 Chart.js ❌
-
-[https://www.chartjs.org/docs/latest/](https://www.chartjs.org/docs/latest/)
-o Bibliothèque pour créer des graphiques interactifs et dynamiques (stats, performances, etc.).
+Open-source icon library with customizable styles, designed for clean and consistent UI.
 
 ---
-### ✨ Framer Motion ❌
 
-[https://www.framer.com/motion/](https://www.framer.com/motion/)
-o Bibliothèque d’animations fluide pour React afin de créer des interfaces modernes et dynamiques.
+### 🏛️ Clean Architecture
+
+Codebase structured around separation of concerns with clear boundaries between layers (presentation, domain, data).
 
 ---
+
+### 📊 Chart.js *(planned)*
+
+[https://www.chartjs.org/docs/latest](https://www.chartjs.org/docs/latest)
+
+Library for building interactive charts and visualizations (statistics, performance tracking, etc.).
+
+---
+
+### ✨ Framer Motion *(planned)*
+
+[https://www.framer.com/motion](https://www.framer.com/motion)
+
+Animation library for React, used to create fluid transitions and dynamic interface effects.
+
+---
+
+### 🟥 Redis *(planned)*
+
+[https://redis.io](https://redis.io)
+
+In-memory data store planned for caching leaderboard data, managing session state, and implementing rate limiting for code submission requests.
