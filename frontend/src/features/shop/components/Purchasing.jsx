@@ -4,8 +4,8 @@ import { Zap } from "lucide-react";
 
 const Purchasing = () => {
   return createPortal(
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[9999]">
-      <div className="bg-white border border-slate-200 p-8 rounded-2xl shadow-2xl flex flex-col items-center gap-5 min-w-[240px]">
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-9999">
+      <div className="bg-white border border-slate-200 p-8 rounded-2xl shadow-2xl flex flex-col items-center gap-5 min-w-60">
         {/* spinner */}
         <div className="w-12 h-12 border-4 border-slate-100 border-t-blue-600 rounded-full animate-spin" />
 

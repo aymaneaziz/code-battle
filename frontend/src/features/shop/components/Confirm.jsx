@@ -44,7 +44,7 @@ const Confirm = ({ selectedItem, handleClose, purchase, mode }) => {
   );
 
   return createPortal(
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[9999] p-4">
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-9999 p-4">
       <div className="bg-white border border-slate-200 rounded-2xl shadow-2xl w-full max-w-md p-6 flex flex-col gap-6">
         {/* Header */}
         <div className="flex items-center justify-between">
