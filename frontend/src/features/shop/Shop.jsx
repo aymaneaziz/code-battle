@@ -150,7 +150,7 @@ export const Shop = () => {
           {/* ------------------------------------------------ */}
           <section className="space-y-4">
             <div className="flex items-center gap-2">
-              <h2 className="text-sm font-bold text-slate-500 uppercase tracking-widest">
+              <h2 className="text-sm font-bold text-slate-900 uppercase tracking-widest">
                 Daily Deals Reset In:
               </h2>
               {/* ⏱ timer basé sur minuit */}
@@ -167,7 +167,7 @@ export const Shop = () => {
           {/* ------------------------------------------------ */}
           <section className="space-y-4">
             <div className="flex items-center gap-2">
-              <h2 className="text-sm font-bold text-slate-500 uppercase tracking-widest">
+              <h2 className="text-sm font-bold text-slate-900 uppercase tracking-widest">
                 Season Spotlights Ends In:
               </h2>
               {/* 🌍 timer basé sur seasonEndDate backend */}
@@ -184,7 +184,7 @@ export const Shop = () => {
           {/* ------------------------------------------------ */}
           <section className="space-y-4">
             <div className="flex items-center gap-2">
-              <h2 className="text-sm font-bold text-slate-500 uppercase tracking-widest">
+              <h2 className="text-sm font-bold text-slate-900 uppercase tracking-widest">
                 Special Bundles:
               </h2>
               <div className="h-px flex-1 bg-slate-200"></div>

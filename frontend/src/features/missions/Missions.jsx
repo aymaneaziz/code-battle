@@ -1,6 +1,7 @@
 import { getToken } from "@clerk/react";
 import { useEffect, useState, useRef } from "react";
 import { Loading } from "@/components/common/Loading";
+
 import seasonTimer from "@/service/seasonTimer";
 import dailyTimer from "@/service/dailyTimer";
 import { toast } from "sonner";

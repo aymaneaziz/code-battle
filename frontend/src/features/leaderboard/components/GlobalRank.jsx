@@ -12,32 +12,32 @@ import PlayerRow from "./PlayerRow";
 
 const GlobalRank = ({ data }) => {
   return (
-    <ScrollArea className="h-96 rounded-md border">
+    <ScrollArea className="h-96 rounded-2xl">
       <Table className="w-full">
-        <TableHeader className="bg-slate-50/80 w-full">
-          <TableRow className="w-full">
-            <TableHead className="font-bold text-slate-500 uppercase text-xs text-left w-1/12">
+        <TableHeader className="bg-slate-50 border-b border-slate-200 sticky top-0">
+          <TableRow className="hover:bg-slate-50">
+            <TableHead className="font-bold text-slate-400 uppercase text-[11px] tracking-widest text-left w-1/12 px-3 py-3">
               Rank
             </TableHead>
-            <TableHead className="font-bold text-slate-500 uppercase text-xs text-left w-1/12">
-              Best-Rank
+            <TableHead className="font-bold text-slate-400 uppercase text-[11px] tracking-widest text-left w-1/12 px-3">
+              Best
             </TableHead>
-            <TableHead className="font-bold text-slate-500 uppercase text-xs text-left w-5/12">
+            <TableHead className="font-bold text-slate-400 uppercase text-[11px] tracking-widest text-left w-5/12 px-3">
               Player
             </TableHead>
-            <TableHead className="font-bold text-slate-500 uppercase text-xs text-left w-1/12">
+            <TableHead className="font-bold text-slate-400 uppercase text-[11px] tracking-widest text-left w-1/12 px-3">
               Tier
             </TableHead>
-            <TableHead className="font-bold text-slate-500 uppercase text-xs text-left w-1/12">
+            <TableHead className="font-bold text-slate-400 uppercase text-[11px] tracking-widest text-left w-1/12 px-3">
               XP
             </TableHead>
-            <TableHead className="font-bold text-slate-500 uppercase text-xs text-left w-1/12">
+            <TableHead className="font-bold text-slate-400 uppercase text-[11px] tracking-widest text-left w-1/12 px-3">
               Elo
             </TableHead>
-            <TableHead className="font-bold text-slate-500 uppercase text-xs text-left w-1/12">
-              Win-rate
+            <TableHead className="font-bold text-slate-400 uppercase text-[11px] tracking-widest text-left w-1/12 px-3">
+              Win %
             </TableHead>
-            <TableHead className="font-bold text-slate-500 uppercase text-xs text-left w-1/12">
+            <TableHead className="font-bold text-slate-400 uppercase text-[11px] tracking-widest text-left w-1/12 px-3">
               Battles
             </TableHead>
           </TableRow>
@@ -53,4 +53,5 @@ const GlobalRank = ({ data }) => {
     </ScrollArea>
   );
 };
+
 export default GlobalRank;

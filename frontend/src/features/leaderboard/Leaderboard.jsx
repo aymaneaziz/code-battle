@@ -63,17 +63,24 @@ export const Leaderboard = () => {
   if (loading) return <Loading />;
 
   return (
-    <div className="min-h-screen bg-slate-50/50 text-slate-900 p-6 md:p-8 font-sans flex flex-col gap-6">
-      <Card className="w-full h-24 p-6 flex shadow-md">
+    <div className="min-h-screen bg-slate-50/50 text-slate-900 p-6 md:p-8 font-sans flex flex-col gap-5">
+      {/* Header */}
+      <Card className="w-full px-6 py-4 flex items-center shadow-sm border border-slate-200 rounded-2xl">
         <Header system={systemData} />
       </Card>
-      <Card className="w-full p-6 flex shadow-md">
+
+      {/* Global rankings table */}
+      <Card className="w-full p-0 shadow-sm border border-slate-200 rounded-2xl overflow-hidden">
         <GlobalRank data={globalRank} />
       </Card>
-      <Card className="w-full p-6 flex shadow-md">
-        <p className="text-blue-600 font-medium bg-blue-50/80 rounded-xl p-2">
-          Your Position
-        </p>
+
+      {/* My position */}
+      <Card className="w-full px-6 py-4 shadow-sm border border-slate-200 rounded-2xl">
+        <div className="flex items-center gap-2 mb-3">
+          <span className="text-xs font-bold text-blue-600 bg-blue-50 border border-blue-100 rounded-lg px-3 py-1 uppercase tracking-widest">
+            Your Position
+          </span>
+        </div>
         <Table className="w-full">
           <TableBody>
             <PlayerRow player={myRank} />

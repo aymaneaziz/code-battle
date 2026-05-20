@@ -5,12 +5,10 @@ import { Badge } from "@/components/ui/badge";
 
 const Bundles = ({ data, purchase }) => {
   return (
-    <Card className="h-full relative bg-white/80 backdrop-blur border border-slate-200 shadow-sm hover:shadow-md transition-all duration-300 rounded-2xl overflow-hidden p-6">
-      <div className="absolute inset-0 bg-linear-to-br from-slate-100/40 to-transparent pointer-events-none" />
-
+    <Card className="h-full relative bg-white border border-slate-200 shadow-sm rounded-2xl overflow-hidden p-5">
       {/* EMPTY STATE */}
       {(!data || data.length === 0) && (
-        <div className="relative h-full flex items-center justify-center text-slate-500 font-semibold">
+        <div className="relative h-full flex items-center justify-center text-slate-500 font-semibold py-10">
           No bundles available
         </div>
       )}
@@ -28,57 +26,52 @@ const Bundles = ({ data, purchase }) => {
           return (
             <Card
               key={item._id}
-              className="bg-white min-h-40 p-4 flex flex-col justify-between shadow-md"
+              className="bg-white min-h-40 p-4 flex flex-col justify-between shadow-sm border border-slate-200 rounded-2xl hover:shadow-md transition-shadow duration-200"
             >
               {/* Header */}
               <div className="flex items-start justify-between">
-                <div className="flex flex-row items-center gap-4">
-                  <Card className="w-10 h-10 border border-indigo-300 bg-indigo-50 flex items-center justify-center text-xl font-bold">
+                <div className="flex flex-row items-center gap-3">
+                  <div className="w-10 h-10 border border-violet-200 bg-violet-50 rounded-xl flex items-center justify-center text-xl">
                     {item?.iconUrl}
-                  </Card>
-                  <p>{item?.name}</p>
+                  </div>
+                  <p className="text-sm font-semibold text-slate-700">
+                    {item?.name}
+                  </p>
                 </div>
-
-                <Card className="px-3 py-1 border text-indigo-600  bg-indigo-50 text-sm font-medium border-indigo-300">
+                <span className="px-2.5 py-1 border border-slate-200 text-slate-500 bg-slate-50 text-[11px] font-bold uppercase tracking-widest rounded-lg">
                   {expiration === "Permanent" ? "Permanent" : expiration}
-                </Card>
+                </span>
               </div>
 
-              {/* description */}
-              <div className="flex flex-col">
-                <p className="text-sm text-zinc-600 leading-relaxed">
+              {/* Description */}
+              <div className="flex flex-col gap-0.5">
+                <p className="text-sm text-slate-600 leading-relaxed">
                   {item?.description}
                 </p>
-
-                {/* Purchase limit */}
-                <p className="text-[10px] text-slate-500">
+                <p className="text-[10px] text-slate-400 font-medium">
                   Limit: {item?.purchaseLimit}
                 </p>
               </div>
 
               {/* Bundle items */}
-              <div className="flex flex-col flex-wrap gap-2">
-                <p className="text-xs font-bold uppercase tracking-widest text-slate-500">
+              <div className="flex flex-col gap-2">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-slate-600">
                   This pack contains
                 </p>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-1.5">
                   {(item?.items || []).map((bundleItem) => {
                     const ref = bundleItem?.refId;
-
                     if (!ref) return null;
-
                     return (
                       <Badge
                         key={bundleItem._id}
-                        className="flex items-center gap-1 px-1 py-1 bg-slate-100 text-slate-700 rounded-full"
+                        className="flex items-center gap-1 px-2 py-1 bg-slate-100 text-slate-600 rounded-full border border-slate-200"
                       >
-                        <div className="flex items-center">
-                          <span>{ref?.refId?.iconUrl}</span>
-                          <span>x{bundleItem?.quantity}</span>
-                        </div>
-
-                        {/* type */}
-                        <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500">
+                        <span>{ref?.refId?.iconUrl}</span>
+                        <span className="text-[10px] font-bold">
+                          x{bundleItem?.quantity}
+                        </span>
+                        <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">
                           {ref?.refType}
                         </span>
                       </Badge>
@@ -87,34 +80,35 @@ const Bundles = ({ data, purchase }) => {
                 </div>
               </div>
 
-              {/* prix */}
-              <div className="flex justify-between items-center">
-                <div className="flex gap-2">
-                  {/* coins */}
-                  <Badge className="flex items-center gap-1 px-1 py-1 bg-amber-50 text-amber-600 rounded-full border border-amber-600">
-                    <Coins size={10} className="fill-amber-600" />
-                    <span className="text-[10px] font-bold uppercase">
-                      {coins}
-                    </span>
+              {/* Price */}
+              <div className="flex justify-between items-center pt-2">
+                <div className="flex gap-1.5">
+                  {/* Coins — amber/gold */}
+                  <Badge className="flex items-center gap-1 px-2 py-1 bg-amber-50 text-amber-600 rounded-full border border-amber-600">
+                    <Coins
+                      size={10}
+                      className="fill-amber-600 text-amber-600"
+                    />
+                    <span className="text-[10px] font-bold">{coins}</span>
                   </Badge>
 
-                  {/* gems */}
-                  <Badge className="flex items-center gap-1 px-1 py-1 bg-indigo-50 text-indigo-600 rounded-full border border-indigo-600">
-                    <Gem size={10} className="fill-indigo-600" />
-                    <span className="text-[10px] font-bold uppercase">
-                      {gems}
-                    </span>
+                  {/* Gems — violet/purple */}
+                  <Badge className="flex items-center gap-1 px-2 py-1 bg-violet-50 text-indigo-600 rounded-full border border-indigo-600">
+                    <Gem
+                      size={10}
+                      className="fill-indigo-600 text-indigo-600"
+                    />
+                    <span className="text-[10px] font-bold">{gems}</span>
                   </Badge>
                 </div>
-                <div>
-                  {/* Buy button */}
-                  <Button
-                    className="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white hover:cursor-pointer"
-                    onClick={() => purchase(item)}
-                  >
-                    Acheter
-                  </Button>
-                </div>
+
+                {/* Buy button */}
+                <Button
+                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-xl cursor-pointer"
+                  onClick={() => purchase(item)}
+                >
+                  Buy
+                </Button>
               </div>
             </Card>
           );
