@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useAuth } from "@clerk/clerk-react";
 import { fetchHomeInfo } from "@/features/home/services/homeApi";
 
-const POLL_INTERVAL_MS = 500000; // zadt hadi ghir bach dir refresh 7ta nrigloha
+const POLL_INTERVAL_MS = 3000; // zadt hadi ghir bach dir refresh 7ta nrigloha
 
 export function usePlayerInfo() {
   const { getToken } = useAuth();
