@@ -72,7 +72,7 @@ const RewardModal = ({ isOpen, onClose, rewards, isNewlyClaimed = true }) => {
           onClick={onClose}
           className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold h-12 rounded-xl text-sm transition duration-200 cursor-pointer shadow-lg shadow-blue-600/15 border-none"
         >
-          {isNewlyClaimed ? "Challenge Complete!" : "Close"}
+          {isNewlyClaimed ? "Problem Solved!" : "Close"}
         </Button>
       </DialogContent>
     </Dialog>
