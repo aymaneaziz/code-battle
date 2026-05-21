@@ -19,7 +19,7 @@ const RewardModal = ({ isOpen, onClose, rewards, isNewlyClaimed = true }) => {
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="max-w-sm rounded-3xl p-8 border border-slate-200 bg-white text-slate-900 flex flex-col items-center text-center shadow-2xl">
         {/* Glowing Platform Icon (Light Mode) */}
-        <div className="w-20 h-20 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center mb-2 shadow-inner animate-bounce border border-emerald-100">
+        <div className="w-20 h-20 bg-yellow-50 text-yellow-500 rounded-full flex items-center justify-center mb-2 shadow-inner animate-bounce border border-yellow-100">
           <Trophy className="w-10 h-10" />
         </div>
 
@@ -72,7 +72,7 @@ const RewardModal = ({ isOpen, onClose, rewards, isNewlyClaimed = true }) => {
           onClick={onClose}
           className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold h-12 rounded-xl text-sm transition duration-200 cursor-pointer shadow-lg shadow-blue-600/15 border-none"
         >
-          {isNewlyClaimed ? "Awesome!" : "Close"}
+          {isNewlyClaimed ? "Challenge Complete!" : "Close"}
         </Button>
       </DialogContent>
     </Dialog>

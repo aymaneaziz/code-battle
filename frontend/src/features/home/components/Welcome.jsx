@@ -1,44 +1,38 @@
 import React from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import codeArenaArch from "../../../assets/Code-ArenaBig.png";
 
 const Welcome = ({ handleClick }) => {
   return (
-    <Card className="relative bg-white/80 backdrop-blur border border-slate-200 shadow-md hover:shadow-xl transition-all duration-300 rounded-2xl overflow-hidden">
-      {/* Background effect */}
-      <div className="absolute inset-0 bg-linear-to-br from-slate-100/40 to-transparent pointer-events-none" />
+    <Card className="relative bg-white border border-slate-200 shadow-sm rounded-3xl overflow-hidden">
+      <div className="flex flex-col items-center text-center  gap-5 pb-10">
+        {/* BIG LOGO */}
+        <img
+          src={codeArenaArch}
+          alt="Code Arena"
+          className="w-92 h-92 object-contain -mt-12 -mb-18 "
+        />
 
-      <div className="relative p-6 md:p-8 flex flex-col text-center items-center gap-6">
-        {/* Badge (same style as season) */}
-        <div className="bg-linear-to-r from-slate-900 to-slate-700 px-4 py-2 rounded-xl shadow-sm">
-          <span className="hidden sm:block font-black text-xl tracking-tighter text-white uppercase">
-            Code <span className="text-blue-500">Arena</span>
-          </span>
-        </div>
-
-        {/* Title */}
-        <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight">
-          Welcome to CODE <span className="text-blue-500">ARENA</span>
+        <h1 className="text-4xl md:text-5xl font-black text-slate-900 tracking-[-0.05em] uppercase leading-tight">
+          Welcome to Code <span className="text-blue-500">Arena</span>
         </h1>
 
-        {/* Description */}
-        <p className="text-gray-600 leading-relaxed max-w-xl text-base md:text-lg">
+        <p className="text-slate-500 leading-relaxed max-w-105 text-base">
           Challenge developers, improve your coding skills, and climb the
           leaderboard in real-time.
         </p>
 
-        {/* Buttons */}
-        <div className="w-full max-w-sm flex gap-4 pt-2">
+        <div className="flex gap-4 w-full max-w-sm pt-2">
           <Button
-            className="flex-1 bg-white border border-slate-300 hover:bg-slate-100 transition-all duration-200 cursor-pointer"
             variant="outline"
+            className="flex-1 border-slate-200 text-slate-900 hover:bg-slate-50 cursor-pointer"
             onClick={() => handleClick("findMatch")}
           >
             Find Match
           </Button>
-
           <Button
-            className="flex-1 bg-slate-900 hover:bg-slate-800 text-white transition-all duration-200 shadow-sm hover:shadow-md cursor-pointer"
+            className="flex-1 bg-slate-900 hover:bg-slate-800 text-white font-bold border-none cursor-pointer"
             onClick={() => handleClick("Practice")}
           >
             Practice
