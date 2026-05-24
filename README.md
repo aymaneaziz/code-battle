@@ -4,6 +4,7 @@
 
 - **Design:** [Code Arena Design PDF](https://github.com/user-attachments/files/27923855/AI-Powered.Code.Battle.Platform.pdf)
 - **Built in:** 3 weeks 
+- **Demo:** https://www.youtube.com/watch?v=0_qlwxfly-g
 ---
 
 ## Frontend — React
